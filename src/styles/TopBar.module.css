@@ -1,0 +1,145 @@
+.TopBar{
+    width: 100%;
+    height: 70px;
+    display: flex;
+    padding: 10px 40px;
+}
+.TopBar.lessPadding{
+    padding: 10px;
+}
+.container{
+    height: 100%;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+.colLeft{
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    gap:20px;
+}
+
+.hamburguer{
+    cursor: pointer;
+}
+
+.logo{
+    height: 50px;
+}
+
+.logo img{
+    height: 100%;
+    width: auto;
+}   
+
+.colCenter{
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    gap:10px;
+}
+
+.search{
+    background-color: #e1e1e1;
+    border-radius: 10px;
+    width: 100%;
+    height: 25px;
+    padding: 0 10px;
+    color:#222;
+    border: none;
+    outline: none;
+}
+
+.search::placeholder{
+    color:#3a3939;
+}
+.colRight{
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+    gap:20px;
+}
+
+.cntBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:10px
+}
+
+.icon{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 300px) {
+    .TopBar{
+        padding: 10px;
+    }
+    .colLeft{
+        width: 100%;
+    }
+    .colRight{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .TopBar{
+        padding: 10px;
+    }
+}
+
+/*
+THEME DARK
+*/
+.TopBar.dark{
+    background-color: var(--color-black);
+    border-bottom: solid 1px #6c6c6c;
+}
+
+.TopBar.dark .search{
+    background-color: var(--color-gray);
+    color:var(--color-black);
+}
+
+.TopBar.dark .search::placeholder{
+    color:var(--color-black);
+}
+
+.TopBar.dark .iconLabel, .TopBar.dark .iconLabel a{
+    color:var(--color-white);
+}
+
+/*
+THEME LIGHT
+*/
+.TopBar.light{
+    background-color: var(--color-white);
+    border: solid 1px var(--color-gray);
+}
+
+.TopBar.light .search{
+    background-color: var(--color-white);
+    color:var(--color-black);
+    border: solid 1px var(--color-gray);
+}
+
+.TopBar.light .iconLabel,.TopBar.light .iconLabel a{
+    color:var(--theme-light-color-primary);
+}
+
+.TopBar.light .search::placeholder{
+    color:var(--color-black);
+}
