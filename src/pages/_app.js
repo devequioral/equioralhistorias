@@ -1,5 +1,7 @@
 import '@/styles/grid.css';
 import '@/styles/globals.css';
+import { SessionProvider, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 import { Montserrat } from 'next/font/google';
 import { Roboto } from 'next/font/google';
@@ -14,7 +16,10 @@ const secondary_font = Roboto({
   weight: ['400', '500', '700'],
 });
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
   return (
     <>
       <style jsx global>{`
@@ -38,7 +43,33 @@ export default function App({ Component, pageProps }) {
           box-sizing: border-box;
         }
       `}</style>
-      <Component {...pageProps} />
+      <SessionProvider session={session}>
+        {Component.auth ? (
+          <Auth adminOnly={Component.auth.adminOnly}>
+            <Component {...pageProps} />
+          </Auth>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </SessionProvider>
     </>
   );
+}
+
+function Auth({ children, adminOnly }) {
+  const router = useRouter();
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/login?message=login required');
+    },
+  });
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+  if (adminOnly && !session.user.isAdmin) {
+    router.push('/login?message=Access Denied');
+  }
+
+  return children;
 }

@@ -23,7 +23,7 @@ export default function SideBar({ open, theme }) {
         <ul className={`${styles.list}`}>
           <li>
             <SideBarItemMenu
-              path="/app"
+              path="/dashboard"
               icon={{
                 src: `/assets/images/theme-${theme}/icon-home.svg`,
                 width: 24,
@@ -37,7 +37,7 @@ export default function SideBar({ open, theme }) {
 
           <li>
             <SideBarItemMenu
-              path="/app/categories"
+              path="/dashboard/orders"
               icon={{
                 src: `/assets/images/theme-${theme}/icon-orders.svg`,
                 width: 24,

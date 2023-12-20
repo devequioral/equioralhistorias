@@ -5,8 +5,8 @@
 }
 
 body{
-  background: #000;
-  color:#fff;
+  /* background: #000;
+  color:#fff; */
   font-family: var(--primary-font), serif;
 }
 
@@ -19,4 +19,10 @@ a{
   .container{
     padding: 0 40px;
   }
+}
+
+.image-fit-content{
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
