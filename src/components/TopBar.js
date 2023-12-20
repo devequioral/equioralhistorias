@@ -4,11 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-export default function TopBar({ theme, onClickEvent, toogleTheme }) {
+export default function TopBar(props) {
+  const { theme, onClickEvent, toogleTheme } = props;
   const router = useRouter();
-  const [sidebarExpanded, setSidebarExpanded] = React.useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = React.useState(
+    props.sidebarExpanded
+  );
 
-  const onClick = (ev) => {
+  const onClickMenu = (ev) => {
     onClickEvent(ev);
     if (ev === 'toggle-sidebar') setSidebarExpanded(!sidebarExpanded);
   };
@@ -33,7 +36,7 @@ export default function TopBar({ theme, onClickEvent, toogleTheme }) {
             <div className={`col-4 ${styles.colLeft}`}>
               <div
                 className={`${styles.hamburguer}`}
-                onClick={() => onClick('toggle-sidebar')}
+                onClick={() => onClickMenu('toggle-sidebar')}
               >
                 <Image
                   src={`/assets/images/theme-${theme}/hamburguer.svg`}

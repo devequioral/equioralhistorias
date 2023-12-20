@@ -5,14 +5,14 @@ import Image from 'next/image';
 
 export default function SideBar({ open, theme }) {
   const [expanded, setExpanded] = React.useState(false);
-  const onClickMenu = (elem) => {
-    const menu = elem.target.dataset.menu;
-    console.log(menu, elem.target);
-  };
-  const onToggleMenu = (elem) => {
-    if (elem.target.className !== styles.itemMenu) return;
-    setExpanded(!expanded);
-  };
+  // const onClickMenu = (elem) => {
+  //   const menu = elem.target.dataset.menu;
+  //   console.log(menu, elem.target);
+  // };
+  // const onToggleMenu = (elem) => {
+  //   if (elem.target.className !== styles.itemMenu) return;
+  //   setExpanded(!expanded);
+  // };
   return (
     <>
       <div
@@ -47,7 +47,16 @@ export default function SideBar({ open, theme }) {
               showLabel={open}
               theme={theme}
             >
-              <li data-path="/app/categories/categoria-01">
+              <li data-path="/dashboard/orders/new">
+                <Image
+                  src={`/assets/images/theme-${theme}/icon-new-order.svg`}
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+                Nueva Orden
+              </li>
+              <li data-path="/dashboard/orders/status/pending">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-light.svg`}
                   width={24}
@@ -56,7 +65,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Pendientes
               </li>
-              <li data-path="/app/categories/categoria-02">
+              <li data-path="/dashboard/orders/status/process">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-medium.svg`}
                   width={24}
@@ -65,7 +74,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Procesadas
               </li>
-              <li data-path="/app/categories/categoria-03">
+              <li data-path="/dashboard/orders/status/complete">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-dark.svg`}
                   width={24}

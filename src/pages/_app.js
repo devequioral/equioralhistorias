@@ -32,7 +32,7 @@ export default function App({
           --theme-dark-color-secondary: #dc9c9c;
 
           --theme-light-color-primary: #2a2e66;
-          --theme-light-color-secondary: #9bacbf;
+          --theme-light-color-secondary: #409dd5;
 
           --primary-font: ${primary_font.style.fontFamily};
           --secondary-font: ${secondary_font.style.fontFamily};

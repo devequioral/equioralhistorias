@@ -1,0 +1,33 @@
+.container{
+    display: flex;
+}
+
+.row02{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+@media (max-width: 599px){
+    .row02{
+        flex-direction: column;
+    }
+}
+
+.colPreview{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.colOptions{
+    display: flex;
+}
+
+@media (max-width: 599px){
+    .colOptions{
+        align-items: center;
+    }
+}

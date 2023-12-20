@@ -35,7 +35,7 @@ export default function MyComponent(props) {
         }
         @media (max-width: 640px) {
           .div {
-            justify-content: flex-start;
+            justify-content: center;
           }
         }
         .div-2 {

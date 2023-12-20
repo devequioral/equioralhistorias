@@ -4,8 +4,13 @@ import SideBar from '@/components/SideBar';
 
 import styles from '@/styles/Layout.module.css';
 
-export default function Layout({ children, theme, toogleTheme }) {
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
+export default function Layout({
+  children,
+  theme,
+  toogleTheme,
+  sidebarCollapsed = false,
+}) {
+  const [sidebarOpen, setSidebarOpen] = React.useState(!sidebarCollapsed);
   const TopBarClick = (ev) => {
     if (ev === 'toggle-sidebar') setSidebarOpen(!sidebarOpen);
   };
@@ -17,6 +22,7 @@ export default function Layout({ children, theme, toogleTheme }) {
           onClickEvent={TopBarClick}
           theme={theme}
           toogleTheme={toogleTheme}
+          sidebarExpanded={!sidebarCollapsed}
         />
         <div className={`${styles.centerWrapper}`}>
           <SideBar open={sidebarOpen} theme={theme} />
