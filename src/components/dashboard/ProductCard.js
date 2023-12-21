@@ -18,7 +18,7 @@ export default function MyComponent(props) {
           <div className="div-4">{product.description}</div>
           <div className="div-5">
             <Link
-              href={`/dashboard/orders/new/${product.id}`}
+              href={`/dashboard/orders/new/customize/${product.id}`}
               style={{
                 justifyContent: 'space-between',
                 alignItems: 'center',

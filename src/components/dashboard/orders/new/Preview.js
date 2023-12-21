@@ -4,7 +4,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 export default function MyComponent(props) {
-  const { theme, data } = props;
+  const { theme, product } = props;
   const [width, setWidth] = React.useState(0);
 
   React.useEffect(() => {
@@ -19,30 +19,44 @@ export default function MyComponent(props) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  React.useEffect(() => {
+    console.log('Preview product changed');
+  }, [product]);
+
+  const calcPercentage = (addon) => {
+    let percentage = addon.defaultPercent;
+    addon.options.forEach((option) => {
+      if (option.selected) {
+        percentage += option.percent;
+      }
+    });
+    return percentage;
+  };
   return (
     <>
       <div className="PreviewComponent">
         <div className="Container">
           <div className="ColumnProduct">
-            {data.productImage && (
+            {product.productImage && (
               <Image
-                src={data.productImage.src}
-                width={data.productImage.width}
-                height={data.productImage.height}
+                src={product.productImage.src}
+                width={product.productImage.width}
+                height={product.productImage.height}
                 style={{ width: '100%', height: 'auto' }}
                 alt=""
               />
             )}
           </div>
           <div className="ColumnCharts">
-            {data.previewItems.map((previewItem, index) => (
+            {product.addons.map((addon, index) => (
               <div className="row PreviewItem" key={index}>
                 <div className="col-6 PreviewItemChart">
                   <PieChart
                     data={[
                       {
-                        value: previewItem.pieChart.value,
-                        color: previewItem.pieChart.color,
+                        value: calcPercentage(addon),
+                        color: addon.color,
                       },
                     ]}
                     totalValue={100}
@@ -51,7 +65,7 @@ export default function MyComponent(props) {
                     labelStyle={{
                       fontSize: '1.5em',
                       fontFamily: 'sans-serif',
-                      fill: previewItem.pieChart.color,
+                      fill: addon.color,
                     }}
                     labelPosition={0}
                   />
@@ -59,11 +73,9 @@ export default function MyComponent(props) {
                 <div className="col-6">
                   <div
                     className="PreviewItemTitle"
-                    data-tooltip-id={`my-tooltip-${index}`}
+                    data-tooltip-id={`PreviewItem${index}`}
                   >
-                    <div className="PreviewItemTitleText">
-                      {previewItem.title}
-                    </div>
+                    <div className="PreviewItemTitleText">{addon.name}</div>
                     <Image
                       src="/assets/images/icon-help.svg"
                       width={12}
@@ -84,10 +96,10 @@ export default function MyComponent(props) {
                     />
                   </div>
                   <ReactTooltip
-                    id={`my-tooltip-${index}`}
+                    id={`PreviewItem${index}`}
                     place="bottom"
                     openOnClick={true}
-                    content={previewItem.description}
+                    content={addon.description}
                     style={{
                       backgroundColor: 'var(--theme-light-color-secondary)',
                       color: 'var(--color-white)',
@@ -95,9 +107,7 @@ export default function MyComponent(props) {
                       maxWidth: '200px',
                     }}
                   />
-                  <div className="PreviewItemInfo">
-                    {previewItem.description}
-                  </div>
+                  <div className="PreviewItemInfo">{addon.description}</div>
                 </div>
               </div>
             ))}
@@ -177,6 +187,17 @@ export default function MyComponent(props) {
           letter-spacing: 0.15px;
           font: 700 15px/160% Roboto, -apple-system, Roboto, Helvetica,
             sans-serif;
+        }
+        .PreviewItemTitleText {
+          font: 700 15px/100% Roboto, -apple-system, Roboto, Helvetica,
+            sans-serif;
+          margin: 5px 0;
+          white-space: nowrap;
+        }
+        @media (max-width: 780px) {
+          .PreviewItemTitleText {
+            white-space: normal;
+          }
         }
         .PreviewItemInfo {
           color: rgba(21, 61, 104, 0.6);

@@ -3,12 +3,16 @@ import React from 'react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 export default function OptionItemMenu(props) {
-  const { option } = props;
-  const [isAdded, setIsAdded] = React.useState(false);
+  const { option, index, onChangeOption, addon } = props;
+  console.log('OptionItemMenu', addon);
+  const [isAdded, setIsAdded] = React.useState(option.selected);
   return (
     <>
       <div className="OptionItemMenu">
-        <div data-tooltip-id="my-tooltip-1" className="OptionItemMenuInfo">
+        <div
+          data-tooltip-id={`optioItemMenuToolTip${index}`}
+          className="OptionItemMenuInfo"
+        >
           <Image
             src="/assets/images/icon-help.svg"
             width={12}
@@ -18,7 +22,7 @@ export default function OptionItemMenu(props) {
           <div className="OptionItemMenuInfoText">{option.text}</div>
         </div>
         <ReactTooltip
-          id="my-tooltip-1"
+          id={`optioItemMenuToolTip${index}`}
           place="bottom"
           openOnClick={true}
           content={option.help}
@@ -32,7 +36,10 @@ export default function OptionItemMenu(props) {
         <div
           className="OptionItemMenuRemove"
           style={{ display: isAdded ? 'flex' : 'none' }}
-          onClick={() => setIsAdded(false)}
+          onClick={() => {
+            setIsAdded(false);
+            onChangeOption(option, addon, 'remove');
+          }}
         >
           <Image
             src="/assets/images/icon-remove.svg"
@@ -44,7 +51,10 @@ export default function OptionItemMenu(props) {
         <div
           className="OptionItemMenuAdd"
           style={{ display: !isAdded ? 'flex' : 'none' }}
-          onClick={() => setIsAdded(true)}
+          onClick={() => {
+            setIsAdded(true);
+            onChangeOption(option, addon, 'add');
+          }}
         >
           <Image
             src="/assets/images/icon-add.svg"

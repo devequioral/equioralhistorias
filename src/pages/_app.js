@@ -2,6 +2,7 @@ import '@/styles/grid.css';
 import '@/styles/globals.css';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 import { Montserrat } from 'next/font/google';
 import { Roboto } from 'next/font/google';
@@ -46,10 +47,14 @@ export default function App({
       <SessionProvider session={session}>
         {Component.auth ? (
           <Auth adminOnly={Component.auth.adminOnly}>
-            <Component {...pageProps} />
+            <ThemeProvider>
+              <Component {...pageProps} />
+            </ThemeProvider>
           </Auth>
         ) : (
-          <Component {...pageProps} />
+          <ThemeProvider>
+            <Component {...pageProps} />
+          </ThemeProvider>
         )}
       </SessionProvider>
     </>

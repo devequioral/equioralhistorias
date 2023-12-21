@@ -17,6 +17,8 @@ export default function BreadCrumbs(props) {
                     style={{
                       color: 'var(--theme-light-color-primary)',
                       textDecoration: 'underline',
+                      fontSize: '12px',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     {link.title}
@@ -53,6 +55,8 @@ export default function BreadCrumbs(props) {
         }
         .title {
           color: var(--theme-light-color-primary);
+          font-size: 12px;
+          white-space: nowrap;
         }
         .div-2 {
           color: var(--Gray-6, #f2f2f2);

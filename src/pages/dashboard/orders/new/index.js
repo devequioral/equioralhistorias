@@ -1,14 +1,12 @@
 import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
-import ProductList from '@/components/dashboard/ProductList';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
-import { useState } from 'react';
+import ProductList from '@/components/dashboard/ProductList';
+import { useContext } from 'react';
+import { ThemeContext } from '@/contexts/ThemeContext';
 
 function NewOrderScreen() {
-  const [theme, setTheme] = useState('light');
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
+  const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <>
       <Metaheader title="Nueva Orden | Arctic Bunker" />

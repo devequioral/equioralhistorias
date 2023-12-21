@@ -1,16 +1,14 @@
 import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
-import { useState } from 'react';
-import MainBanner from '@/components/dashboard/MainBanner';
-import ProductList from '@/components/dashboard/ProductList';
 import Banner02 from '@/components/dashboard/Banner02';
+import MainBanner from '@/components/dashboard/MainBanner';
 import NewOrderBanner from '@/components/dashboard/NewOrderBanner';
+import ProductList from '@/components/dashboard/ProductList';
+import { ThemeContext } from '@/contexts/ThemeContext';
+import { useContext } from 'react';
 
 function DashBoardScreen() {
-  const [theme, setTheme] = useState('light');
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
+  const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <>
       <Metaheader />

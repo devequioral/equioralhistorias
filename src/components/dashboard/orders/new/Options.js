@@ -3,26 +3,35 @@ import * as React from 'react';
 import OptionItemMenu from './OptionItemMenu';
 
 export default function MyComponent(props) {
-  const { theme, data } = props;
+  const { theme, product, onChangeOption } = props;
+  React.useEffect(() => {
+    console.log('Options product changed');
+  }, [product]);
   return (
     <>
       <div className="OptionsCard">
-        <div className="title">{data.title}</div>
-        <div className="subtitle">{data.subtitle}</div>
-        {data.categories.map((category, index) => (
+        <div className="title">{product.productName}</div>
+        <div className="subtitle">{product.productSubtitle}</div>
+        {product.addons.map((addon, index) => (
           <div className="OptionItem" key={index}>
             <div className="OptionItemTitle">
               <Image
-                src={category.icon.src}
-                width={category.icon.width}
-                height={category.icon.height}
+                src={addon.icon.src}
+                width={addon.icon.width}
+                height={addon.icon.height}
                 alt=""
               />
-              <div className="OptionItemTitleText">{category.text}</div>
+              <div className="OptionItemTitleText">{addon.name}</div>
             </div>
             <div className="OptionItemBody">
-              {category.options.map((option, index) => (
-                <OptionItemMenu option={option} key={index} />
+              {addon.options.map((option, index) => (
+                <OptionItemMenu
+                  option={option}
+                  addon={addon}
+                  key={index}
+                  index={index}
+                  onChangeOption={onChangeOption}
+                />
               ))}
             </div>
           </div>
