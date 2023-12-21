@@ -43,7 +43,7 @@ export default function SideBar({ open, theme }) {
                 width: 24,
                 height: 24,
               }}
-              label="Ordenes"
+              label="Cotizaciones"
               showLabel={open}
               theme={theme}
             >
@@ -54,7 +54,7 @@ export default function SideBar({ open, theme }) {
                   height={24}
                   alt=""
                 />
-                Nueva Orden
+                Nueva Cotización
               </li>
               <li data-path="/dashboard/orders/status/pending">
                 <Image

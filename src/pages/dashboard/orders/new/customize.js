@@ -7,14 +7,14 @@ import Preview from '@/components/dashboard/orders/new/Preview';
 
 import styles from '@/styles/dashboard/orders/NewOrderScreen.module.css';
 
-function NewOrderScreen() {
+function CustomizeOrderScreen() {
   const [theme, setTheme] = useState('light');
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
   return (
     <>
-      <Metaheader />
+      <Metaheader title="Personalizar Orden | Arctic Bunker" />
       <Layout theme={theme} toogleTheme={toggleTheme} sidebarCollapsed={true}>
         <div className={`container ${styles.container}`}>
           <div className={`row ${styles.row01}`}>
@@ -183,5 +183,5 @@ function NewOrderScreen() {
   );
 }
 
-NewOrderScreen.auth = true;
-export default NewOrderScreen;
+CustomizeOrderScreen.auth = true;
+export default CustomizeOrderScreen;

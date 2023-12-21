@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import * as React from 'react';
 
 export default function MyComponent(props) {
@@ -16,13 +17,23 @@ export default function MyComponent(props) {
           <div className="div-3">{product.title}</div>
           <div className="div-4">{product.description}</div>
           <div className="div-5">
-            <Image
-              src="/assets/images/icon-cart.svg"
-              width={20}
-              height={20}
-              alt=""
-            />
-            <div className="div-6">COTIZAR</div>
+            <Link
+              href={`/dashboard/orders/new/${product.id}`}
+              style={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                display: 'flex',
+                gap: '8px',
+              }}
+            >
+              <Image
+                src="/assets/images/icon-cart.svg"
+                width={20}
+                height={20}
+                alt=""
+              />
+              <div className="div-6">COTIZAR</div>
+            </Link>
           </div>
         </div>
       </div>
