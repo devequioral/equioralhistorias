@@ -30,9 +30,9 @@ export default function BreadCrumbs(props) {
               {link.href && (
                 <div className="div-3">
                   <Image
-                    src="/assets/images/icon-arrow-right.svg"
-                    width={21}
-                    height={8}
+                    src="/assets/images/icon-vertical-separator.svg"
+                    width={1}
+                    height={17}
                     alt=""
                   />
                 </div>

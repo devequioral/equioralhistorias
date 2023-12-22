@@ -7,6 +7,8 @@ import ProductList from '@/components/dashboard/ProductList';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useContext } from 'react';
 
+import productJSON from '@/temp/product.json';
+
 function DashBoardScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   return (
@@ -45,55 +47,7 @@ function DashBoardScreen() {
             },
           }}
         />
-        <ProductList
-          theme={theme}
-          products={[
-            {
-              id: 1,
-              title: 'ARCTIC BUNKER',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
-              },
-            },
-            {
-              id: 2,
-              title: 'ARCTIC BUNKER 02',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
-              },
-            },
-            {
-              id: 3,
-              title: 'ARCTIC BUNKER 02',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
-              },
-            },
-            {
-              id: 4,
-              title: 'ARCTIC BUNKER 04',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
-              },
-            },
-          ]}
-        />
+        <ProductList theme={theme} products={productJSON} />
         <Banner02
           data={{
             title: 'MONITOREO INTEGRAL',

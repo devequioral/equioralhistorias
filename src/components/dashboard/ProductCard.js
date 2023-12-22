@@ -8,13 +8,13 @@ export default function MyComponent(props) {
     <>
       <div className={`div ${theme}`}>
         <Image
-          src={product.image.src}
-          width={product.image.width}
-          height={product.image.height}
-          alt={product.title}
+          src={product.productImageSM.src}
+          width={product.productImageSM.width}
+          height={product.productImageSM.height}
+          alt={product.productName}
         />
         <div className="div-2">
-          <div className="div-3">{product.title}</div>
+          <div className="div-3">{product.productName}</div>
           <div className="div-4">{product.description}</div>
           <div className="div-5">
             <Link

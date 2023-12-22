@@ -1,3 +1,4 @@
+import { set } from 'mongoose';
 import Image from 'next/image';
 import * as React from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
@@ -20,9 +21,25 @@ export default function MyComponent(props) {
     };
   }, []);
 
-  React.useEffect(() => {
-    console.log('Preview product changed');
-  }, [product]);
+  const ref = React.useRef(null);
+  const [initialPosition, setInitialPosition] = React.useState(0);
+
+  // React.useEffect(() => {
+  //   setInitialPosition(ref.current.offsetTop);
+  //   console.log(ref.current.offsetTop);
+  //   const checkPositionScroll = () => {
+  //     console.log(window.pageYOffset, initialPosition);
+  //     if (window.pageYOffset > initialPosition) {
+  //       ref.current.classList.add('sticky');
+  //     } else {
+  //       ref.current.classList.remove('sticky');
+  //     }
+  //   };
+  //   window.addEventListener('scroll', checkPositionScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', checkPositionScroll);
+  //   };
+  // }, []);
 
   const calcPercentage = (addon) => {
     let percentage = addon.defaultPercent;
@@ -35,7 +52,7 @@ export default function MyComponent(props) {
   };
   return (
     <>
-      <div className="PreviewComponent">
+      <div className="PreviewComponent" ref={ref}>
         <div className="Container">
           <div className="ColumnProduct">
             {product.productImage && (
@@ -118,6 +135,10 @@ export default function MyComponent(props) {
         .PreviewComponent {
           padding-top: 40px;
           max-width: 447px;
+        }
+        .PreviewComponent.sticky {
+          position: fixed;
+          top: 0;
         }
         .PreviewItem {
           display: flex;

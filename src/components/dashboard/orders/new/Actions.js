@@ -1,27 +1,30 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import * as React from 'react';
 
 export default function MyComponent(props) {
   return (
     <>
       <div className="div">
-        <div className="div-2">
-          <Image
-            src="/assets/images/icon-save.svg"
-            width={20}
-            height={20}
-            alt=""
-          />
-          <div className="div-3">Guardar</div>
-        </div>
         <div className="div-4">
-          <Image
-            src="/assets/images/icon-check.svg"
-            width={20}
-            height={20}
-            alt=""
-          />
-          <div className="div-5">Completar</div>
+          <Link
+            href="/dashboard/orders/new/last-step"
+            style={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              display: 'flex',
+              gap: '8px',
+              cursor: 'pointer',
+            }}
+          >
+            <Image
+              src="/assets/images/icon-check.svg"
+              width={20}
+              height={20}
+              alt=""
+            />
+            <div className="div-5">Siguiente</div>
+          </Link>
         </div>
       </div>
       <style jsx>{`

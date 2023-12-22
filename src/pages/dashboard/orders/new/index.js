@@ -2,11 +2,36 @@ import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import ProductList from '@/components/dashboard/ProductList';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '@/contexts/ThemeContext';
+import ModalWindow from '@/components/dashboard/ModalWindow';
+import { useRouter } from 'next/router';
+
+import productJSON from '@/temp/product.json';
 
 function NewOrderScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const draftOrder = localStorage.getItem('ArcticBunker_draft_order');
+    if (draftOrder) {
+      setShowModal(true);
+    }
+  }, []);
+
+  const handleModalEvent = (name_event) => {
+    console.log(name_event);
+    if (name_event === 'option01') {
+      router.push('/dashboard/orders/new/customize/1');
+    }
+    if (name_event === 'option02') {
+      localStorage.removeItem('ArcticBunker_draft_order');
+      setShowModal(false);
+    }
+  };
+
   return (
     <>
       <Metaheader title="Nueva Orden | Arctic Bunker" />
@@ -21,55 +46,24 @@ function NewOrderScreen() {
             ],
           }}
         />
-        <ProductList
-          theme={theme}
-          products={[
-            {
-              id: 1,
-              title: 'ARCTIC BUNKER',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
+        <ProductList theme={theme} products={productJSON} />
+        {showModal && (
+          <ModalWindow
+            options={{
+              title: 'Ya tienes una cotización en borrrador',
+              option01: {
+                name_event: 'option01',
+                text: '¿Quieres Continuar con la anterior?',
               },
-            },
-            {
-              id: 2,
-              title: 'ARCTIC BUNKER 02',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
+              option02: {
+                name_event: 'option02',
+                text: '¿Quieres crear una nueva cotización?',
               },
-            },
-            {
-              id: 3,
-              title: 'ARCTIC BUNKER 02',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
-              },
-            },
-            {
-              id: 4,
-              title: 'ARCTIC BUNKER 04',
-              description:
-                'Ocupa muy poco espacio, lo que permite una implementación rápida dentro de un espacio limitado y proporciona 10 tipos de soluciones que requieren capacidades de suministro de energía de 20kVA.',
-              image: {
-                src: '/assets/images/temp/product-01-t.png',
-                width: 105,
-                height: 213,
-              },
-            },
-          ]}
-        />
+              closeable: false,
+            }}
+            handleModalEvent={handleModalEvent}
+          ></ModalWindow>
+        )}
       </Layout>
     </>
   );

@@ -16,10 +16,17 @@
     }
 }
 
+.row03{
+    border:solid 1px #ccc;
+    padding: 50px 20px;
+    margin: 50px 0;
+}
+
 .colPreview{
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    height: 100%;
 }
 
 .colOptions{
@@ -30,4 +37,11 @@
     .colOptions{
         align-items: center;
     }
+}
+
+.colConfirmation{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0;
 }
