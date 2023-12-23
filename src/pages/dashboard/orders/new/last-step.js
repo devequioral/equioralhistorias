@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
 import Actions from '@/components/dashboard/orders/new/Actions';
 import OptionsConfirm from '@/components/dashboard/orders/new/OptionsConfirm';
-import { useContext, useReducer } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
@@ -15,12 +15,19 @@ import ConfirmForm from '@/components/dashboard/orders/new/ConfirmForm';
 function LastStepScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
+  const [forceSubmitForm, setForceSubmitForm] = React.useState(0);
+
   const initialProduct =
     JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || productJSON;
   const [product, dispatch] = useReducer(productReducer, initialProduct);
 
   const onChangeOption = (option, addon, action) => {
     dispatch({ type: 'CHANGE_OPTION', option, addon, action });
+  };
+  const onActionsEvent = (event) => {
+    if (event === 'next') {
+      setForceSubmitForm(forceSubmitForm + 1);
+    }
   };
   return (
     <>
@@ -47,7 +54,7 @@ function LastStepScreen() {
           </div>
           <div className={`row ${styles.row01}`}>
             <div className={`col col-12`}>
-              <Actions />
+              <Actions onActionsEvent={onActionsEvent} />
             </div>
           </div>
           <div className={`row ${styles.row02}`}>
@@ -63,7 +70,11 @@ function LastStepScreen() {
             <div
               className={`col col-12 col-sm-6 col-md-8 col-lg-8 ${styles.colPreview}`}
             >
-              <ConfirmForm theme={theme} product={product} />
+              <ConfirmForm
+                theme={theme}
+                product={product}
+                forceSubmitForm={forceSubmitForm}
+              />
             </div>
           </div>
         </div>

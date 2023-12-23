@@ -7,6 +7,15 @@ import contactData from '@/temp/contact-data.json';
 import { useRouter } from 'next/router';
 
 function ConfirmForm(props) {
+  const { forceSubmitForm = 0 } = props;
+  const ref = React.useRef();
+
+  React.useEffect(() => {
+    if (forceSubmitForm > 0) {
+      handleSubmit(_handleSubmit)();
+    }
+  }, [forceSubmitForm]);
+
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const router = useRouter();
   const {
@@ -41,7 +50,7 @@ function ConfirmForm(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        //console.log('Success:', data);
+        setIsSubmitting(false);
         toast.success('Cotización enviada con éxito');
         router.push(
           `/dashboard/orders/new/complete/?order_id=${data.order_id}`
@@ -49,6 +58,7 @@ function ConfirmForm(props) {
       })
       .catch((error) => {
         console.error('Error:', error);
+        setIsSubmitting(false);
         toast.error('Error al enviar la cotización');
       });
   };
@@ -146,7 +156,9 @@ function ConfirmForm(props) {
         )}
       </div>
 
-      <button className="login-button">Eniar</button>
+      <button className="login-button" ref={ref}>
+        Enviar
+      </button>
 
       <style jsx>{`
         .main-container {

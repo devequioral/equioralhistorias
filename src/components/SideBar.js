@@ -54,9 +54,18 @@ export default function SideBar({ open, theme }) {
                   height={24}
                   alt=""
                 />
-                Nueva Cotización
+                Nueva
               </li>
-              <li data-path="/dashboard/orders/status/pending">
+              <li data-path="/dashboard/orders">
+                <Image
+                  src={`/assets/images/theme-${theme}/icon-status-dark.svg`}
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+                Todas
+              </li>
+              <li data-path="/dashboard/orders/pending">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-light.svg`}
                   width={24}
@@ -65,7 +74,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Pendientes
               </li>
-              <li data-path="/dashboard/orders/status/process">
+              <li data-path="/dashboard/orders/procesed">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-medium.svg`}
                   width={24}
@@ -74,7 +83,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Procesadas
               </li>
-              <li data-path="/dashboard/orders/status/complete">
+              <li data-path="/dashboard/orders/completed">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-dark.svg`}
                   width={24}

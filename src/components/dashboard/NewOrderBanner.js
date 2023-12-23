@@ -25,7 +25,7 @@ export default function MyComponent(props) {
               height={24}
               alt=""
             />
-            <div className="div-3">Nueva Orden</div>
+            <div className="div-3">Nueva Cotización</div>
           </Link>
         </div>
         <div className="div-4">

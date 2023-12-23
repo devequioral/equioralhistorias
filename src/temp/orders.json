@@ -1,0 +1,23 @@
+{
+    "data":  
+    [
+        {
+            "key": "1",
+            "order_id": "0001",
+            "customer": "José Pérez",
+            "product": "Arctic Bunker 01",
+            "date": "12/05/2021",
+            "status": "Pendiente"
+        },
+        {
+            "key": "2",
+            "order_id": "0002",
+            "customer": "Carlos Suarez",
+            "product": "Arctic Bunker 02",
+            "date": "12/05/2021",
+            "status": "Completada"
+        }
+    ],
+    "page": 1,
+    "totalPages": 10
+}

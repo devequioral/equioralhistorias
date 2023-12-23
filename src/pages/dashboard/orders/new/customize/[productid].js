@@ -41,6 +41,11 @@ function CustomizeOrderScreen() {
       );
     }
   }, []);
+  const onActionsEvent = (event) => {
+    if (event === 'next') {
+      router.push('/dashboard/orders/new/last-step');
+    }
+  };
   return (
     <>
       <Metaheader title="Personalizar Orden | Arctic Bunker" />
@@ -68,7 +73,7 @@ function CustomizeOrderScreen() {
             <>
               <div className={`row ${styles.row01}`}>
                 <div className={`col col-12`}>
-                  <Actions />
+                  <Actions onActionsEvent={onActionsEvent} />
                 </div>
               </div>
               <div className={`row ${styles.row02}`}>

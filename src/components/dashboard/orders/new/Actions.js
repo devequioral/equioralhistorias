@@ -1,30 +1,22 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import * as React from 'react';
 
 export default function MyComponent(props) {
+  console.log(props.onActionsEvent);
   return (
     <>
       <div className="div">
-        <div className="div-4">
-          <Link
-            href="/dashboard/orders/new/last-step"
-            style={{
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              display: 'flex',
-              gap: '8px',
-              cursor: 'pointer',
-            }}
-          >
-            <Image
-              src="/assets/images/icon-check.svg"
-              width={20}
-              height={20}
-              alt=""
-            />
-            <div className="div-5">Siguiente</div>
-          </Link>
+        <div
+          className="div-4"
+          onClick={() => props.onActionsEvent && props.onActionsEvent('next')}
+        >
+          <Image
+            src="/assets/images/icon-check.svg"
+            width={20}
+            height={20}
+            alt=""
+          />
+          <div className="div-5">Siguiente</div>
         </div>
       </div>
       <style jsx>{`

@@ -26,3 +26,7 @@ a{
   height: auto;
   object-fit: contain;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

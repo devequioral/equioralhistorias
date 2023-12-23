@@ -1,8 +1,6 @@
 import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
-import Actions from '@/components/dashboard/orders/new/Actions';
-import OptionsConfirm from '@/components/dashboard/orders/new/OptionsConfirm';
-import { useContext, useReducer } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
@@ -21,6 +19,25 @@ function CompleteScreen() {
   const initialProduct =
     JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || productJSON;
   const [product, dispatch] = useReducer(productReducer, initialProduct);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('ArcticBunker_draft_order')) {
+      if (!localStorage.getItem('ArcticBunker_orders')) {
+        localStorage.setItem('ArcticBunker_orders', JSON.stringify([]));
+      }
+      if (localStorage.getItem('ArcticBunker_orders')) {
+        const orders = JSON.parse(localStorage.getItem('ArcticBunker_orders'));
+        orders.push({
+          product,
+          order_id,
+          status: 'Pendiente',
+          date: new Date().toLocaleDateString(),
+        });
+        localStorage.setItem('ArcticBunker_orders', JSON.stringify(orders));
+      }
+      localStorage.removeItem('ArcticBunker_draft_order');
+    }
+  }, []);
 
   return (
     <>

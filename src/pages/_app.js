@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { NextUIProvider } from '@nextui-org/react';
 
 import { Montserrat } from 'next/font/google';
 import { Roboto } from 'next/font/google';
@@ -47,14 +48,18 @@ export default function App({
       <SessionProvider session={session}>
         {Component.auth ? (
           <Auth adminOnly={Component.auth.adminOnly}>
+            <NextUIProvider>
+              <ThemeProvider>
+                <Component {...pageProps} />
+              </ThemeProvider>
+            </NextUIProvider>
+          </Auth>
+        ) : (
+          <NextUIProvider>
             <ThemeProvider>
               <Component {...pageProps} />
             </ThemeProvider>
-          </Auth>
-        ) : (
-          <ThemeProvider>
-            <Component {...pageProps} />
-          </ThemeProvider>
+          </NextUIProvider>
         )}
       </SessionProvider>
     </>
