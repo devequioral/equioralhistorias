@@ -4,9 +4,7 @@ import OptionItemMenu from './OptionItemMenu';
 
 export default function MyComponent(props) {
   const { theme, product, onChangeOption } = props;
-  React.useEffect(() => {
-    console.log('Options product changed');
-  }, [product]);
+
   return (
     <>
       <div className="OptionsCard">

@@ -17,7 +17,16 @@ export default function LoginScreen() {
             alt=""
           />
         </div>
-        <LoginComponent />
+        <LoginComponent
+          options={{
+            logo: {
+              src: '/assets/images/logo.svg',
+              width: 268,
+              height: 63,
+              alt: 'Logo',
+            },
+          }}
+        />
       </div>
     </>
   );

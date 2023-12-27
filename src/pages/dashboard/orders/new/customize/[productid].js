@@ -18,8 +18,6 @@ function CustomizeOrderScreen() {
 
   const router = useRouter();
 
-  console.log(router.query);
-
   const productid = router.query.productid;
   const productCurrent = productJSON.find((product) => product.id == productid);
 

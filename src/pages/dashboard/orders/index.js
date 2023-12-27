@@ -2,25 +2,51 @@ import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
 import TableComponent from '@/components/dashboard/TableComponent';
 import { ThemeContext } from '@/contexts/ThemeContext';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import ordersJSON from '@/temp/orders.json';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import { Chip } from '@nextui-org/react';
 import { Link } from '@nextui-org/react';
+import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
+
+async function getOrders() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/list`
+  );
+  return await res.json();
+}
 
 function ListOrders() {
-  const ordersStorage = JSON.parse(localStorage.getItem('ArcticBunker_orders'));
-
-  const orders = ordersStorage.map((order, index) => {
-    return {
-      key: index,
-      order_id: order.order_id,
-      product: order.product.productName,
-      date: order.date,
-      status: order.status,
-    };
-  });
+  const [orders, setOrders] = React.useState([]);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const fetchOrders = async () => {
+        const ordersBD = await getOrders();
+        console.log(ordersBD);
+        if (
+          ordersBD &&
+          ordersBD.orders &&
+          ordersBD.orders.records &&
+          ordersBD.orders.records.length > 0
+        ) {
+          setOrders(
+            ordersBD.orders.records.map((order, index) => {
+              const product = JSON.parse(order.product);
+              return {
+                key: index,
+                order_id: order.id,
+                product: product ? product?.productName : '',
+                date: formatDate(order.createdAt),
+                status: capitalizeFirstLetter(order.status),
+              };
+            })
+          );
+        }
+      };
+      fetchOrders();
+    }
+  }, []);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
   const renderCell = React.useCallback((record, columnKey) => {
