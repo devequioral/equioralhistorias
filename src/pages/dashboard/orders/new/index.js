@@ -22,7 +22,6 @@ function NewOrderScreen() {
   }, []);
 
   const handleModalEvent = (name_event) => {
-    console.log(name_event);
     if (name_event === 'option01') {
       router.push('/dashboard/orders/new/customize/1');
     }

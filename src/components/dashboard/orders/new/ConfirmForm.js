@@ -32,6 +32,7 @@ function ConfirmForm(props) {
     contact_phone,
   }) => {
     if (isSubmitting) return;
+
     //FETCH DATA TO API/ORDERS/NEW
     fetch('/api/orders/new', {
       method: 'POST',
@@ -45,15 +46,21 @@ function ConfirmForm(props) {
           contact_name,
           contact_phone,
         },
-        order: props.product,
+        order_request: props.product,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+        if (response.status !== 200) {
+          throw new Error('No Pudimos Enviar la Cotización');
+        }
+        return response.json();
+      })
       .then((data) => {
         setIsSubmitting(false);
         toast.success('Cotización enviada con éxito');
         router.push(
-          `/dashboard/orders/new/complete/?order_id=${data.order_id}`
+          `/dashboard/orders/new/complete/?order_id=${data.order.record.id}`
         );
       })
       .catch((error) => {

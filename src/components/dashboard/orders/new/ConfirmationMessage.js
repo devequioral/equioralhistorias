@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 
 export default function MyComponent(props) {
   const { theme, order_id } = props;
@@ -12,7 +13,11 @@ export default function MyComponent(props) {
         </div>
         <div className="div-4">
           <div className="div-5">N. de Orden</div>
-          <div className="div-6">{order_id}</div>
+          <div className="div-6">
+            <Link href={`/dashboard/orders/detail/${order_id}`}>
+              {order_id}
+            </Link>
+          </div>
           <div className="div-7">
             Si tiene alguna duda con esta orden puede llamar al número de
             atención al cliente 0800-456 45 45

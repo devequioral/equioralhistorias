@@ -104,12 +104,14 @@ function DetailOrderScreen() {
                 <div className="div-3">
                   <div className="div-4">Detalle de la Cotización</div>
                   <div className="div-5">Fecha: {order.date}</div>
-                  <Image
-                    src={order.productImage.src}
-                    width={order.productImage.width}
-                    height={order.productImage.height}
-                    alt={order.product}
-                  />
+                  {order.productImage && (
+                    <Image
+                      src={order.productImage.src}
+                      width={order.productImage.width}
+                      height={order.productImage.height}
+                      alt={order.product}
+                    />
+                  )}
                 </div>
               </div>
               <div className="column-2">
