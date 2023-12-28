@@ -6,13 +6,14 @@ import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import { Chip } from '@nextui-org/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
 
-async function getOrders(page = 1, pageSize = 5) {
+async function getOrders(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
   //await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/list?page=${page}&pageSize=${pageSize}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/list?page=${page}&pageSize=${pageSize}&status=${status}`
   );
   return await res.json();
 }
@@ -23,11 +24,14 @@ function ListOrders() {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(5);
   const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
+  const { status } = router.query;
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const fetchOrders = async () => {
         setLoading(true);
-        const ordersBD = await getOrders(page, pageSize);
+        const ordersBD = await getOrders(page, pageSize, status);
 
         if (
           ordersBD &&
@@ -49,12 +53,16 @@ function ListOrders() {
           );
           setTotalPages(ordersBD.orders.totalPages);
           setPage(ordersBD.orders.page);
-          setLoading(false);
+        } else {
+          setOrders([]);
+          setTotalPages(1);
+          setPage(1);
         }
+        setLoading(false);
       };
       fetchOrders(page, pageSize);
     }
-  }, [page, pageSize]);
+  }, [page, pageSize, status]);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
   const renderCell = React.useCallback((record, columnKey) => {

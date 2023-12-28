@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
 
-async function getOrders(userid, page = 1, pageSize = 5) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders?filterBy=userid&filterValue=${userid}&page=${page}&pageSize=${pageSize}`;
+async function getOrders(userid, page = 1, pageSize = 5, status = 'all') {
+  const filterBy = status === 'all' ? 'userid' : `userid,status`;
+  const filterValue = status === 'all' ? userid : `${userid},${status}`;
+  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders?filterBy=${filterBy}&filterValue=${filterValue}&page=${page}&pageSize=${pageSize}`;
   try {
     const response = await axios({
       method: 'get',
@@ -27,10 +29,10 @@ export default async function handler(req, res) {
 
     if (!token) return res.status(401).send({ message: 'Not authorized' });
 
-    const { page, pageSize } = req.query;
+    const { page, pageSize, status } = req.query;
     const { id: userid } = token;
 
-    const orders = await getOrders(userid, page, pageSize);
+    const orders = await getOrders(userid, page, pageSize, status);
 
     if (!orders) return res.status(404).send({ message: 'Orders Not found' });
 

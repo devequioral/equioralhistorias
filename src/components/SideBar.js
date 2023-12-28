@@ -65,7 +65,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Todas
               </li>
-              <li data-path="/dashboard/orders/pending">
+              <li data-path="/dashboard/orders?status=pendiente">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-light.svg`}
                   width={24}
@@ -74,7 +74,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Pendientes
               </li>
-              <li data-path="/dashboard/orders/procesed">
+              <li data-path="/dashboard/orders?status=procesada">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-medium.svg`}
                   width={24}
@@ -83,7 +83,7 @@ export default function SideBar({ open, theme }) {
                 />
                 Procesadas
               </li>
-              <li data-path="/dashboard/orders/completed">
+              <li data-path="/dashboard/orders?status=completada">
                 <Image
                   src={`/assets/images/theme-${theme}/icon-status-dark.svg`}
                   width={24}
