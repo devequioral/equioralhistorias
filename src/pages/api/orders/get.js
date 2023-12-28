@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
 
-async function getOrders(userid, page = 1, pageSize = 5) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders?filterBy=userid&filterValue=${userid}&page=${page}&pageSize=${pageSize}`;
+async function getOrder(userid, order_id) {
+  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders?filterBy=userid,id&filterValue=${userid},${order_id}`;
   try {
     const response = await axios({
       method: 'get',
@@ -27,14 +27,14 @@ export default async function handler(req, res) {
 
     if (!token) return res.status(401).send({ message: 'Not authorized' });
 
-    const { page, pageSize } = req.query;
+    const { order_id } = req.query;
     const { id: userid } = token;
 
-    const orders = await getOrders(userid, page, pageSize);
+    const order = await getOrder(userid, order_id);
 
-    if (!orders) return res.status(404).send({ message: 'Orders Not found' });
+    if (!order) return res.status(404).send({ message: 'Order Not found' });
 
-    res.status(200).json({ orders });
+    res.status(200).json({ order });
   } catch (error) {
     console.error('Error getting token or session:', error);
   }

@@ -3,27 +3,32 @@ import Metaheader from '@/components/Metaheader';
 import TableComponent from '@/components/dashboard/TableComponent';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import React, { useContext, useEffect } from 'react';
-
-import ordersJSON from '@/temp/orders.json';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import { Chip } from '@nextui-org/react';
-import { Link } from '@nextui-org/react';
+import Link from 'next/link';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
 
-async function getOrders() {
+async function getOrders(page = 1, pageSize = 5) {
+  //SIMULATE SLOW CONNECTION
+  //await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/list`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/list?page=${page}&pageSize=${pageSize}`
   );
   return await res.json();
 }
 
 function ListOrders() {
   const [orders, setOrders] = React.useState([]);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(5);
+  const [loading, setLoading] = React.useState(false);
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const fetchOrders = async () => {
-        const ordersBD = await getOrders();
-        console.log(ordersBD);
+        setLoading(true);
+        const ordersBD = await getOrders(page, pageSize);
+
         if (
           ordersBD &&
           ordersBD.orders &&
@@ -42,11 +47,14 @@ function ListOrders() {
               };
             })
           );
+          setTotalPages(ordersBD.orders.totalPages);
+          setPage(ordersBD.orders.page);
+          setLoading(false);
         }
       };
-      fetchOrders();
+      fetchOrders(page, pageSize);
     }
-  }, []);
+  }, [page, pageSize]);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
   const renderCell = React.useCallback((record, columnKey) => {
@@ -71,7 +79,13 @@ function ListOrders() {
 
       case 'order_id':
         return (
-          <Link href={`/dashboard/orders/detail/${record.order_id}`}>
+          <Link
+            href={`/dashboard/orders/detail/${record.order_id}`}
+            style={{
+              textDecoration: 'none',
+              color: '#0070f0',
+            }}
+          >
             {cellValue}
           </Link>
         );
@@ -82,7 +96,7 @@ function ListOrders() {
   }, []);
   return (
     <>
-      <Metaheader />
+      <Metaheader title="Listado de Cotizaciones | Arctic Bunker" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}
@@ -108,8 +122,12 @@ function ListOrders() {
             ],
             rows: orders,
             pagination: {
-              total: ordersJSON.totalPages,
-              initialPage: ordersJSON.page,
+              total: totalPages,
+              initialPage: page,
+              isDisabled: loading,
+              onChange: (page) => {
+                setPage(page);
+              },
             },
             renderCell,
           }}

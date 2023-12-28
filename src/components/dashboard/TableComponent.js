@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Table,
@@ -9,18 +9,26 @@ import {
   TableCell,
   Pagination,
   Button,
-  Chip,
+  CircularProgress,
 } from '@nextui-org/react';
 import Link from 'next/link';
 
 export default function TableComponent(props) {
   const { data } = props;
+
   const renderCell = React.useCallback((record, columnKey) => {
     if (data.renderCell) return data.renderCell(record, columnKey);
 
     const cellValue = record[columnKey];
     return cellValue;
   }, []);
+
+  const [initialPage, setInitialPage] = React.useState(1);
+
+  useEffect(() => {
+    setInitialPage(data.pagination.initialPage);
+  }, [data.pagination.initialPage]);
+
   return (
     <>
       <div className="header">
@@ -48,11 +56,20 @@ export default function TableComponent(props) {
             )}
           </TableBody>
         </Table>
-
-        <Pagination
-          total={data.pagination.total}
-          initialPage={data.pagination.initialPage}
-        />
+        <div className="flex justify-start">
+          <Pagination
+            total={Number.parseInt(data.pagination.total)}
+            initialPage={initialPage}
+            {...data.pagination}
+            onChange={(page) => {
+              setInitialPage(page);
+              data.pagination.onChange(page);
+            }}
+          />
+          {data.pagination.isDisabled && (
+            <CircularProgress size="sm" aria-label="Loading..." />
+          )}
+        </div>
       </div>
       <style jsx>{`
         .header {
