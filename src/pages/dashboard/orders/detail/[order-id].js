@@ -35,7 +35,7 @@ function DetailOrderScreen() {
           orderBD.order.records.length > 0
         ) {
           const _order = orderBD.order.records[0];
-          const product = JSON.parse(_order.product);
+          const product = _order.product;
           //VERIFY IF PRODUCT HAVE A ADDON SELECTED
           if (addons.length === 0) {
             if (product && product.addons && product.addons.length > 0) {

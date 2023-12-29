@@ -60,7 +60,7 @@ function ConfirmForm(props) {
         setIsSubmitting(false);
         toast.success('Cotización enviada con éxito');
         router.push(
-          `/dashboard/orders/new/complete/?order_id=${data.order.record.id}`
+          `/dashboard/orders/new/complete/?order_id=${data.order.id}`
         );
       })
       .catch((error) => {

@@ -22,7 +22,7 @@ async function createOrder(userid, data_contact, order_request) {
       id: generateUUID(),
       status: 'pendiente',
       userid,
-      product: order_request.id,
+      product: order_request,
     };
     const response = await axios({
       method: 'post',
@@ -35,7 +35,7 @@ async function createOrder(userid, data_contact, order_request) {
 
     const order = response.data || null;
 
-    return order;
+    return order_new;
   } catch (error) {
     console.error(error);
     return null;

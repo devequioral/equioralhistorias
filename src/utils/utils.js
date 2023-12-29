@@ -1,5 +1,6 @@
 //FUNCTION CONVERT FORMAT DATE FROM ISO 8601 (2023-12-27T16:46:42.208Z) TO DD/MM/YYYY
 function formatDate(date) {
+  if (!date) return;
   const dateSplit = date.split('T');
   const dateSplit2 = dateSplit[0].split('-');
   return `${dateSplit2[2]}/${dateSplit2[1]}/${dateSplit2[0]}`;

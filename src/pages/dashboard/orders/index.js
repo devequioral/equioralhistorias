@@ -32,7 +32,6 @@ function ListOrders() {
       const fetchOrders = async () => {
         setLoading(true);
         const ordersBD = await getOrders(page, pageSize, status);
-
         if (
           ordersBD &&
           ordersBD.orders &&
@@ -41,11 +40,10 @@ function ListOrders() {
         ) {
           setOrders(
             ordersBD.orders.records.map((order, index) => {
-              const product = JSON.parse(order.product);
               return {
                 key: index,
                 order_id: order.id,
-                product: product ? product?.productName : '',
+                product: order.product.productName,
                 date: formatDate(order.createdAt),
                 status: capitalizeFirstLetter(order.status),
               };

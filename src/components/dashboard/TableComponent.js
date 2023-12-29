@@ -15,7 +15,6 @@ import Link from 'next/link';
 
 export default function TableComponent(props) {
   const { data } = props;
-
   const renderCell = React.useCallback((record, columnKey) => {
     if (data.renderCell) return data.renderCell(record, columnKey);
 

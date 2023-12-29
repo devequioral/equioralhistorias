@@ -2,9 +2,10 @@ import bcryptjs from 'bcryptjs';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
+import { consoleError } from '@/utils/error';
 
 async function getUser(value, filterBy) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/users?filterBy=${filterBy}&filterValue=${value}&filterOperator=eq`;
+  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/users?filterBy=${filterBy}&filterValue=${value}`;
   try {
     const response = await axios({
       method: 'get',
@@ -15,7 +16,12 @@ async function getUser(value, filterBy) {
     });
 
     const user =
-      (response.data && response.data.length > 0 && response.data[0]) || null;
+      (response.data &&
+        response.data.records &&
+        response.data.records.length > 0 &&
+        response.data.records[0]) ||
+      null;
+
     return user;
   } catch (error) {
     //console.error(error);
@@ -28,6 +34,7 @@ async function fetchUser(username) {
   const isEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9_-]+(\.)[a-zA-Z0-9_-]+$/;
   const filterBy = isEmail.test(username) ? 'email' : 'username';
   const user = await getUser(username, filterBy);
+
   if (!user) {
     throw new Error('User not found');
   }
