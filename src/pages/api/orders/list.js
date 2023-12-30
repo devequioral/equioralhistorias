@@ -1,26 +1,21 @@
-import axios from 'axios';
+import { getRecords } from '@/virtel-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
+import { filterBy, filterValue } from '@/utils/filters';
 
 async function getOrders(userid, page = 1, pageSize = 5, status = 'all') {
-  const filterBy = status === 'all' ? 'userid' : `userid,status`;
-  const filterValue = status === 'all' ? userid : `${userid},${status}`;
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders?filterBy=${filterBy}&filterValue=${filterValue}&page=${page}&pageSize=${pageSize}`;
-  try {
-    const response = await axios({
-      method: 'get',
-      url: url,
-      headers: {
-        Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
-      },
-    });
-
-    const orders = response.data || null;
-
-    return orders;
-  } catch (error) {
-    //console.error(error);
-    return null;
-  }
+  return await getRecords({
+    backend_url: process.env.VIRTEL_DASHBOARD_URL,
+    organization: process.env.VIRTEL_DASHBOARD_ORGANIZATION,
+    database: process.env.VIRTEL_DASHBOARD_DATABASE,
+    object: 'orders',
+    api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
+    params: {
+      filterBy: filterBy(userid, status),
+      filterValue: filterValue(userid, status),
+      page,
+      pageSize,
+    },
+  });
 }
 
 export default async function handler(req, res) {
@@ -30,9 +25,18 @@ export default async function handler(req, res) {
     if (!token) return res.status(401).send({ message: 'Not authorized' });
 
     const { page, pageSize, status } = req.query;
-    const { id: userid } = token;
+    const { id: userid, role } = token;
 
-    const orders = await getOrders(userid, page, pageSize, status);
+    let orders;
+
+    //IF USER ROLE IS ADMIN
+    if (role === 'admin') {
+      orders = await getOrders(null, page, pageSize, status);
+    }
+    //IF USER ROLE IS NOT ADMIN
+    else {
+      orders = await getOrders(userid, page, pageSize, status);
+    }
 
     if (!orders) return res.status(404).send({ message: 'Orders Not found' });
 

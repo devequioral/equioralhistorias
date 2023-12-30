@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
 import { Chip } from '@nextui-org/react';
 import Image from 'next/image';
+import { Spinner } from '@nextui-org/react';
 
 async function getOrder(order_id) {
   //SIMULATE SLOW CONNECTION
@@ -97,7 +98,7 @@ function DetailOrderScreen() {
             ],
           }}
         />
-        {order && (
+        {order ? (
           <div className="OrderDeail">
             <div className="div-2">
               <div className="column">
@@ -143,6 +144,11 @@ function DetailOrderScreen() {
                 </div>
               </div>
             </div>
+          </div>
+        ) : (
+          <div>
+            {' '}
+            <Spinner />
           </div>
         )}
       </Layout>
