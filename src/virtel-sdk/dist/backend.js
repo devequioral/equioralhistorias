@@ -9,7 +9,6 @@ const getURL = (options) => {
 const getRecords = async (options) => {
   const { api_key } = options;
   const url = getURL(options);
-
   try {
     const response = await axios({
       method: 'get',
@@ -23,7 +22,7 @@ const getRecords = async (options) => {
 
     return records;
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     return null;
   }
 };

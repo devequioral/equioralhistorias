@@ -97,6 +97,20 @@ export default function SideBar({ open, theme }) {
 
           <li>
             <SideBarItemMenu
+              path="/dashboard/products"
+              icon={{
+                src: `/assets/images/theme-${theme}/icon-products.svg`,
+                width: 24,
+                height: 24,
+              }}
+              label="Productos"
+              showLabel={open}
+              theme={theme}
+            ></SideBarItemMenu>
+          </li>
+
+          <li>
+            <SideBarItemMenu
               path="/close-session"
               icon={{
                 src: `/assets/images/theme-${theme}/icon-exit.svg`,
