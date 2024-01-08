@@ -8,6 +8,8 @@ import { Chip } from '@nextui-org/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
+import Image from 'next/image';
+import ModalComponent from '@/components/dashboard/ModalComponent';
 
 async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
@@ -26,12 +28,15 @@ function ListProducts() {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
   const { status } = router.query;
+  const [showModalCount, setShowModalCount] = React.useState(0);
+  const [recordModal, setRecordModal] = React.useState(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const fetchOrders = async () => {
         setLoading(true);
         const productsBD = await getProducts(page, pageSize, status);
+
         if (
           productsBD &&
           productsBD.products &&
@@ -45,7 +50,7 @@ function ListProducts() {
                 id: product.id,
                 productName: product.productName,
                 date: formatDate(product.createdAt),
-                status: 'In Stock',
+                status: capitalizeFirstLetter(product.status),
               };
             })
           );
@@ -63,14 +68,35 @@ function ListProducts() {
   }, [page, pageSize, status]);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
+
+  const onClickExpandCell = (record) => {
+    setRecordModal(record);
+    setShowModalCount((currCount) => currCount + 1);
+  };
+
   const renderCell = React.useCallback((record, columnKey) => {
     const cellValue = record[columnKey];
     switch (columnKey) {
+      case 'expand':
+        return (
+          <div
+            className="expand-cell"
+            onClick={() => {
+              onClickExpandCell(record);
+            }}
+          >
+            <Image
+              src="/assets/images/icon-expand.svg"
+              width={12}
+              height={12}
+              alt=""
+            />
+          </div>
+        );
       case 'status':
         const statusColorMap = {
-          Completada: 'success',
-          Pendiente: 'danger',
-          Procesada: 'warning',
+          Disponible: 'success',
+          Agotado: 'danger',
         };
         return (
           <Chip
@@ -83,10 +109,10 @@ function ListProducts() {
           </Chip>
         );
 
-      case 'order_id':
+      case 'id':
         return (
           <Link
-            href={`/dashboard/products/detail/${record.order_id}`}
+            href={`/dashboard/products/detail/${record.id}`}
             style={{
               textDecoration: 'none',
               color: '#0070f0',
@@ -121,7 +147,8 @@ function ListProducts() {
               href: '/dashboard/products/new',
             },
             columns: [
-              { key: 'id', label: '#' },
+              { key: 'expand', label: '' },
+              { key: 'id', label: 'Product ID' },
               { key: 'productName', label: 'Producto' },
               { key: 'date', label: 'Fecha' },
               { key: 'status', label: 'Status' },
@@ -136,6 +163,19 @@ function ListProducts() {
               },
             },
             renderCell,
+          }}
+        />
+        <ModalComponent
+          show={showModalCount}
+          record={recordModal}
+          schema={{
+            title: 'Detalle de Producto',
+            fields: [
+              { key: 'id', label: 'Product ID', type: 'text', readOnly: true },
+              { key: 'productName', label: 'Producto', type: 'text' },
+              { key: 'date', label: 'Fecha', type: 'date' },
+              { key: 'status', label: 'Status', type: 'text' },
+            ],
           }}
         />
       </Layout>

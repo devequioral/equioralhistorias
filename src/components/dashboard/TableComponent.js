@@ -39,7 +39,7 @@ export default function TableComponent(props) {
         )}
       </div>
       <div className="flex flex-col gap-3">
-        <Table aria-label={data.title}>
+        <Table aria-label={data.title} selectionMode="single">
           <TableHeader columns={data.columns}>
             {(column) => (
               <TableColumn key={column.key}>{column.label}</TableColumn>
