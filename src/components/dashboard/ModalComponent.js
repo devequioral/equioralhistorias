@@ -9,6 +9,7 @@ import {
   Button,
   useDisclosure,
   Input,
+  Image,
 } from '@nextui-org/react';
 
 import styles from '@/styles/dashboard/ModalComponent.module.css';
@@ -32,12 +33,17 @@ export default function App(props) {
     }
   };
 
+  const changeImage = (field) => {
+    console.log(field, record);
+  };
+
   return (
     <>
       <Modal
         className={`${styles.Modal}`}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        scrollBehavior={'inside'}
       >
         <ModalContent>
           {(onClose) => (
@@ -47,19 +53,46 @@ export default function App(props) {
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-1">
-                  {schema.fields.map((field, index) => (
-                    <div key={index} className="flex flex-col gap-1">
-                      <Input
-                        isReadOnly={field.readOnly ? true : false}
-                        type={field.type}
-                        label={field.label}
-                        defaultValue={formatValue(
-                          record[field.key],
-                          field.type
+                  {schema.fields.map((field, index) => {
+                    return (
+                      <div key={index} className="flex flex-col gap-1">
+                        {(field.type == 'text' || field.type == 'date') && (
+                          <Input
+                            isReadOnly={field.readOnly ? true : false}
+                            type={field.type}
+                            label={field.label}
+                            defaultValue={formatValue(
+                              record[field.key],
+                              field.type
+                            )}
+                          />
                         )}
-                      />
-                    </div>
-                  ))}
+                        {field.type == 'image' && (
+                          <div className={`${styles.FieldImage}`}>
+                            {field.preview && (
+                              <div className={`${styles.ImagePreview}`}>
+                                {Object.keys(record).length > 0 && (
+                                  <Image
+                                    className="w-full"
+                                    src={record[field.key].src}
+                                    alt=""
+                                  />
+                                )}
+                              </div>
+                            )}
+                            <div
+                              className={`${styles.ChangeImage}`}
+                              onClick={() => {
+                                changeImage(field, record);
+                              }}
+                            >
+                              <span>Change Image</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </ModalBody>
               <ModalFooter>

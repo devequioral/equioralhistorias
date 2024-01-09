@@ -12,9 +12,11 @@ import {
   CircularProgress,
 } from '@nextui-org/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function TableComponent(props) {
   const { data } = props;
+  const router = useRouter();
   const renderCell = React.useCallback((record, columnKey) => {
     if (data.renderCell) return data.renderCell(record, columnKey);
 
@@ -28,13 +30,27 @@ export default function TableComponent(props) {
     setInitialPage(data.pagination.initialPage);
   }, [data.pagination.initialPage]);
 
+  const onNewRecord = (button) => {
+    if (button.callback) {
+      button.callback();
+    }
+    if (button.href) {
+      router.push(button.href);
+    }
+  };
+
   return (
     <>
       <div className="header">
         <h1 className="text-2xl font-bold">{data.title}</h1>
         {data.button && (
-          <Button color="primary">
-            <Link href={data.button.href}>{data.button.label}</Link>
+          <Button
+            color="primary"
+            onClick={() => {
+              onNewRecord(data.button);
+            }}
+          >
+            {data.button.label}
           </Button>
         )}
       </div>

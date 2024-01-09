@@ -51,6 +51,7 @@ function ListProducts() {
                 productName: product.productName,
                 date: formatDate(product.createdAt),
                 status: capitalizeFirstLetter(product.status),
+                ...product,
               };
             })
           );
@@ -71,6 +72,11 @@ function ListProducts() {
 
   const onClickExpandCell = (record) => {
     setRecordModal(record);
+    setShowModalCount((currCount) => currCount + 1);
+  };
+
+  const onNewProduct = () => {
+    setRecordModal({});
     setShowModalCount((currCount) => currCount + 1);
   };
 
@@ -144,7 +150,9 @@ function ListProducts() {
             title: 'Listado de Productos',
             button: {
               label: 'Nuevo Producto',
-              href: '/dashboard/products/new',
+              callback: () => {
+                onNewProduct();
+              },
             },
             columns: [
               { key: 'expand', label: '' },
@@ -173,7 +181,14 @@ function ListProducts() {
             fields: [
               { key: 'id', label: 'Product ID', type: 'text', readOnly: true },
               { key: 'productName', label: 'Producto', type: 'text' },
-              { key: 'date', label: 'Fecha', type: 'date' },
+              { key: 'description', label: 'Descripción', type: 'text' },
+              {
+                key: 'productImage',
+                label: 'Imágen',
+                type: 'image',
+                preview: true,
+              },
+              //{ key: 'date', label: 'Fecha', type: 'date' },
               { key: 'status', label: 'Status', type: 'text' },
             ],
           }}
