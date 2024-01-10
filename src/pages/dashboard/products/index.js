@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
 import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
+import productModel from '@/models/productModel';
+import { toast } from 'react-toastify';
 
 async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
@@ -50,8 +52,8 @@ function ListProducts() {
                 key: index,
                 id: product.id,
                 productName: product.productName,
-                date: formatDate(product.createdAt),
-                status: capitalizeFirstLetter(product.status),
+                date: product.createdAt,
+                status: product.status,
               };
             })
           );
@@ -76,8 +78,33 @@ function ListProducts() {
   };
 
   const onNewProduct = () => {
-    setRecordModal({});
+    setRecordModal(productModel);
     setShowModalCount((currCount) => currCount + 1);
+  };
+
+  const saveProduct = (record) => {
+    //console.log('saveProduct', record);
+    fetch('/api/products/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ product_request: record }),
+    })
+      .then((response) => {
+        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+        if (response.status !== 200) {
+          toast.error('No se pudo enviar la información');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        toast.success('Producto Guardado con éxito');
+      })
+      .catch((error) => {
+        //console.error('Error:', error);
+        toast.error('El Producto no se pudo guardar');
+      });
   };
 
   const renderCell = React.useCallback((record, columnKey) => {
@@ -101,8 +128,8 @@ function ListProducts() {
         );
       case 'status':
         const statusColorMap = {
-          Disponible: 'success',
-          Agotado: 'danger',
+          disponible: 'success',
+          agotado: 'danger',
         };
         return (
           <Chip
@@ -111,9 +138,12 @@ function ListProducts() {
             size="sm"
             variant="flat"
           >
-            {cellValue}
+            {capitalizeFirstLetter(cellValue)}
           </Chip>
         );
+
+      case 'date':
+        return <div>{formatDate(cellValue)}</div>;
 
       case 'id':
         return (
@@ -179,10 +209,12 @@ function ListProducts() {
         <ModalComponent
           show={showModalCount}
           record={recordModal}
+          onSave={(record) => {
+            saveProduct(record);
+          }}
           schema={{
             title: 'Detalle de Producto',
             fields: [
-              //{ key: 'id', label: 'Product ID', type: 'text', readOnly: true },
               {
                 key: 'productName',
                 label: 'Nombre del Producto',
@@ -195,8 +227,15 @@ function ListProducts() {
                 type: 'image',
                 preview: true,
               },
-              //{ key: 'date', label: 'Fecha', type: 'date' },
-              { key: 'status', label: 'Status', type: 'text' },
+              {
+                key: 'status',
+                label: 'Status',
+                type: 'select',
+                items: [
+                  { value: 'disponible', label: 'Disponible' },
+                  { value: 'agotado', label: 'Agotado' },
+                ],
+              },
             ],
           }}
         />

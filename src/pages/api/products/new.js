@@ -31,7 +31,7 @@ async function createProduct(userid, product_request) {
       data: product_new,
     });
 
-    const order = response.data || null;
+    const product = response.data || null;
 
     return product_new;
   } catch (error) {
