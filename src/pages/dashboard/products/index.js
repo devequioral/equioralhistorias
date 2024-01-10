@@ -46,12 +46,12 @@ function ListProducts() {
           setProducts(
             productsBD.products.records.map((product, index) => {
               return {
+                ...product,
                 key: index,
                 id: product.id,
                 productName: product.productName,
                 date: formatDate(product.createdAt),
                 status: capitalizeFirstLetter(product.status),
-                ...product,
               };
             })
           );
@@ -70,7 +70,7 @@ function ListProducts() {
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
-  const onClickExpandCell = (record) => {
+  const showModalRecord = (record) => {
     setRecordModal(record);
     setShowModalCount((currCount) => currCount + 1);
   };
@@ -88,7 +88,7 @@ function ListProducts() {
           <div
             className="expand-cell"
             onClick={() => {
-              onClickExpandCell(record);
+              showModalRecord(record);
             }}
           >
             <Image
@@ -117,15 +117,18 @@ function ListProducts() {
 
       case 'id':
         return (
-          <Link
-            href={`/dashboard/products/detail/${record.id}`}
+          <div
             style={{
               textDecoration: 'none',
               color: '#0070f0',
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              showModalRecord(record);
             }}
           >
             {cellValue}
-          </Link>
+          </div>
         );
 
       default:
@@ -179,8 +182,12 @@ function ListProducts() {
           schema={{
             title: 'Detalle de Producto',
             fields: [
-              { key: 'id', label: 'Product ID', type: 'text', readOnly: true },
-              { key: 'productName', label: 'Producto', type: 'text' },
+              //{ key: 'id', label: 'Product ID', type: 'text', readOnly: true },
+              {
+                key: 'productName',
+                label: 'Nombre del Producto',
+                type: 'text',
+              },
               { key: 'description', label: 'Descripción', type: 'text' },
               {
                 key: 'productImage',

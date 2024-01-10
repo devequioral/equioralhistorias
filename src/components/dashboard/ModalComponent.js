@@ -18,6 +18,7 @@ import { formatDateToISOSM } from '@/utils/utils';
 export default function App(props) {
   const { show, record, schema } = props;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [recordChange, setRecordChange] = React.useState(false);
 
   useEffect(() => {
     if (show > 0) {
@@ -37,6 +38,10 @@ export default function App(props) {
     console.log(field, record);
   };
 
+  const saveRecord = () => {
+    console.log(record);
+  };
+
   return (
     <>
       <Modal
@@ -44,6 +49,7 @@ export default function App(props) {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         scrollBehavior={'inside'}
+        onClose={() => setRecordChange(false)}
       >
         <ModalContent>
           {(onClose) => (
@@ -61,6 +67,11 @@ export default function App(props) {
                             isReadOnly={field.readOnly ? true : false}
                             type={field.type}
                             label={field.label}
+                            onChange={(e) => {
+                              //record[field.key] = e.target.value;
+                              //console.log(record, field.key, e.target.value);
+                              setRecordChange(true);
+                            }}
                             defaultValue={formatValue(
                               record[field.key],
                               field.type
@@ -99,7 +110,11 @@ export default function App(props) {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cerrar
                 </Button>
-                <Button color="default" onPress={onClose} disabled>
+                <Button
+                  color={!recordChange ? 'default' : 'primary'}
+                  onPress={saveRecord}
+                  disabled={!recordChange}
+                >
                   Guardar
                 </Button>
               </ModalFooter>

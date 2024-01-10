@@ -27,16 +27,13 @@ export default async function handler(req, res) {
     const { page, pageSize, status } = req.query;
     const { role } = token;
 
-    let products;
-
-    //IF USER ROLE IS ADMIN
-    if (role === 'admin') {
-      products = await getProducts(page, pageSize, status);
-    }
-    //IF USER ROLE IS NOT ADMIN
-    else {
+    if (role !== 'admin') {
       return res.status(401).send({ message: 'Not authorized' });
     }
+
+    let products;
+
+    products = await getProducts(page, pageSize, status);
 
     if (!products)
       return res.status(404).send({ message: 'Products Not found' });
