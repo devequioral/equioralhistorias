@@ -77,7 +77,8 @@ function Auth({ children, adminOnly }) {
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
-  if (adminOnly && !session.user.isAdmin) {
+
+  if (adminOnly && session.user.role !== 'admin') {
     router.push('/login?message=Access Denied');
   }
 

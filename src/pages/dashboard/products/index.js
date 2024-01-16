@@ -334,5 +334,5 @@ function ListProducts() {
   );
 }
 
-ListProducts.auth = true;
+ListProducts.auth = { adminOnly: true };
 export default ListProducts;

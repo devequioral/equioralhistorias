@@ -2,6 +2,7 @@ import styles from '@/styles/SideBar.module.css';
 import React from 'react';
 import SideBarItemMenu from './SideBarItemMenu';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 export default function SideBar({ open, theme }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -13,6 +14,9 @@ export default function SideBar({ open, theme }) {
   //   if (elem.target.className !== styles.itemMenu) return;
   //   setExpanded(!expanded);
   // };
+
+  const { data: session } = useSession();
+  const user = session?.user;
   return (
     <>
       <div
@@ -94,20 +98,21 @@ export default function SideBar({ open, theme }) {
               </li>
             </SideBarItemMenu>
           </li>
-
-          <li>
-            <SideBarItemMenu
-              path="/dashboard/products"
-              icon={{
-                src: `/assets/images/theme-${theme}/icon-products.svg`,
-                width: 24,
-                height: 24,
-              }}
-              label="Productos"
-              showLabel={open}
-              theme={theme}
-            ></SideBarItemMenu>
-          </li>
+          {user && user?.role === 'admin' && (
+            <li>
+              <SideBarItemMenu
+                path="/dashboard/products"
+                icon={{
+                  src: `/assets/images/theme-${theme}/icon-products.svg`,
+                  width: 24,
+                  height: 24,
+                }}
+                label="Productos"
+                showLabel={open}
+                theme={theme}
+              ></SideBarItemMenu>
+            </li>
+          )}
 
           <li>
             <SideBarItemMenu
