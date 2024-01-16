@@ -30,6 +30,7 @@ function ListProducts() {
   const [totalPages, setTotalPages] = React.useState(1);
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(5);
+  const [refreshTable, setRefreshTable] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
   const { status } = router.query;
@@ -86,7 +87,7 @@ function ListProducts() {
       };
       fetchOrders(page, pageSize);
     }
-  }, [page, pageSize, status]);
+  }, [page, pageSize, status, refreshTable]);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -123,6 +124,7 @@ function ListProducts() {
       .then((data) => {
         toast.success('Producto Guardado con éxito');
         setShowModalProductDetail(0);
+        setRefreshTable((currCount) => currCount + 1);
       })
       .catch((error) => {
         //console.error('Error:', error);
