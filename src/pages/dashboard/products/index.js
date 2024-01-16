@@ -12,6 +12,9 @@ import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
 import productModel from '@/models/productModel';
 import { toast } from 'react-toastify';
+import DetailProduct from '@/components/dashboard/products/DetailProduct';
+import MediaUpload from '@/components/dashboard/MediaUpload';
+import { set } from 'mongoose';
 
 async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
@@ -30,8 +33,23 @@ function ListProducts() {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
   const { status } = router.query;
-  const [showModalCount, setShowModalCount] = React.useState(0);
-  const [recordModal, setRecordModal] = React.useState(null);
+  const [showModalProductDetail, setShowModalProductDetail] = React.useState(0);
+  const [showModalChangeImage, setShowModalChangeImage] = React.useState(0);
+  const [recordModal, setRecordModal] = React.useState(productModel);
+  const [recordChange, setRecordChange] = React.useState(false);
+  const [allowUploadImage, setAllowUploadImage] = React.useState(false);
+  const [recordImage, setRecordImage] = React.useState(null);
+
+  const onRecordChange = (value) => {
+    setRecordChange(value);
+  };
+
+  const onFieldChange = (key, value) => {
+    const newRecord = { ...recordModal };
+    newRecord[key] = value;
+    setRecordModal(newRecord);
+    setRecordChange(true);
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -72,24 +90,28 @@ function ListProducts() {
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
-  const showModalRecord = (record) => {
+  const showProductDetail = (record) => {
+    console.log('showProductDetail');
     setRecordModal(record);
-    setShowModalCount((currCount) => currCount + 1);
+    setShowModalProductDetail((currCount) => currCount + 1);
   };
 
   const onNewProduct = () => {
     setRecordModal(productModel);
-    setShowModalCount((currCount) => currCount + 1);
+    setShowModalProductDetail((currCount) => currCount + 1);
   };
 
-  const saveProduct = (record) => {
-    //console.log('saveProduct', record);
-    fetch('/api/products/new', {
+  const showChangeImage = (image) => {
+    setShowModalChangeImage((currCount) => currCount + 1);
+  };
+
+  const saveProduct = () => {
+    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/products/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ product_request: record }),
+      body: JSON.stringify({ product_request: recordModal }),
     })
       .then((response) => {
         //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
@@ -100,11 +122,48 @@ function ListProducts() {
       })
       .then((data) => {
         toast.success('Producto Guardado con éxito');
+        setShowModalProductDetail(0);
       })
       .catch((error) => {
         //console.error('Error:', error);
         toast.error('El Producto no se pudo guardar');
       });
+  };
+
+  const uploadImage = async () => {
+    const body = new FormData();
+    body.append('file', recordImage);
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_BASE_URL + '/api/media/upload',
+      {
+        method: 'POST',
+        body,
+      }
+    );
+
+    if (response.ok) {
+      const { url, fields, mediaKey, urlMedia } = await response.json();
+      const formData = new FormData();
+      Object.entries(fields).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      formData.append('file', recordImage);
+
+      const uploadResponse = await fetch(url, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (uploadResponse.ok) {
+        //toast.success('Imágen Guardada con éxito');
+        const newRecord = { ...recordModal };
+        newRecord.productImage.src = urlMedia;
+        setRecordModal(newRecord);
+      } else {
+        toast.error('La imágen no se pudo guardar');
+      }
+      setShowModalChangeImage(0);
+    }
   };
 
   const renderCell = React.useCallback((record, columnKey) => {
@@ -115,7 +174,7 @@ function ListProducts() {
           <div
             className="expand-cell"
             onClick={() => {
-              showModalRecord(record);
+              showProductDetail(record);
             }}
           >
             <Image
@@ -154,7 +213,7 @@ function ListProducts() {
               cursor: 'pointer',
             }}
             onClick={() => {
-              showModalRecord(record);
+              showProductDetail(record);
             }}
           >
             {cellValue}
@@ -207,38 +266,69 @@ function ListProducts() {
           }}
         />
         <ModalComponent
-          show={showModalCount}
-          record={recordModal}
-          onSave={(record) => {
-            saveProduct(record);
+          show={showModalProductDetail}
+          onSave={saveProduct}
+          title="Detalle de Producto"
+          onCloseModal={() => {
+            onRecordChange(false);
           }}
-          schema={{
-            title: 'Detalle de Producto',
-            fields: [
-              {
-                key: 'productName',
-                label: 'Nombre del Producto',
-                type: 'text',
-              },
-              { key: 'description', label: 'Descripción', type: 'text' },
-              {
-                key: 'productImage',
-                label: 'Imágen',
-                type: 'image',
-                preview: true,
-              },
-              {
-                key: 'status',
-                label: 'Status',
-                type: 'select',
-                items: [
-                  { value: 'disponible', label: 'Disponible' },
-                  { value: 'agotado', label: 'Agotado' },
-                ],
-              },
-            ],
+          allowSave={recordChange}
+        >
+          <DetailProduct
+            onRecordChange={(value) => {
+              onRecordChange(value);
+            }}
+            record={recordModal}
+            onFieldChange={(key, value) => {
+              onFieldChange(key, value);
+            }}
+            onChangeImage={(image) => {
+              showChangeImage(image);
+            }}
+            schema={{
+              title: 'Detalle de Producto',
+              fields: [
+                {
+                  key: 'productName',
+                  label: 'Nombre del Producto',
+                  type: 'text',
+                },
+                { key: 'description', label: 'Descripción', type: 'text' },
+                {
+                  key: 'productImage',
+                  label: 'Imágen',
+                  type: 'image',
+                  preview: true,
+                },
+                {
+                  key: 'status',
+                  label: 'Status',
+                  type: 'select',
+                  items: [
+                    { value: 'disponible', label: 'Disponible' },
+                    { value: 'agotado', label: 'Agotado' },
+                  ],
+                },
+              ],
+            }}
+          />
+        </ModalComponent>
+        <ModalComponent
+          show={showModalChangeImage}
+          onSave={uploadImage}
+          title="Cambiar Imágen"
+          onCloseModal={() => {
+            setAllowUploadImage(false);
           }}
-        />
+          allowSave={allowUploadImage}
+        >
+          <MediaUpload
+            onImageChange={(image) => {
+              setRecordImage(image);
+              setAllowUploadImage(true);
+            }}
+          />
+        </ModalComponent>
       </Layout>
     </>
   );
