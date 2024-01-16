@@ -193,14 +193,20 @@ function ListProducts() {
           agotado: 'danger',
         };
         return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[record.status]}
-            size="sm"
-            variant="flat"
-          >
-            {capitalizeFirstLetter(cellValue)}
-          </Chip>
+          <>
+            {cellValue ? (
+              <Chip
+                className="capitalize"
+                color={statusColorMap[record.status]}
+                size="sm"
+                variant="flat"
+              >
+                {capitalizeFirstLetter(cellValue)}
+              </Chip>
+            ) : (
+              <div></div>
+            )}
+          </>
         );
 
       case 'date':
