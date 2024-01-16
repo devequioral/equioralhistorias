@@ -107,10 +107,29 @@ export default function SideBar({ open, theme }) {
                   width: 24,
                   height: 24,
                 }}
-                label="Productos"
+                label="Inventario"
                 showLabel={open}
                 theme={theme}
-              ></SideBarItemMenu>
+              >
+                <li data-path="/dashboard/products">
+                  <Image
+                    src={`/assets/images/theme-${theme}/icon-status-dark.svg`}
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                  Productos
+                </li>
+                <li data-path="/dashboard/products/addons">
+                  <Image
+                    src={`/assets/images/theme-${theme}/icon-status-light.svg`}
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                  Adicionales
+                </li>
+              </SideBarItemMenu>
             </li>
           )}
 

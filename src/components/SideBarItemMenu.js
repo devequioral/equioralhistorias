@@ -13,9 +13,8 @@ export default function SideBarItemMenu({
   theme,
 }) {
   const [expanded, setExpanded] = useState(false);
-  const collapsable = children && children.length > 0;
+  const collapsable = children ? true : false;
   const router = useRouter();
-
   const onClickMenu = (elem) => {
     const path = elem.target.dataset.path;
     if (elem.target.classList.contains(styles.collapsable)) return;

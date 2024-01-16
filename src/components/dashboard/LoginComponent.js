@@ -88,6 +88,7 @@ function LoginForm(props) {
 
   const _handleSubmit = async ({ username, password }) => {
     if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
       const result = await signIn('credentials', {
@@ -185,6 +186,7 @@ function LoginForm(props) {
         type="sumbit"
         color="primary"
         variant="shadow"
+        isDisabled={isSubmitting}
         style={{ width: '100%', marginTop: '20px' }}
       >
         Entrar
