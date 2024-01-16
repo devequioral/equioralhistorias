@@ -3,8 +3,11 @@ import styles from '@/styles/TopBar.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 export default function TopBar(props) {
+  const { data: session } = useSession();
+  const user = session?.user;
   const { theme, onClickEvent, toogleTheme } = props;
   const router = useRouter();
   const [sidebarExpanded, setSidebarExpanded] = React.useState(
@@ -23,6 +26,15 @@ export default function TopBar(props) {
   };
   const _toggleTheme = () => {
     toogleTheme();
+  };
+  const getUserName = () => {
+    if (!user) return 'Invitado';
+    let name = user.name || user.username;
+    if (name.indexOf(' ') > -1) {
+      name = name.split(' ');
+      name = name[0];
+    }
+    return name;
   };
   return (
     <>
@@ -57,7 +69,7 @@ export default function TopBar(props) {
               </div>
             </div>
             <div className={`col-4 ${styles.colCenter}`}>
-              <input
+              {/* <input
                 className={`${styles.search}`}
                 type="text"
                 placeholder="Buscar"
@@ -81,10 +93,10 @@ export default function TopBar(props) {
                 <div className={`hide-xs ${styles.icon} ${styles.iconLabel}`}>
                   <div onClick={onSearch}>Buscar</div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className={`col-4 ${styles.colRight}`}>
-              <div className={`${styles.cntBtn}`}>
+              {/* <div className={`${styles.cntBtn}`}>
                 <div className={`${styles.icon}`} onClick={_toggleTheme}>
                   <Image
                     src={`/assets/images/theme-${theme}/icon-theme.svg`}
@@ -93,7 +105,7 @@ export default function TopBar(props) {
                     alt="Theme"
                   />
                 </div>
-              </div>
+              </div> */}
 
               <div className={`${styles.cntBtn}`}>
                 <div className={`${styles.icon}`}>
@@ -120,7 +132,9 @@ export default function TopBar(props) {
                   </Link>
                 </div>
                 <div className={`hide-xs ${styles.icon} ${styles.iconLabel}`}>
-                  <Link href="/app">Invitado</Link>
+                  <Link href="/app" className={`${styles.Username}`}>
+                    {getUserName()}
+                  </Link>
                 </div>
               </div>
             </div>
