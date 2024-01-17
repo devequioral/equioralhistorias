@@ -9,10 +9,50 @@ import { useRouter } from 'next/router';
 
 import productJSON from '@/temp/product.json';
 
+async function getProducts(page = 1, pageSize = 5, status = 'all') {
+  //SIMULATE SLOW CONNECTION
+  //await new Promise((resolve) => setTimeout(resolve, 2000));
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/list?page=${page}&pageSize=${pageSize}&status=${status}`
+  );
+  return await res.json();
+}
+
 function NewOrderScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const fetchProducts = async () => {
+        setLoading(true);
+        const productsBD = await getProducts(page, pageSize, 'all');
+
+        if (!productsBD) {
+          setProducts([]);
+          setPage(1);
+          return;
+        }
+
+        const { records } = productsBD.products;
+
+        setProducts(
+          records.map((product, index) => {
+            return {
+              ...product,
+            };
+          })
+        );
+        setLoading(false);
+      };
+      fetchProducts(page, pageSize);
+    }
+  }, [page, pageSize]);
 
   useEffect(() => {
     const draftOrder = localStorage.getItem('ArcticBunker_draft_order');
@@ -33,7 +73,7 @@ function NewOrderScreen() {
 
   return (
     <>
-      <Metaheader title="Nueva Orden | Arctic Bunker" />
+      <Metaheader title="Nueva Cotización | Arctic Bunker" />
       <Layout theme={theme} toogleTheme={toggleTheme} sidebarCollapsed={true}>
         <BreadCrumbs
           theme={theme}
@@ -45,7 +85,7 @@ function NewOrderScreen() {
             ],
           }}
         />
-        <ProductList theme={theme} products={productJSON} />
+        <ProductList theme={theme} products={products} isLoading={loading} />
         {showModal && (
           <ModalWindow
             options={{

@@ -4,15 +4,23 @@ import * as React from 'react';
 
 export default function MyComponent(props) {
   const { theme, product } = props;
+  const image = `${product.productImage.src}?w=105&q=75`;
+  console.log(image);
   return (
     <>
       <div className={`div ${theme}`}>
-        <Image
-          src={product.productImageSM.src}
-          width={product.productImageSM.width}
-          height={product.productImageSM.height}
-          alt={product.productName}
-        />
+        <div className="cntImage">
+          <Image
+            src={`${image}`}
+            width={105}
+            height={105}
+            alt={product.productName}
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </div>
         <div className="div-2">
           <div className="div-3">{product.productName}</div>
           <div className="div-4">{product.description}</div>
@@ -52,13 +60,9 @@ export default function MyComponent(props) {
         .div.dark {
           background-color: transparent;
         }
-        .img {
-          aspect-ratio: 0.49;
-          object-fit: contain;
-          object-position: center;
+        .cntImage {
           width: 105px;
-          overflow: hidden;
-          max-width: 100%;
+          height: 213px;
         }
         .div-2 {
           align-self: center;
