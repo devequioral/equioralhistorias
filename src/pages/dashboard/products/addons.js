@@ -12,7 +12,16 @@ import ModalComponent from '@/components/dashboard/ModalComponent';
 import addonModel from '@/models/addonModel';
 import { toast } from 'react-toastify';
 import DetailAddon from '@/components/dashboard/products/addons/DetailAddon';
-import addons from '@/temp/addons.json';
+//import addons from '@/temp/addons.json';
+
+async function getAddons(page = 1, pageSize = 5) {
+  //SIMULATE SLOW CONNECTION
+  //await new Promise((resolve) => setTimeout(resolve, 2000));
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/addons/list?page=${page}&pageSize=${pageSize}`
+  );
+  return await res.json();
+}
 
 async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
@@ -25,6 +34,7 @@ async function getProducts(page = 1, pageSize = 5, status = 'all') {
 
 function ListProducts() {
   const [products, setProducts] = React.useState([]);
+  const [addons, setAddons] = React.useState([]);
   const [totalPages, setTotalPages] = React.useState(1);
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(5);
@@ -41,17 +51,57 @@ function ListProducts() {
     setRecordChange(value);
   };
 
-  const onFieldChange = (key, value) => {
+  const onFieldChange = (field, value) => {
     const newRecord = { ...recordModal };
-    newRecord[key] = value;
+    newRecord[field.key] = value;
+    if (field.key === 'productID') {
+      const product = products.find((product) => product.value === value);
+      newRecord['productName'] = product.label;
+    }
     setRecordModal(newRecord);
     setRecordChange(true);
   };
 
+  //FETCH ADDONS
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const fetchRecords = async () => {
+        setLoading(true);
+        const addonsBD = await getAddons(page, pageSize);
+
+        if (!addonsBD.records) {
+          setAddons([]);
+          setTotalPages(1);
+          setPage(1);
+          setLoading(false);
+          return;
+        }
+        const { totalPages, records } = addonsBD.records;
+        setAddons(
+          records.map((record, index) => {
+            return {
+              ...record,
+              key: index,
+              id: record.id,
+              text: record.text,
+              category: record.category,
+              percent: record.percent,
+              productID: record.productID,
+            };
+          })
+        );
+        setTotalPages(totalPages);
+        setPage(page);
+        setLoading(false);
+      };
+      fetchRecords(page, pageSize);
+    }
+  }, [page, pageSize, status, refreshTable]);
+
   //FETCH PRODUCTS
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const fetchProducts = async () => {
+      const fetchRecords = async () => {
         const productsBD = await getProducts(1, 100, 'all');
 
         if (
@@ -72,14 +122,13 @@ function ListProducts() {
           setProducts([]);
         }
       };
-      fetchProducts();
+      fetchRecords();
     }
   }, []);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   const showProductDetail = (record) => {
-    console.log('showProductDetail');
     setRecordModal(record);
     setShowModalRecord((currCount) => currCount + 1);
   };

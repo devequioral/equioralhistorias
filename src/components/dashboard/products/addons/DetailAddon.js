@@ -43,7 +43,7 @@ export default function DetailAddon(props) {
                   type={field.type}
                   label={field.label}
                   onChange={(e) => {
-                    onFieldChange(field.key, e.target.value);
+                    onFieldChange(field, e.target.value);
                   }}
                   defaultValue={formatValue(field.key, field.type)}
                 />
@@ -80,7 +80,7 @@ export default function DetailAddon(props) {
                     record && record[field.key] ? [record[field.key]] : null
                   }
                   onChange={(e) => {
-                    onFieldChange(field.key, e.target.value);
+                    onFieldChange(field, e.target.value);
                   }}
                 >
                   {(item) => (
@@ -95,7 +95,7 @@ export default function DetailAddon(props) {
                   placeholder={field.placeholder}
                   className="max-w-xs"
                   onSelectionChange={(key) => {
-                    onFieldChange(field.key, key);
+                    onFieldChange(field, key);
                   }}
                 >
                   {(item) => (
