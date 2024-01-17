@@ -1,6 +1,13 @@
 import React from 'react';
 
-import { Input, Image, Select, SelectItem, Button } from '@nextui-org/react';
+import {
+  Input,
+  Image,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
+} from '@nextui-org/react';
 
 import styles from '@/styles/dashboard/products/addons/DetailAddon.module.css';
 
@@ -80,6 +87,23 @@ export default function DetailAddon(props) {
                     <SelectItem key={item.value}>{item.label}</SelectItem>
                   )}
                 </Select>
+              )}
+              {field.type === 'autocomplete' && (
+                <Autocomplete
+                  defaultItems={field.items}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  className="max-w-xs"
+                  onSelectionChange={(key) => {
+                    onFieldChange(field.key, key);
+                  }}
+                >
+                  {(item) => (
+                    <AutocompleteItem key={item.value}>
+                      {item.label}
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
               )}
             </div>
           );

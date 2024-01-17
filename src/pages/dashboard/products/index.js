@@ -40,6 +40,7 @@ function ListProducts() {
   const [recordChange, setRecordChange] = React.useState(false);
   const [allowUploadImage, setAllowUploadImage] = React.useState(false);
   const [recordImage, setRecordImage] = React.useState(null);
+  const [savingRecord, setSavingRecord] = React.useState(false);
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -111,6 +112,8 @@ function ListProducts() {
   };
 
   const saveProduct = () => {
+    if (savingRecord) return;
+    setSavingRecord(true);
     fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/products/new', {
       method: 'POST',
       headers: {
@@ -122,6 +125,7 @@ function ListProducts() {
         //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
         if (response.status !== 200) {
           toast.error('No se pudo enviar la información');
+          setSavingRecord(false);
         }
         return response.json();
       })
@@ -129,10 +133,12 @@ function ListProducts() {
         toast.success('Producto Guardado con éxito');
         setShowModalProductDetail(0);
         setRefreshTable((currCount) => currCount + 1);
+        setSavingRecord(false);
       })
       .catch((error) => {
         //console.error('Error:', error);
         toast.error('El Producto no se pudo guardar');
+        setSavingRecord(false);
       });
   };
 

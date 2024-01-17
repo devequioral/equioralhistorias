@@ -2,7 +2,7 @@
     {
         "id":"12356646464654654",
         "category":"Seguridad",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Autenticador Biométrico",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -11,7 +11,7 @@
     {
         "id":"12356646464654652",
         "category":"Seguridad",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Lector de Tarjeta Magnética",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -20,7 +20,7 @@
     {
         "id":"12356646464654655",
         "category":"Seguridad",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "CCTV 24 horas",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -29,7 +29,7 @@
     {
         "id":"12356646464654656",
         "category":"Energía",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Actualización de energía",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -38,7 +38,7 @@
     {
         "id":"12356646464654657",
         "category":"Energía",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Protección electromagnética",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -47,7 +47,7 @@
     {
         "id":"12356646464654658",
         "category":"Energía",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "UPS Adicional 8 horas",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -56,7 +56,7 @@
     {
         "id":"12356646464654659",
         "category":"Protección Desastres",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Alarma y extinción de incendios",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -65,7 +65,7 @@
     {
         "id":"12356646464654651",
         "category":"Protección Desastres",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Sellos ignífugos para pase de cables",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -74,7 +74,7 @@
     {
         "id":"1235664646465465451",
         "category":"Protección Desastres",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Sistema de anti vibración",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -83,7 +83,7 @@
     {
         "id":"1235664646465465478",
         "category":"Refrigeración",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Sistema de Enfriamiento Adicional",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -92,7 +92,7 @@
     {
         "id":"1235664646465465467",
         "category":"Refrigeración",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Sistema Automático de Refrigeración",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",
@@ -101,7 +101,7 @@
     {
         "id":"1235664646465465434",
         "category":"Refrigeración",
-        "idProducto": "12356646464654654",
+        "productID": "12356646464654654",
         "productName": "Artic Bunker 01",
         "text": "Sellos Anti Calentamiento",
         "help": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, quae.",

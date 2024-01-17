@@ -5,15 +5,13 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import { Chip } from '@nextui-org/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
 import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
-import productModel from '@/models/productModel';
+import addonModel from '@/models/addonModel';
 import { toast } from 'react-toastify';
 import DetailAddon from '@/components/dashboard/products/addons/DetailAddon';
-import MediaUpload from '@/components/dashboard/MediaUpload';
 import addons from '@/temp/addons.json';
 
 async function getProducts(page = 1, pageSize = 5, status = 'all') {
@@ -35,12 +33,9 @@ function ListProducts() {
   const router = useRouter();
   const { status } = router.query;
   const [showModalRecord, setShowModalRecord] = React.useState(0);
-  const [showModalChangeImage, setShowModalChangeImage] = React.useState(0);
-
-  const [recordModal, setRecordModal] = React.useState(productModel);
+  const [recordModal, setRecordModal] = React.useState(addonModel);
   const [recordChange, setRecordChange] = React.useState(false);
-  const [allowUploadImage, setAllowUploadImage] = React.useState(false);
-  const [recordImage, setRecordImage] = React.useState(null);
+  const [savingRecord, setSavingRecord] = React.useState(false);
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -53,15 +48,11 @@ function ListProducts() {
     setRecordChange(true);
   };
 
-  const onShowModalAddons = () => {
-    setShowModalAddons((currCount) => currCount + 1);
-  };
-
+  //FETCH PRODUCTS
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const fetchOrders = async () => {
-        setLoading(true);
-        const productsBD = await getProducts(page, pageSize, status);
+      const fetchProducts = async () => {
+        const productsBD = await getProducts(1, 100, 'all');
 
         if (
           productsBD &&
@@ -72,27 +63,18 @@ function ListProducts() {
           setProducts(
             productsBD.products.records.map((product, index) => {
               return {
-                ...product,
-                key: index,
-                id: product.id,
-                productName: product.productName,
-                date: product.createdAt,
-                status: product.status,
+                value: product.id,
+                label: product.productName,
               };
             })
           );
-          setTotalPages(productsBD.products.totalPages);
-          setPage(productsBD.products.page);
         } else {
           setProducts([]);
-          setTotalPages(1);
-          setPage(1);
         }
-        setLoading(false);
       };
-      fetchOrders(page, pageSize);
+      fetchProducts();
     }
-  }, [page, pageSize, status, refreshTable]);
+  }, []);
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -103,38 +85,39 @@ function ListProducts() {
   };
 
   const createRecord = () => {
-    setRecordModal(productModel);
+    setRecordModal(addonModel);
     setShowModalRecord((currCount) => currCount + 1);
   };
 
-  const showChangeImage = (image) => {
-    setShowModalChangeImage((currCount) => currCount + 1);
-  };
-
   const saveRecord = () => {
-    // fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/products/new', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ product_request: recordModal }),
-    // })
-    //   .then((response) => {
-    //     //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
-    //     if (response.status !== 200) {
-    //       toast.error('No se pudo enviar la información');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     toast.success('Producto Guardado con éxito');
-    //     setShowModalRecord(0);
-    //     setRefreshTable((currCount) => currCount + 1);
-    //   })
-    //   .catch((error) => {
-    //     //console.error('Error:', error);
-    //     toast.error('El Producto no se pudo guardar');
-    //   });
+    if (savingRecord) return;
+    setSavingRecord(true);
+    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/products/addons/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ record: recordModal }),
+    })
+      .then((response) => {
+        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+        if (response.status !== 200) {
+          toast.error('No se pudo enviar la información');
+          setSavingRecord(false);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        toast.success('Registro Guardado con éxito');
+        setShowModalRecord(0);
+        setRefreshTable((currCount) => currCount + 1);
+        setSavingRecord(false);
+      })
+      .catch((error) => {
+        //console.error('Error:', error);
+        toast.error('El Registro no se pudo guardar');
+        setSavingRecord(false);
+      });
   };
 
   const renderCell = React.useCallback((record, columnKey) => {
@@ -284,7 +267,6 @@ function ListProducts() {
                   items: [
                     { value: 'Seguridad', label: 'Seguridad' },
                     { value: 'Energía', label: 'Energía' },
-                    { value: 'Energía', label: 'Energía' },
                     {
                       value: 'Protección Desastres',
                       label: 'Protección Desastres',
@@ -293,9 +275,11 @@ function ListProducts() {
                   ],
                 },
                 {
-                  key: 'productName',
+                  key: 'productID',
                   label: 'Producto',
-                  type: 'text',
+                  type: 'autocomplete',
+                  placeholder: 'Elija un Producto',
+                  items: products,
                 },
               ],
             }}
