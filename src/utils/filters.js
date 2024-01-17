@@ -1,13 +1,21 @@
-//IF USERID IS NULL, GET ALL RECORDS (AVAILABLE ONLY FOR ADMIN USERS)
-const filterBy = (userid, status, id) => {
-  return [userid && 'userid', status !== 'all' && 'status', id && 'id']
-    .filter(Boolean)
-    .join(',');
+const filterBy = (object) => {
+  const filter = [];
+  Object.keys(object).forEach((key) => {
+    if (object[key])
+      if (key === 'status' && object[key] != 'all') filter.push(key);
+      else if (key !== 'status') filter.push(key);
+  });
+
+  return filter.join(',');
 };
-const filterValue = (userid, status, id) => {
-  return [userid && userid, status !== 'all' && status, id && id]
-    .filter(Boolean)
-    .join(',');
+const filterValue = (object) => {
+  const filter = [];
+  Object.keys(object).forEach((key) => {
+    if (object[key])
+      if (key === 'status' && object[key] != 'all') filter.push(object[key]);
+      else if (key !== 'status') filter.push(object[key]);
+  });
+  return filter.join(',');
 };
 
 export { filterBy, filterValue };

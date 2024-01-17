@@ -2,16 +2,16 @@ import { getRecords } from '@/virtel-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
 import { filterBy, filterValue } from '@/utils/filters';
 
-async function getOrders(userid, page = 1, pageSize = 5, status = 'all') {
+async function listRecords(page = 1, pageSize = 5) {
   return await getRecords({
     backend_url: process.env.VIRTEL_DASHBOARD_URL,
     organization: process.env.VIRTEL_DASHBOARD_ORGANIZATION,
     database: process.env.VIRTEL_DASHBOARD_DATABASE,
-    object: 'orders',
+    object: 'addons',
     api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
     params: {
-      filterBy: filterBy({ userid, status }),
-      filterValue: filterValue({ userid, status }),
+      filterBy: '',
+      filterValue: '',
       page,
       pageSize,
     },
@@ -24,23 +24,18 @@ export default async function handler(req, res) {
 
     if (!token) return res.status(401).send({ message: 'Not authorized' });
 
-    const { page, pageSize, status } = req.query;
-    const { id: userid, role } = token;
+    const { page, pageSize } = req.query;
+    const { role } = token;
 
-    let orders;
-
-    //IF USER ROLE IS ADMIN
-    if (role === 'admin') {
-      orders = await getOrders(null, page, pageSize, status);
-    }
-    //IF USER ROLE IS NOT ADMIN
-    else {
-      orders = await getOrders(userid, page, pageSize, status);
+    if (role !== 'admin') {
+      return res.status(401).send({ message: 'Not authorized' });
     }
 
-    if (!orders) return res.status(404).send({ message: 'Orders Not found' });
+    const records = await listRecords(page, pageSize);
 
-    res.status(200).json({ orders });
+    if (!records) return res.status(404).send({ message: 'Records Not found' });
+
+    res.status(200).json({ records });
   } catch (error) {
     console.error('Error getting token or session:', error);
   }

@@ -1,5 +1,7 @@
 export default function productReducer(state, action) {
   switch (action.type) {
+    case 'SET_PRODUCT':
+      return action.product;
     case 'CHANGE_OPTION':
       const newState = JSON.parse(JSON.stringify(state)); // Deep copy
       newState.addons.map((addonItem) => {

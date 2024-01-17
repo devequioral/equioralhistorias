@@ -2,7 +2,6 @@ import Image from 'next/image';
 import * as React from 'react';
 
 export default function MyComponent(props) {
-  console.log(props.onActionsEvent);
   return (
     <>
       <div className="div">

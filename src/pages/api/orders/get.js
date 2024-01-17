@@ -10,8 +10,8 @@ async function getOrder(userid, order_id) {
     object: 'orders',
     api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
     params: {
-      filterBy: filterBy(userid, 'all', 'id'),
-      filterValue: filterValue(userid, 'all', order_id),
+      filterBy: filterBy({ userid, id: order_id }),
+      filterValue: filterValue({ userid, id: order_id }),
     },
   });
 }

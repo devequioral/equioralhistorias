@@ -3,7 +3,13 @@ import axios from 'axios';
 const getURL = (options) => {
   const { backend_url, organization, database, object, params } = options;
   const { filterBy, filterValue, page, pageSize } = params;
-  return `${backend_url}${organization}/${database}/${object}?filterBy=${filterBy}&filterValue=${filterValue}&page=${page}&pageSize=${pageSize}`;
+  const filter =
+    filterBy && filterValue
+      ? `&filterBy=${filterBy}&filterValue=${filterValue}`
+      : '';
+  const pagination = page ? `&page=${page}` : '';
+  const numrecords = pageSize ? `&pageSize=${pageSize}` : '';
+  return `${backend_url}${organization}/${database}/${object}?${filter}${pagination}${numrecords}`;
 };
 
 const getRecords = async (options) => {

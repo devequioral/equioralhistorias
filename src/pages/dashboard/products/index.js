@@ -19,7 +19,7 @@ async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
   //await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/list?page=${page}&pageSize=${pageSize}&status=${status}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/list?page=${page}&pageSize=${pageSize}&status=${status}`
   );
   return await res.json();
 }
@@ -114,7 +114,7 @@ function ListProducts() {
   const saveProduct = () => {
     if (savingRecord) return;
     setSavingRecord(true);
-    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/products/new', {
+    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/admin/products/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ function ListProducts() {
     const body = new FormData();
     body.append('file', recordImage);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL + '/api/media/upload',
+      process.env.NEXT_PUBLIC_BASE_URL + '/api/admin/media/upload',
       {
         method: 'POST',
         body,

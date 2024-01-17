@@ -18,7 +18,7 @@ async function getAddons(page = 1, pageSize = 5) {
   //SIMULATE SLOW CONNECTION
   //await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/addons/list?page=${page}&pageSize=${pageSize}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/list?page=${page}&pageSize=${pageSize}`
   );
   return await res.json();
 }
@@ -27,7 +27,7 @@ async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
   //await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/list?page=${page}&pageSize=${pageSize}&status=${status}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/list?page=${page}&pageSize=${pageSize}&status=${status}`
   );
   return await res.json();
 }
@@ -141,7 +141,7 @@ function ListProducts() {
   const saveRecord = () => {
     if (savingRecord) return;
     setSavingRecord(true);
-    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/products/addons/new', {
+    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/admin/products/addons/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

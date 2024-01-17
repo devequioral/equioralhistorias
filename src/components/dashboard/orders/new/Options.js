@@ -3,38 +3,56 @@ import * as React from 'react';
 import OptionItemMenu from './OptionItemMenu';
 
 export default function MyComponent(props) {
-  const { theme, product, onChangeOption } = props;
+  const { theme, product, onChangeOption, categoriesAddonsModel, addons } =
+    props;
 
+  const flag = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!addons || !categoriesAddonsModel) return;
+    if (flag.current) return;
+    flag.current = true;
+
+    addons.map((addon) => {
+      categoriesAddonsModel.map((category) => {
+        if (category.name === addon.category) {
+          category.options.push(addon);
+        }
+      });
+    });
+  }, [addons, categoriesAddonsModel]);
   return (
     <>
-      <div className="OptionsCard">
-        <div className="title">{product.productName}</div>
-        <div className="subtitle">{product.productSubtitle}</div>
-        {product.addons.map((addon, index) => (
-          <div className="OptionItem" key={index}>
-            <div className="OptionItemTitle">
-              <Image
-                src={addon.icon.src}
-                width={addon.icon.width}
-                height={addon.icon.height}
-                alt=""
-              />
-              <div className="OptionItemTitleText">{addon.name}</div>
-            </div>
-            <div className="OptionItemBody">
-              {addon.options.map((option, index) => (
-                <OptionItemMenu
-                  option={option}
-                  addon={addon}
-                  key={index}
-                  index={index}
-                  onChangeOption={onChangeOption}
+      {product && (
+        <div className="OptionsCard">
+          <div className="title">{product.productName}</div>
+          <div className="subtitle">Personalice el producto</div>
+          {categoriesAddonsModel.map((addon, index) => (
+            <div className="OptionItem" key={index}>
+              <div className="OptionItemTitle">
+                <Image
+                  src={addon.icon.src}
+                  width={addon.icon.width}
+                  height={addon.icon.height}
+                  alt=""
                 />
-              ))}
+                <div className="OptionItemTitleText">{addon.name}</div>
+              </div>
+              <div className="OptionItemBody">
+                {addon.options.map((option, index) => (
+                  <OptionItemMenu
+                    option={option}
+                    addon={addon}
+                    key={index}
+                    index={index}
+                    onChangeOption={onChangeOption}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
       <style jsx>{`
         .OptionsCard {
           align-items: flex-start;

@@ -5,7 +5,6 @@ import * as React from 'react';
 export default function MyComponent(props) {
   const { theme, product } = props;
   const image = `${product.productImage.src}?w=105&q=75`;
-  console.log(image);
   return (
     <>
       <div className={`div ${theme}`}>

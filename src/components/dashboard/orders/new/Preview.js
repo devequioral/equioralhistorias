@@ -5,7 +5,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 export default function MyComponent(props) {
-  const { theme, product } = props;
+  const { theme, product, categoriesAddonsModel } = props;
   const [width, setWidth] = React.useState(0);
 
   React.useEffect(() => {
@@ -50,16 +50,17 @@ export default function MyComponent(props) {
     });
     return percentage;
   };
+  const image = `${product.productImage.src}?w=158&q=75`;
   return (
     <>
       <div className="PreviewComponent" ref={ref}>
         <div className="Container">
           <div className="ColumnProduct">
-            {product.productImage && (
+            {image && (
               <Image
-                src={product.productImage.src}
-                width={product.productImage.width}
-                height={product.productImage.height}
+                src={image}
+                width={158}
+                height={319}
                 style={{ width: '100%', height: 'auto' }}
                 alt=""
               />
