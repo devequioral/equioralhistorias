@@ -11,7 +11,7 @@ import styles from '@/styles/dashboard/orders/NewOrderScreen.module.css';
 import productJSON from '@/temp/product.json';
 import categoriesAddonsModel from '@/models/categoriesAddonsModel';
 
-import orderReducer from '@/reducers/OrderReducer';
+import productReducer from '@/reducers/ProductReducers';
 import { useRouter } from 'next/router';
 import { CircularProgress } from '@nextui-org/react';
 
@@ -35,46 +35,79 @@ async function getAddons(productid) {
 
 function CustomizeOrderScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+
   const router = useRouter();
+
   const productid = router.query.productid;
+  //const productCurrent = productJSON.find((product) => product.id == productid);
+  const [productCurrent, setProductCurrent] = useState(null);
+
+  const [addons, setAddons] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [order, dispatch] = useReducer(orderReducer, orderModel);
-  const orderFetch = useRef(false);
+
+  const initialProduct =
+    JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) ||
+    productCurrent;
+
+  const [product, dispatch] = useReducer(productReducer, initialProduct);
+
+  const onChangeOption = (option, addon, action) => {
+    dispatch({ type: 'CHANGE_OPTION', option, addon, action });
+
+    categoriesAddonsModel.map((category) => {
+      if (category.name === option.category) {
+        category.options.map((optionItem) => {
+          if (optionItem.id === option.id) {
+            optionItem.selected = action === 'add';
+          }
+        });
+      }
+    });
+  };
 
   useEffect(() => {
-    if (orderFetch.current) return;
-    orderFetch.current = true;
     if (productid) {
-      console.log('productid', productid);
       const fetchProduct = async () => {
         setIsLoading(true);
         const productBD = await getProduct(productid);
         const { records } = productBD.record;
         if (!productBD || records.length === 0) {
+          setProductCurrent(null);
           setIsLoading(false);
           return;
         }
 
-        orderModel.product = records[0];
+        let curProduct = records[0];
 
         const addonsBD = await getAddons(productid);
         const { records: recordsAddons } = addonsBD.records;
 
-        if (addonsBD || recordsAddons.length > 0) {
-          recordsAddons.map((addon) => {
-            orderModel.categoriesAddons.map((category) => {
-              if (category.name === addon.category) {
-                category.options.push({ ...addon, selected: false });
-              }
-            });
-          });
+        if (!addonsBD || recordsAddons.length === 0) {
+          setAddons(null);
+        } else {
+          setAddons(recordsAddons);
         }
 
-        const currentOrder =
-          JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) ||
-          orderModel;
+        recordsAddons.map((addonItem) => {
+          curProduct.addons.map((curProductAddonItem) => {
+            if (addonItem.category === curProductAddonItem.name) {
+              curProductAddonItem.options.push({
+                help: addonItem.help,
+                id: addonItem.id,
+                percent: addonItem.percent,
+                selected: false,
+                text: addonItem.text,
+              });
+            }
+          });
+        });
+        setProductCurrent(curProduct);
 
-        dispatch({ type: 'SET_ORDER', order: currentOrder });
+        const initialProduct =
+          JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) ||
+          curProduct;
+
+        dispatch({ type: 'SET_PRODUCT', product: initialProduct });
 
         setIsLoading(false);
       };
@@ -82,15 +115,35 @@ function CustomizeOrderScreen() {
     }
   }, [productid]);
 
+  useEffect(() => {
+    if (!localStorage.getItem('ArcticBunker_draft_order') && initialProduct) {
+      localStorage.setItem(
+        'ArcticBunker_draft_order',
+        JSON.stringify(initialProduct)
+      );
+    }
+  }, []);
   const onActionsEvent = (event) => {
     if (event === 'next') {
       router.push('/dashboard/orders/new/last-step');
     }
   };
 
-  const onChangeOption = (option, addon, action) => {
-    dispatch({ type: 'CHANGE_OPTION', option, addon, action });
-  };
+  const addonsUpdated = useRef(false);
+
+  useEffect(() => {
+    if (!addons || !categoriesAddonsModel) return;
+    if (addonsUpdated.current) return;
+    addonsUpdated.current = true;
+
+    addons.map((addon) => {
+      categoriesAddonsModel.map((category) => {
+        if (category.name === addon.category) {
+          category.options.push({ ...addon, selected: false });
+        }
+      });
+    });
+  }, [addons, categoriesAddonsModel]);
 
   return (
     <>
@@ -119,7 +172,7 @@ function CustomizeOrderScreen() {
             <div className={`${styles.loading}`}>
               <CircularProgress size="sm" aria-label="Loading..." />
             </div>
-          ) : order.product ? (
+          ) : initialProduct ? (
             <>
               <div className={`row ${styles.row01}`}>
                 <div className={`col col-12`}>
@@ -133,13 +186,20 @@ function CustomizeOrderScreen() {
                   <Options
                     theme={theme}
                     onChangeOption={onChangeOption}
-                    order={order}
+                    product={product}
+                    addons={addons}
+                    categoriesAddonsModel={categoriesAddonsModel}
                   />
                 </div>
                 <div
                   className={`col col-12 col-sm-6 col-md-8 col-lg-8 ${styles.colPreview}`}
                 >
-                  <Preview theme={theme} order={order} />
+                  <Preview
+                    theme={theme}
+                    product={product}
+                    addons={addons}
+                    categoriesAddonsModel={categoriesAddonsModel}
+                  />
                 </div>
               </div>
             </>

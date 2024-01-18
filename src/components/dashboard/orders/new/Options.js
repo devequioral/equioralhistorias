@@ -3,31 +3,17 @@ import * as React from 'react';
 import OptionItemMenu from './OptionItemMenu';
 
 export default function MyComponent(props) {
-  const { theme, product, onChangeOption, categoriesAddonsModel, addons } =
-    props;
+  const { theme, order, onChangeOption } = props;
 
-  // const flag = React.useRef(false);
+  const { product, addons, categoriesAddons } = order;
 
-  // React.useEffect(() => {
-  //   if (!addons || !categoriesAddonsModel) return;
-  //   if (flag.current) return;
-  //   flag.current = true;
-
-  //   addons.map((addon) => {
-  //     categoriesAddonsModel.map((category) => {
-  //       if (category.name === addon.category) {
-  //         category.options.push(addon);
-  //       }
-  //     });
-  //   });
-  // }, [addons, categoriesAddonsModel]);
   return (
     <>
       {product && (
         <div className="OptionsCard">
           <div className="title">{product.productName}</div>
           <div className="subtitle">Personalice el producto</div>
-          {categoriesAddonsModel.map(
+          {categoriesAddons.map(
             (addon, index) =>
               addon.options.length > 0 && (
                 <div className="OptionItem" key={index}>

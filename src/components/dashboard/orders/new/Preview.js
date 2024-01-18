@@ -5,8 +5,10 @@ import { PieChart } from 'react-minimal-pie-chart';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 export default function MyComponent(props) {
-  const { theme, product, categoriesAddonsModel, addons } = props;
+  const { theme, order } = props;
   const [width, setWidth] = React.useState(0);
+
+  const { product, addons, categoriesAddons } = order;
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -20,22 +22,6 @@ export default function MyComponent(props) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  //const flag = React.useRef(false);
-
-  // React.useEffect(() => {
-  //   if (!addons || !categoriesAddonsModel) return;
-  //   if (flag.current) return;
-  //   flag.current = true;
-
-  //   addons.map((addon) => {
-  //     categoriesAddonsModel.map((category) => {
-  //       if (category.name === addon.category) {
-  //         category.options.push(addon);
-  //       }
-  //     });
-  //   });
-  // }, [addons, categoriesAddonsModel]);
 
   const ref = React.useRef(null);
   const [initialPosition, setInitialPosition] = React.useState(0);
@@ -86,7 +72,7 @@ export default function MyComponent(props) {
             )}
           </div>
           <div className="ColumnCharts">
-            {categoriesAddonsModel.map((addon, index) => (
+            {categoriesAddons.map((addon, index) => (
               <div className="row PreviewItem" key={index}>
                 <div className="col-6 PreviewItemChart">
                   <PieChart

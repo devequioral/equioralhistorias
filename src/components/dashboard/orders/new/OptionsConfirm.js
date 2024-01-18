@@ -4,9 +4,7 @@ import OptionItemMenu from './OptionItemMenu';
 
 export default function MyComponent(props) {
   const { theme, product, onChangeOption } = props;
-  React.useEffect(() => {
-    console.log('Options product changed');
-  }, [product]);
+  console.log('OptionsConfirm', product);
   return (
     <>
       <div className="OptionsCard">
@@ -24,18 +22,10 @@ export default function MyComponent(props) {
         {product.addons.map((addon, index) => (
           <div className="OptionItem" key={index}>
             <div className="OptionItemBody">
-              {addon.options.map(
-                (option, index) =>
-                  option.selected && (
-                    <OptionItemMenu
-                      option={option}
-                      addon={addon}
-                      key={index}
-                      index={index}
-                      onChangeOption={onChangeOption}
-                      readOnly={true}
-                    />
-                  )
+              {addon.selected && (
+                <div className="OptionItemTitle">
+                  <div className="OptionItemTitleText">{addon.text}</div>
+                </div>
               )}
             </div>
           </div>
@@ -71,18 +61,19 @@ export default function MyComponent(props) {
           margin-top: 5px;
           font: 400 14px/117% Roboto, -apple-system, Roboto, Helvetica,
             sans-serif;
+          margin-bottom: 15px;
         }
         .OptionItemTitle {
           align-items: center;
           align-self: stretch;
           display: flex;
-          margin-top: 25px;
+          margin-top: 0px;
           justify-content: flex-start;
           gap: 12px;
         }
 
         .OptionItemTitleText {
-          color: rgba(34, 142, 206, 0.9);
+          color: #222;
           letter-spacing: 0.15px;
           font: 400 15px/160% Roboto, -apple-system, Roboto, Helvetica,
             sans-serif;
@@ -91,7 +82,7 @@ export default function MyComponent(props) {
           padding-left: 15px;
           align-self: stretch;
           display: flex;
-          margin-top: 16px;
+          margin-top: 0px;
           flex-direction: column;
         }
         .productImage {

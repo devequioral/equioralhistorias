@@ -5,12 +5,18 @@ export default function productReducer(state, action) {
     case 'CHANGE_OPTION':
       const newState = JSON.parse(JSON.stringify(state)); // Deep copy
       if (action.action === 'add') {
-        if (!newState.addons.includes(action.addon.id)) {
-          newState.addons.push(action.addon.id);
+        const index = newState.addons.findIndex(
+          (addon) => addon.id === action.option.id
+        );
+        if (index === -1) {
+          newState.addons.push(action.option);
         }
       } else {
-        if (newState.addons.includes(action.addon.id)) {
-          newState.addons.splice(newState.addons.indexOf(action.addon.id), 1);
+        const index = newState.addons.findIndex(
+          (addon) => addon.id === action.option.id
+        );
+        if (index !== -1) {
+          newState.addons.splice(index, 1);
         }
       }
       localStorage.setItem(

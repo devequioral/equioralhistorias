@@ -2,5 +2,6 @@
     "address": "Calle 4 # 43-52, Medellín, Antioquia, Colombia",
     "invoice_to": "Soluciones Tecnológicas Integrales S.A.S",
     "contact_name": "Juan Pablo Gómez",
-    "contact_phone": "300 555 5555"
+    "contact_phone": "300 555 5555",
+    "contact_email": "user@example.com"
 }

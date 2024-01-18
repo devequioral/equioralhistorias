@@ -1,16 +1,38 @@
 export default function orderReducer(state, action) {
   switch (action.type) {
+    case 'SET_ORDER':
+      return action.order;
     case 'CHANGE_OPTION':
       const newState = JSON.parse(JSON.stringify(state)); // Deep copy
-      newState.addons.map((addonItem) => {
-        if (addonItem.id === action.addon.id) {
-          addonItem.options.map((optionItem) => {
+
+      //CHANGE ADDONS
+      if (action.action === 'add') {
+        const index = newState.addons.findIndex(
+          (addon) => addon.id === action.option.id
+        );
+        if (index === -1) {
+          newState.addons.push(action.option);
+        }
+      } else {
+        const index = newState.addons.findIndex(
+          (addon) => addon.id === action.option.id
+        );
+        if (index !== -1) {
+          newState.addons.splice(index, 1);
+        }
+      }
+
+      //CHANGE CATEGORIES ADDONS
+      newState.categoriesAddons.map((category) => {
+        if (category.name === action.option.category) {
+          category.options.map((optionItem) => {
             if (optionItem.id === action.option.id) {
-              optionItem.selected = action.action === 'add' ? true : false;
+              optionItem.selected = action.action === 'add';
             }
           });
         }
       });
+
       localStorage.setItem(
         'ArcticBunker_draft_order',
         JSON.stringify(newState)
