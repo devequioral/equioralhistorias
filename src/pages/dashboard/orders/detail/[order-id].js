@@ -37,17 +37,12 @@ function DetailOrderScreen() {
         ) {
           const _order = orderBD.order.records[0];
           const product = _order.product;
-          //VERIFY IF PRODUCT HAVE A ADDON SELECTED
+
+          //VERIFY IF ORDER HAVE A ADDON SELECTED
           if (addons.length === 0) {
-            if (product && product.addons && product.addons.length > 0) {
-              product.addons.forEach((options) => {
-                if (options && options.options && options.options.length > 0) {
-                  options.options.forEach((option) => {
-                    if (option && option.selected) {
-                      setAddons((prev) => [...prev, option.text]);
-                    }
-                  });
-                }
+            if (_order && _order.addons && _order.addons.length > 0) {
+              _order.addons.forEach((addon) => {
+                setAddons((prev) => [...prev, addon.text]);
               });
             }
           }
@@ -55,7 +50,9 @@ function DetailOrderScreen() {
             key: 1,
             id: _order.id,
             product: product ? product?.productName : '',
-            productImage: product ? product?.productImage : '',
+            productImage: product
+              ? `${product?.productImage.src}?w=158&q=75`
+              : '',
             date: formatDate(_order.createdAt),
             status: capitalizeFirstLetter(_order.status),
           });
@@ -107,9 +104,9 @@ function DetailOrderScreen() {
                   <div className="div-5">Fecha: {order.date}</div>
                   {order.productImage && (
                     <Image
-                      src={order.productImage.src}
-                      width={order.productImage.width}
-                      height={order.productImage.height}
+                      src={order.productImage}
+                      width={158}
+                      height={158}
                       alt={order.product}
                     />
                   )}

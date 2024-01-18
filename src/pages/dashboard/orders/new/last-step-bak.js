@@ -7,9 +7,9 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import styles from '@/styles/dashboard/orders/NewOrderScreen.module.css';
-import orderModel from '@/models/orderModel';
+import productJSON from '@/temp/product.json';
 
-import orderReducer from '@/reducers/OrderReducer';
+import productReducer from '@/reducers/ProductReducers';
 import ConfirmForm from '@/components/dashboard/orders/new/ConfirmForm';
 
 function LastStepScreen() {
@@ -17,10 +17,13 @@ function LastStepScreen() {
 
   const [forceSubmitForm, setForceSubmitForm] = React.useState(0);
 
-  const currentOrder =
-    JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || orderModel;
-  const [order, dispatch] = useReducer(orderReducer, currentOrder);
+  const initialProduct =
+    JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || productJSON;
+  const [product, dispatch] = useReducer(productReducer, initialProduct);
 
+  const onChangeOption = (option, addon, action) => {
+    dispatch({ type: 'CHANGE_OPTION', option, addon, action });
+  };
   const onActionsEvent = (event) => {
     if (event === 'next') {
       setForceSubmitForm(forceSubmitForm + 1);
@@ -58,14 +61,18 @@ function LastStepScreen() {
             <div
               className={`col  col-12 col-xs-12 col-sm-6 col-md-4 col-lg-4 ${styles.colOptions}`}
             >
-              <OptionsConfirm theme={theme} order={order} />
+              <OptionsConfirm
+                theme={theme}
+                onChangeOption={onChangeOption}
+                product={product}
+              />
             </div>
             <div
               className={`col col-12 col-sm-6 col-md-8 col-lg-8 ${styles.colPreview}`}
             >
               <ConfirmForm
                 theme={theme}
-                order={order}
+                product={product}
                 forceSubmitForm={forceSubmitForm}
               />
             </div>

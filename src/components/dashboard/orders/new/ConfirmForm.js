@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 function ConfirmForm(props) {
   const { forceSubmitForm = 0 } = props;
   const ref = React.useRef();
+  const { product, addons } = props.order;
 
   React.useEffect(() => {
     if (forceSubmitForm > 0) {
@@ -46,7 +47,8 @@ function ConfirmForm(props) {
           contact_name,
           contact_phone,
         },
-        order_request: props.product,
+        product,
+        addons,
       }),
     })
       .then((response) => {

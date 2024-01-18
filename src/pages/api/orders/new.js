@@ -14,7 +14,7 @@ function generateUUID() {
   return uuid;
 }
 
-async function createOrder(userid, data_contact, order_request) {
+async function createOrder(userid, data_contact, product, addons) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders`;
 
   try {
@@ -22,7 +22,9 @@ async function createOrder(userid, data_contact, order_request) {
       id: generateUUID(),
       status: 'pendiente',
       userid,
-      product: order_request,
+      product,
+      addons,
+      data_contact,
     };
     const response = await axios({
       method: 'post',
@@ -50,9 +52,9 @@ export default async function handler(req, res) {
 
     const { id: userid } = token;
 
-    const { data_contact, order_request } = req.body;
+    const { data_contact, product, addons } = req.body;
 
-    const order = await createOrder(userid, data_contact, order_request);
+    const order = await createOrder(userid, data_contact, product, addons);
 
     if (!order)
       return res.status(500).send({ message: 'Order could not be processed ' });

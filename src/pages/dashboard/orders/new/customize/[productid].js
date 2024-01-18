@@ -8,7 +8,6 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import styles from '@/styles/dashboard/orders/NewOrderScreen.module.css';
-import productJSON from '@/temp/product.json';
 import categoriesAddonsModel from '@/models/categoriesAddonsModel';
 
 import orderReducer from '@/reducers/OrderReducer';
@@ -45,7 +44,6 @@ function CustomizeOrderScreen() {
     if (orderFetch.current) return;
     orderFetch.current = true;
     if (productid) {
-      console.log('productid', productid);
       const fetchProduct = async () => {
         setIsLoading(true);
         const productBD = await getProduct(productid);

@@ -3,30 +3,26 @@ import * as React from 'react';
 import OptionItemMenu from './OptionItemMenu';
 
 export default function MyComponent(props) {
-  const { theme, product, onChangeOption } = props;
-  console.log('OptionsConfirm', product);
+  const { theme, order } = props;
+
+  const product = order.product;
+  const image = `${product.productImage.src}?w=158&q=75`;
+
   return (
     <>
       <div className="OptionsCard">
         <div className="title">{product.productName}</div>
         <div className="subtitle">{product.productSubtitle}</div>
         <div className="productImage">
-          <Image
-            src={product.productImageSM.src}
-            width={product.productImageSM.width}
-            height={product.productImageSM.height}
-            alt=""
-          />
+          <Image src={image} width={158} height={158} alt="" />
         </div>
         <div className="text">Adicionales:</div>
-        {product.addons.map((addon, index) => (
+        {order.addons.map((addon, index) => (
           <div className="OptionItem" key={index}>
             <div className="OptionItemBody">
-              {addon.selected && (
-                <div className="OptionItemTitle">
-                  <div className="OptionItemTitleText">{addon.text}</div>
-                </div>
-              )}
+              <div className="OptionItemTitle">
+                <div className="OptionItemTitleText">{addon.text}</div>
+              </div>
             </div>
           </div>
         ))}
