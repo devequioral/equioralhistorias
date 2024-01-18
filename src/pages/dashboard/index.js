@@ -5,12 +5,49 @@ import MainBanner from '@/components/dashboard/MainBanner';
 import NewOrderBanner from '@/components/dashboard/NewOrderBanner';
 import ProductList from '@/components/dashboard/ProductList';
 import { ThemeContext } from '@/contexts/ThemeContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import productJSON from '@/temp/product.json';
 
+async function getProducts(page = 1, pageSize = 5, status = 'all') {
+  //SIMULATE SLOW CONNECTION
+  //await new Promise((resolve) => setTimeout(resolve, 2000));
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/list?page=${page}&pageSize=${pageSize}&status=${status}`
+  );
+  return await res.json();
+}
+
 function DashBoardScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const fetchProducts = async () => {
+        setLoading(true);
+        const productsBD = await getProducts(1, 4, 'all');
+
+        if (!productsBD) {
+          setProducts([]);
+          return;
+        }
+
+        const { records } = productsBD.products;
+
+        setProducts(
+          records.map((product, index) => {
+            return {
+              ...product,
+            };
+          })
+        );
+        setLoading(false);
+      };
+      fetchProducts();
+    }
+  }, []);
   return (
     <>
       <Metaheader />
@@ -47,7 +84,7 @@ function DashBoardScreen() {
             },
           }}
         />
-        <ProductList theme={theme} products={productJSON} />
+        <ProductList theme={theme} products={products} isLoading={loading} />
         <Banner02
           data={{
             title: 'MONITOREO INTEGRAL',
