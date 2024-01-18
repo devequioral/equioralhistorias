@@ -5,7 +5,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 export default function MyComponent(props) {
-  const { theme, product, categoriesAddonsModel } = props;
+  const { theme, product, categoriesAddonsModel, addons } = props;
   const [width, setWidth] = React.useState(0);
 
   React.useEffect(() => {
@@ -20,6 +20,22 @@ export default function MyComponent(props) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  //const flag = React.useRef(false);
+
+  // React.useEffect(() => {
+  //   if (!addons || !categoriesAddonsModel) return;
+  //   if (flag.current) return;
+  //   flag.current = true;
+
+  //   addons.map((addon) => {
+  //     categoriesAddonsModel.map((category) => {
+  //       if (category.name === addon.category) {
+  //         category.options.push(addon);
+  //       }
+  //     });
+  //   });
+  // }, [addons, categoriesAddonsModel]);
 
   const ref = React.useRef(null);
   const [initialPosition, setInitialPosition] = React.useState(0);
@@ -43,6 +59,7 @@ export default function MyComponent(props) {
 
   const calcPercentage = (addon) => {
     let percentage = addon.defaultPercent;
+    if (!addon.options) return percentage;
     addon.options.forEach((option) => {
       if (option.selected) {
         percentage += option.percent;
@@ -57,17 +74,19 @@ export default function MyComponent(props) {
         <div className="Container">
           <div className="ColumnProduct">
             {image && (
-              <Image
-                src={image}
-                width={158}
-                height={319}
-                style={{ width: '100%', height: 'auto' }}
-                alt=""
-              />
+              <div className="imgCnt">
+                <Image
+                  src={image}
+                  width={158}
+                  height={319}
+                  style={{ width: '100%', height: 'auto' }}
+                  alt=""
+                />
+              </div>
             )}
           </div>
           <div className="ColumnCharts">
-            {product.addons.map((addon, index) => (
+            {categoriesAddonsModel.map((addon, index) => (
               <div className="row PreviewItem" key={index}>
                 <div className="col-6 PreviewItemChart">
                   <PieChart
@@ -182,6 +201,10 @@ export default function MyComponent(props) {
           .ColumnProduct {
             width: 50%;
           }
+        }
+        .imgCnt {
+          width: 158px;
+          height: 319px;
         }
         .ColumnCharts {
           display: flex;

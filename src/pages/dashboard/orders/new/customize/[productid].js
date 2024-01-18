@@ -3,7 +3,7 @@ import Metaheader from '@/components/Metaheader';
 import Actions from '@/components/dashboard/orders/new/Actions';
 import Options from '@/components/dashboard/orders/new/Options';
 import Preview from '@/components/dashboard/orders/new/Preview';
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState, useRef } from 'react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
@@ -13,6 +13,7 @@ import categoriesAddonsModel from '@/models/categoriesAddonsModel';
 
 import productReducer from '@/reducers/ProductReducers';
 import { useRouter } from 'next/router';
+import { CircularProgress } from '@nextui-org/react';
 
 async function getProduct(productid) {
   //SIMULATE SLOW CONNECTION
@@ -40,6 +41,7 @@ function CustomizeOrderScreen() {
   const [productCurrent, setProductCurrent] = useState(null);
 
   const [addons, setAddons] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const initialProduct =
     JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) ||
@@ -49,15 +51,27 @@ function CustomizeOrderScreen() {
 
   const onChangeOption = (option, addon, action) => {
     dispatch({ type: 'CHANGE_OPTION', option, addon, action });
+
+    categoriesAddonsModel.map((category) => {
+      if (category.name === option.category) {
+        category.options.map((optionItem) => {
+          if (optionItem.id === option.id) {
+            optionItem.selected = action === 'add';
+          }
+        });
+      }
+    });
   };
 
   useEffect(() => {
     if (productid) {
       const fetchProduct = async () => {
+        setIsLoading(true);
         const productBD = await getProduct(productid);
         const { records } = productBD.record;
         if (!productBD || records.length === 0) {
           setProductCurrent(null);
+          setIsLoading(false);
           return;
         }
 
@@ -85,7 +99,6 @@ function CustomizeOrderScreen() {
             }
           });
         });
-        console.log('curProduct', curProduct);
         setProductCurrent(curProduct);
 
         const initialProduct =
@@ -93,27 +106,12 @@ function CustomizeOrderScreen() {
           curProduct;
 
         dispatch({ type: 'SET_PRODUCT', product: initialProduct });
+
+        setIsLoading(false);
       };
       fetchProduct();
     }
   }, [productid]);
-
-  // useEffect(() => {
-  //   if (product && productid) {
-  //     console.log('useEffectAddons', product);
-  //     const fetchAddons = async () => {
-  //       const addonsBD = await getAddons(productid);
-  //       const { records } = addonsBD.records;
-  //       if (!addonsBD || records.length === 0) {
-  //         setAddons(null);
-  //         return;
-  //       }
-
-  //       setAddons(records);
-  //     };
-  //     fetchAddons();
-  //   }
-  // }, [product, productid]);
 
   useEffect(() => {
     if (!localStorage.getItem('ArcticBunker_draft_order') && initialProduct) {
@@ -128,6 +126,23 @@ function CustomizeOrderScreen() {
       router.push('/dashboard/orders/new/last-step');
     }
   };
+
+  const addonsUpdated = useRef(false);
+
+  useEffect(() => {
+    if (!addons || !categoriesAddonsModel) return;
+    if (addonsUpdated.current) return;
+    addonsUpdated.current = true;
+
+    addons.map((addon) => {
+      categoriesAddonsModel.map((category) => {
+        if (category.name === addon.category) {
+          category.options.push({ ...addon, selected: false });
+        }
+      });
+    });
+  }, [addons, categoriesAddonsModel]);
+
   return (
     <>
       <Metaheader title="Personalizar Orden | Arctic Bunker" />
@@ -151,7 +166,11 @@ function CustomizeOrderScreen() {
               />
             </div>
           </div>
-          {initialProduct ? (
+          {isLoading ? (
+            <div className={`${styles.loading}`}>
+              <CircularProgress size="sm" aria-label="Loading..." />
+            </div>
+          ) : initialProduct ? (
             <>
               <div className={`row ${styles.row01}`}>
                 <div className={`col col-12`}>
@@ -176,6 +195,7 @@ function CustomizeOrderScreen() {
                   <Preview
                     theme={theme}
                     product={product}
+                    addons={addons}
                     categoriesAddonsModel={categoriesAddonsModel}
                   />
                 </div>

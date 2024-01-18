@@ -33,6 +33,13 @@
     display: flex;
 }
 
+.loading{
+    margin: 50px 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
 @media (max-width: 599px){
     .colOptions{
         align-items: center;
