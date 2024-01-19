@@ -53,10 +53,6 @@ function ListProducts() {
     setRecordChange(true);
   };
 
-  const onShowModalAddons = () => {
-    setShowModalAddons((currCount) => currCount + 1);
-  };
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const fetchOrders = async () => {
@@ -174,6 +170,7 @@ function ListProducts() {
         const newRecord = { ...recordModal };
         newRecord.productImage.src = urlMedia;
         setRecordModal(newRecord);
+        setRecordChange(true);
       } else {
         toast.error('La imágen no se pudo guardar');
       }
