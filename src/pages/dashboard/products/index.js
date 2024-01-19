@@ -41,6 +41,7 @@ function ListProducts() {
   const [allowUploadImage, setAllowUploadImage] = React.useState(false);
   const [recordImage, setRecordImage] = React.useState(null);
   const [savingRecord, setSavingRecord] = React.useState(false);
+  const [savingImage, setSavingImage] = React.useState(false);
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -142,6 +143,8 @@ function ListProducts() {
   };
 
   const uploadImage = async () => {
+    if (savingImage) return;
+    setSavingImage(true);
     const body = new FormData();
     body.append('file', recordImage);
     const response = await fetch(
@@ -175,6 +178,9 @@ function ListProducts() {
         toast.error('La imágen no se pudo guardar');
       }
       setShowModalChangeImage(0);
+      setSavingImage(false);
+    } else {
+      setSavingImage(false);
     }
   };
 
