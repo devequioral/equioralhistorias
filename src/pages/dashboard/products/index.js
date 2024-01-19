@@ -97,7 +97,6 @@ function ListProducts() {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   const showProductDetail = (record) => {
-    console.log('showProductDetail');
     setRecordModal(record);
     setShowModalProductDetail((currCount) => currCount + 1);
   };
@@ -114,7 +113,11 @@ function ListProducts() {
   const saveProduct = () => {
     if (savingRecord) return;
     setSavingRecord(true);
-    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/admin/products/new', {
+    const url = recordModal.id
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/update`
+      : '${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/new';
+
+    fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -306,6 +309,11 @@ function ListProducts() {
             schema={{
               title: 'Detalle de Producto',
               fields: [
+                {
+                  key: 'id',
+                  label: 'Product ID',
+                  type: 'hidden',
+                },
                 {
                   key: 'productName',
                   label: 'Nombre del Producto',

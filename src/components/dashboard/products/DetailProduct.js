@@ -30,6 +30,13 @@ export default function DetailProduct(props) {
         {schema.fields.map((field, index) => {
           return (
             <div key={index} className="flex flex-col gap-1">
+              {field.type === 'hidden' && (
+                <input
+                  type="hidden"
+                  name={field.key}
+                  value={record[field.key]}
+                />
+              )}
               {(field.type === 'text' || field.type === 'date') && (
                 <Input
                   isReadOnly={field.readOnly ? true : false}
