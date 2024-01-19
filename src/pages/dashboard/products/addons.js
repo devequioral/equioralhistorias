@@ -141,7 +141,10 @@ function ListProducts() {
   const saveRecord = () => {
     if (savingRecord) return;
     setSavingRecord(true);
-    fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/admin/products/addons/new', {
+    const url = recordModal.id
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/update`
+      : '${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/new';
+    fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -298,6 +301,11 @@ function ListProducts() {
             schema={{
               title: 'Detalle del Adicional',
               fields: [
+                {
+                  key: 'id',
+                  label: 'ID',
+                  type: 'hidden',
+                },
                 {
                   key: 'text',
                   label: 'Nombre',

@@ -97,6 +97,7 @@ export default function DetailAddon(props) {
                   onSelectionChange={(key) => {
                     onFieldChange(field, key);
                   }}
+                  defaultSelectedKey={record && record[field.key]}
                 >
                   {(item) => (
                     <AutocompleteItem key={item.value}>
