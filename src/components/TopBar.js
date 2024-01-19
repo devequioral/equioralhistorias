@@ -109,7 +109,7 @@ export default function TopBar(props) {
 
               <div className={`${styles.cntBtn}`}>
                 <div className={`${styles.icon}`}>
-                  <Link href="/app">
+                  <Link href="/dashboard">
                     <Image
                       src={`/assets/images/theme-${theme}/icon-notification.svg`}
                       width={24}
@@ -122,7 +122,7 @@ export default function TopBar(props) {
 
               <div className={`${styles.cntBtn}`}>
                 <div className={`${styles.icon}`}>
-                  <Link href="/app">
+                  <Link href="/dashboard">
                     <Image
                       src={`/assets/images/theme-${theme}/icon-user.svg`}
                       width={24}
@@ -132,7 +132,7 @@ export default function TopBar(props) {
                   </Link>
                 </div>
                 <div className={`hide-xs ${styles.icon} ${styles.iconLabel}`}>
-                  <Link href="/app" className={`${styles.Username}`}>
+                  <Link href="/dashboard" className={`${styles.Username}`}>
                     {getUserName()}
                   </Link>
                 </div>
