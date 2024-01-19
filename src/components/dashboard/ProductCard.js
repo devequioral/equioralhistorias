@@ -52,7 +52,7 @@ export default function MyComponent(props) {
           display: flex;
           justify-content: space-between;
           gap: 20px;
-          max-width: 352px;
+          width: 352px;
           margin: 0 auto;
           padding: 31px 17px;
         }
