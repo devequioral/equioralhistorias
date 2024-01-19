@@ -22,19 +22,19 @@ function CompleteScreen() {
 
   React.useEffect(() => {
     if (localStorage.getItem('ArcticBunker_draft_order')) {
-      if (!localStorage.getItem('ArcticBunker_orders')) {
-        localStorage.setItem('ArcticBunker_orders', JSON.stringify([]));
-      }
-      if (localStorage.getItem('ArcticBunker_orders')) {
-        const orders = JSON.parse(localStorage.getItem('ArcticBunker_orders'));
-        orders.push({
-          product,
-          order_id,
-          status: 'Pendiente',
-          date: new Date().toLocaleDateString(),
-        });
-        localStorage.setItem('ArcticBunker_orders', JSON.stringify(orders));
-      }
+      // if (!localStorage.getItem('ArcticBunker_orders')) {
+      //   localStorage.setItem('ArcticBunker_orders', JSON.stringify([]));
+      // }
+      // if (localStorage.getItem('ArcticBunker_orders')) {
+      //   const orders = JSON.parse(localStorage.getItem('ArcticBunker_orders'));
+      //   orders.push({
+      //     product,
+      //     order_id,
+      //     status: 'Pendiente',
+      //     date: new Date().toLocaleDateString(),
+      //   });
+      //   localStorage.setItem('ArcticBunker_orders', JSON.stringify(orders));
+      // }
       localStorage.removeItem('ArcticBunker_draft_order');
     }
   }, []);

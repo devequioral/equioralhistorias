@@ -24,6 +24,7 @@ function NewOrderScreen() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [draftOrder, setDraftOrder] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -55,13 +56,14 @@ function NewOrderScreen() {
   useEffect(() => {
     const draftOrder = localStorage.getItem('ArcticBunker_draft_order');
     if (draftOrder) {
+      setDraftOrder(JSON.parse(draftOrder));
       setShowModal(true);
     }
   }, []);
 
   const handleModalEvent = (name_event) => {
     if (name_event === 'option01') {
-      router.push('/dashboard/orders/new/customize/1');
+      router.push(`/dashboard/orders/new/customize/${draftOrder.product.id}`);
     }
     if (name_event === 'option02') {
       localStorage.removeItem('ArcticBunker_draft_order');

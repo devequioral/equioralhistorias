@@ -8,7 +8,6 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import styles from '@/styles/dashboard/orders/NewOrderScreen.module.css';
-import categoriesAddonsModel from '@/models/categoriesAddonsModel';
 
 import orderReducer from '@/reducers/OrderReducer';
 import { useRouter } from 'next/router';
@@ -17,16 +16,12 @@ import { CircularProgress } from '@nextui-org/react';
 import orderModel from '@/models/orderModel';
 
 async function getProduct(productid) {
-  //SIMULATE SLOW CONNECTION
-  //await new Promise((resolve) => setTimeout(resolve, 2000));
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/get?productid=${productid}`;
   const res = await fetch(url);
   return await res.json();
 }
 
 async function getAddons(productid) {
-  //SIMULATE SLOW CONNECTION
-  //await new Promise((resolve) => setTimeout(resolve, 2000));
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/addons/list?productid=${productid}`;
   const res = await fetch(url);
   return await res.json();
@@ -62,7 +57,12 @@ function CustomizeOrderScreen() {
           recordsAddons.map((addon) => {
             orderModel.categoriesAddons.map((category) => {
               if (category.name === addon.category) {
-                category.options.push({ ...addon, selected: false });
+                const index = category.options.findIndex(
+                  (option) => option.id === addon.id
+                );
+                if (index === -1) {
+                  category.options.push({ ...addon, selected: false });
+                }
               }
             });
           });

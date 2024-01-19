@@ -48,7 +48,9 @@ export default function MyComponent(props) {
     if (!addon.options) return percentage;
     addon.options.forEach((option) => {
       if (option.selected) {
-        percentage += option.percent;
+        //PARSE PERCENTAGE IN INT
+        const num = parseInt(option.percent);
+        percentage += num;
       }
     });
     return percentage;
