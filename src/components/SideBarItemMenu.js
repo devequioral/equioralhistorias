@@ -11,6 +11,7 @@ export default function SideBarItemMenu({
   clickEvent,
   showLabel,
   theme,
+  onToggleItem,
 }) {
   const [expanded, setExpanded] = useState(false);
   const collapsable = children ? true : false;
@@ -21,6 +22,7 @@ export default function SideBarItemMenu({
     router.push(path);
   };
   const onToggleMenu = (elem) => {
+    onToggleItem && onToggleItem(elem);
     if (!elem.target.classList.contains(styles.collapsable)) return;
     setExpanded(!expanded);
   };

@@ -1,15 +1,14 @@
 import styles from '@/styles/SideBar.module.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import SideBarItemMenu from './SideBarItemMenu';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 
 export default function SideBar({ open, theme }) {
-  const [expanded, setExpanded] = React.useState(false);
-  // const onClickMenu = (elem) => {
-  //   const menu = elem.target.dataset.menu;
-  //   console.log(menu, elem.target);
-  // };
+  const [expanded, setExpanded] = React.useState(open);
+  const onToggleItem = (elem) => {
+    setExpanded(true);
+  };
   // const onToggleMenu = (elem) => {
   //   if (elem.target.className !== styles.itemMenu) return;
   //   setExpanded(!expanded);
@@ -17,12 +16,15 @@ export default function SideBar({ open, theme }) {
 
   const { data: session } = useSession();
   const user = session?.user;
+  useEffect(() => {
+    console.log('expanded', expanded);
+  }, [expanded]);
   return (
     <>
       <div
-        className={`${styles.SideBar} ${open === false && styles.collapse} ${
-          styles[theme]
-        }`}
+        className={`${styles.SideBar} ${
+          expanded === false && styles.collapse
+        } ${styles[theme]}`}
       >
         <ul className={`${styles.list}`}>
           <li>
@@ -34,7 +36,7 @@ export default function SideBar({ open, theme }) {
                 height: 24,
               }}
               label="Inicio"
-              showLabel={open}
+              showLabel={expanded}
               theme={theme}
             ></SideBarItemMenu>
           </li>
@@ -48,8 +50,9 @@ export default function SideBar({ open, theme }) {
                 height: 24,
               }}
               label="Cotizaciones"
-              showLabel={open}
+              showLabel={expanded}
               theme={theme}
+              onToggleItem={onToggleItem}
             >
               <li data-path="/dashboard/orders/new">
                 <Image
@@ -108,7 +111,7 @@ export default function SideBar({ open, theme }) {
                   height: 24,
                 }}
                 label="Inventario"
-                showLabel={open}
+                showLabel={expanded}
                 theme={theme}
               >
                 <li data-path="/dashboard/products">
@@ -142,7 +145,7 @@ export default function SideBar({ open, theme }) {
                 height: 24,
               }}
               label="Salir"
-              showLabel={open}
+              showLabel={expanded}
               theme={theme}
             ></SideBarItemMenu>
           </li>

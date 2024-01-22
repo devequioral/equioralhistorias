@@ -41,6 +41,11 @@ tr:hover .expand-cell img{
   display: block;
 }
 
+.avatar-topnav{
+  background-color: var(--theme-light-color-primary)!important;
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, var(--theme-light-color-primary) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px!important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

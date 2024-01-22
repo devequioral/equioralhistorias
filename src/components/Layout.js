@@ -1,5 +1,5 @@
 import React from 'react';
-import TopBar from '@/components/TopBar';
+import TopBarv2 from '@/components/TopBarv2';
 import SideBar from '@/components/SideBar';
 
 import styles from '@/styles/Layout.module.css';
@@ -18,7 +18,7 @@ export default function Layout({
   return (
     <>
       <div className={`${styles.LayoutWrapper} ${styles[theme]}`}>
-        <TopBar
+        <TopBarv2
           onClickEvent={TopBarClick}
           theme={theme}
           toogleTheme={toogleTheme}
