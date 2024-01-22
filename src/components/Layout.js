@@ -1,6 +1,6 @@
 import React from 'react';
-import TopBarv2 from '@/components/TopBarv2';
-import SideBarV2 from '@/components/SideBarV2';
+import TopBar from '@/components/TopBar';
+import SideBar from '@/components/SideBar';
 
 import styles from '@/styles/Layout.module.css';
 
@@ -18,14 +18,14 @@ export default function Layout({
   return (
     <>
       <div className={`${styles.LayoutWrapper} ${styles[theme]}`}>
-        <TopBarv2
+        <TopBar
           onClickEvent={TopBarClick}
           theme={theme}
           toogleTheme={toogleTheme}
           sidebarExpanded={!sidebarCollapsed}
         />
         <div className={`${styles.centerWrapper}`}>
-          <SideBarV2 open={sidebarOpen} theme={theme} />
+          <SideBar open={sidebarOpen} theme={theme} />
           <div className={`${styles.body}`}>{children}</div>
         </div>
       </div>

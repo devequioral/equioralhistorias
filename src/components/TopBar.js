@@ -1,32 +1,26 @@
 import React from 'react';
-import styles from '@/styles/TopBar.module.css';
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  NavbarMenuToggle,
+  NavbarMenu,
+  DropdownItem,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  Avatar,
+} from '@nextui-org/react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import MainNavigation from '@/components/MainNavigation';
+import styles from '@/styles/TopBar.module.css';
 
-export default function TopBar(props) {
+export default function ToBar() {
   const { data: session } = useSession();
   const user = session?.user;
-  const { theme, onClickEvent, toogleTheme } = props;
-  const router = useRouter();
-  const [sidebarExpanded, setSidebarExpanded] = React.useState(
-    props.sidebarExpanded
-  );
-
-  const onClickMenu = (ev) => {
-    onClickEvent(ev);
-    if (ev === 'toggle-sidebar') setSidebarExpanded(!sidebarExpanded);
-  };
-
-  const searchInput = React.useRef(null);
-  const onSearch = () => {
-    const search = searchInput.current.value;
-    console.log(search);
-  };
-  const _toggleTheme = () => {
-    toogleTheme();
-  };
   const getUserName = () => {
     if (!user) return 'Invitado';
     let name = user.name || user.username;
@@ -36,111 +30,67 @@ export default function TopBar(props) {
     }
     return name;
   };
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
-    <>
-      <div
-        className={`${styles.TopBar} ${
-          !sidebarExpanded && styles.lessPadding
-        } ${styles[theme]}`}
-      >
-        <div className={`container-full ${styles.container}`}>
-          <div className={`row ${styles.row}`}>
-            <div className={`col-4 ${styles.colLeft}`}>
-              <div
-                className={`${styles.hamburguer}`}
-                onClick={() => onClickMenu('toggle-sidebar')}
-              >
-                <Image
-                  src={`/assets/images/theme-${theme}/hamburguer.svg`}
-                  width={50}
-                  height={36}
-                  alt="Menu"
-                />
-              </div>
-              <div className={`hide-xs hide-sm ${styles.logo}`}>
-                <Link href="/">
-                  <Image
-                    src={`/assets/images/theme-${theme}/logo.svg`}
-                    width={141}
-                    height={33}
-                    alt="Logo"
-                  />
-                </Link>
-              </div>
-            </div>
-            <div className={`col-4 ${styles.colCenter}`}>
-              {/* <input
-                className={`${styles.search}`}
-                type="text"
-                placeholder="Buscar"
-                ref={searchInput}
-                onKeyDown={(ev) => {
-                  //IF KEY ENTER IS PRESSED
-                  if (ev.key === 'Enter') {
-                    onSearch();
-                  }
-                }}
-              />
-              <div className={`hide-xs hide-sm ${styles.cntBtn}`}>
-                <div className={`${styles.icon}`} onClick={onSearch}>
-                  <Image
-                    src={`/assets/images/theme-${theme}/icon-search.svg`}
-                    width={18}
-                    height={18}
-                    alt="Search Icon"
-                  />
-                </div>
-                <div className={`hide-xs ${styles.icon} ${styles.iconLabel}`}>
-                  <div onClick={onSearch}>Buscar</div>
-                </div>
-              </div> */}
-            </div>
-            <div className={`col-4 ${styles.colRight}`}>
-              {/* <div className={`${styles.cntBtn}`}>
-                <div className={`${styles.icon}`} onClick={_toggleTheme}>
-                  <Image
-                    src={`/assets/images/theme-${theme}/icon-theme.svg`}
-                    width={24}
-                    height={24}
-                    alt="Theme"
-                  />
-                </div>
-              </div> */}
-
-              <div className={`${styles.cntBtn}`}>
-                <div className={`${styles.icon}`}>
-                  <Link href="/dashboard">
-                    <Image
-                      src={`/assets/images/theme-${theme}/icon-notification.svg`}
-                      width={24}
-                      height={24}
-                      alt="Notification"
-                    />
-                  </Link>
-                </div>
-              </div>
-
-              <div className={`${styles.cntBtn}`}>
-                <div className={`${styles.icon}`}>
-                  <Link href="/dashboard">
-                    <Image
-                      src={`/assets/images/theme-${theme}/icon-user.svg`}
-                      width={24}
-                      height={24}
-                      alt="User Icon"
-                    />
-                  </Link>
-                </div>
-                <div className={`hide-xs ${styles.icon} ${styles.iconLabel}`}>
-                  <Link href="/dashboard" className={`${styles.Username}`}>
-                    {getUserName()}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+    <Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpen}>
+      <NavbarMenuToggle
+        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        className="hide-md hide-lg hide-xl"
+      />
+      <NavbarBrand>
+        <Link href="/">
+          <Image
+            src={`/assets/images/theme-light/logo.svg`}
+            width={141}
+            height={33}
+            alt="Logo"
+          />
+        </Link>
+      </NavbarBrand>
+      <NavbarContent as="div" justify="end" className="hide-xss">
+        <NavbarItem className="lg:flex">
+          <Link href="/dashboard">
+            <Image
+              src={`/assets/images/theme-light/icon-notification.svg`}
+              width={24}
+              height={24}
+              alt="Notification"
+            />
+          </Link>
+        </NavbarItem>
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Avatar
+              isBordered
+              as="button"
+              className="avatar-topnav"
+              name="Jason Hughes"
+              size="sm"
+              src="/assets/images/user-icon.svg"
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Bienvenido</p>
+              <p className="font-semibold">{getUserName()}</p>
+            </DropdownItem>
+            <DropdownItem key="profile">
+              <Link href="/dashboard">Perfil</Link>
+            </DropdownItem>
+            <DropdownItem key="orders">
+              <Link href="/dashboard/orders">Mis Cotizaciones</Link>
+            </DropdownItem>
+            <DropdownItem key="logout" color="danger">
+              <Link href="/close-session">Cerrar Sesión</Link>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+      <NavbarMenu>
+        <div className={`${styles.MainNavigationCNT}`}>
+          <MainNavigation />
         </div>
-      </div>
-    </>
+      </NavbarMenu>
+    </Navbar>
   );
 }
