@@ -48,7 +48,7 @@ export default function ToBar() {
         </Link>
       </NavbarBrand>
       <NavbarContent as="div" justify="end" className="hide-xss">
-        <NavbarItem className="lg:flex">
+        <NavbarItem className="flex justify-center items-center">
           <Link href="/dashboard">
             <Image
               src={`/assets/images/theme-light/icon-notification.svg`}
@@ -63,10 +63,10 @@ export default function ToBar() {
             <Avatar
               isBordered
               as="button"
-              className="avatar-topnav"
-              name="Jason Hughes"
+              className="w-6 h-6 text-tiny avatar-topnav"
+              name={getUserName()}
               size="sm"
-              src="/assets/images/user-icon.svg"
+              src="/assets/images/user-icon-w.svg"
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">

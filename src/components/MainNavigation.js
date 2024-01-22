@@ -160,6 +160,42 @@ export default function MainNavigation() {
           </Dropdown>
         </ButtonGroup>
       )}
+      {user && user?.role === 'admin' && (
+        <Button
+          color="default"
+          variant="light"
+          className="btn-menu"
+          onClick={() => onClickMenu('/dashboard/users')}
+          startContent={
+            <Image
+              src={`/assets/images/theme-light/icon-user.svg`}
+              width={24}
+              height={24}
+              alt="Usuarios"
+            />
+          }
+        >
+          Usuarios
+        </Button>
+      )}
+      {user && user?.role === 'admin' && (
+        <Button
+          color="default"
+          variant="light"
+          className="btn-menu"
+          onClick={() => onClickMenu('/dashboard/tickets')}
+          startContent={
+            <Image
+              src={`/assets/images/theme-light/icon-tickets.svg`}
+              width={24}
+              height={24}
+              alt="Tickets"
+            />
+          }
+        >
+          Tickets
+        </Button>
+      )}
       <Button
         color="default"
         variant="light"

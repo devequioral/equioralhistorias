@@ -21,4 +21,9 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export { formatDate, formatDateToISOSM, capitalizeFirstLetter };
+//FUNCTION FOR SHORT UUID
+function shortUUID(uuid) {
+  return `${uuid.substring(0, 5)}...${uuid.substring(uuid.length - 5)}`;
+}
+
+export { formatDate, formatDateToISOSM, capitalizeFirstLetter, shortUUID };
