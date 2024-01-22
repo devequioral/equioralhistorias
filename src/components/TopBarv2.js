@@ -5,7 +5,8 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
+  NavbarMenuToggle,
+  NavbarMenu,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -14,6 +15,8 @@ import {
 } from '@nextui-org/react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import MainNavigation from '@/components/MainNavigation';
+import styles from '@/styles/TopBarV2.module.css';
 
 export default function ToBarv2() {
   const { data: session } = useSession();
@@ -27,8 +30,13 @@ export default function ToBarv2() {
     }
     return name;
   };
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
-    <Navbar maxWidth="full">
+    <Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpen}>
+      <NavbarMenuToggle
+        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        className="hide-md hide-lg hide-xl"
+      />
       <NavbarBrand>
         <Link href="/">
           <Image
@@ -39,7 +47,7 @@ export default function ToBarv2() {
           />
         </Link>
       </NavbarBrand>
-      <NavbarContent as="div" justify="end">
+      <NavbarContent as="div" justify="end" className="hide-xss">
         <NavbarItem className="lg:flex">
           <Link href="/dashboard">
             <Image
@@ -78,6 +86,11 @@ export default function ToBarv2() {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
+      <NavbarMenu>
+        <div className={`${styles.MainNavigationCNT}`}>
+          <MainNavigation />
+        </div>
+      </NavbarMenu>
     </Navbar>
   );
 }

@@ -46,6 +46,13 @@ tr:hover .expand-cell img{
   box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, var(--theme-light-color-primary) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px!important;
 }
 
+.btn-menu.text-primary {
+  color: var(--theme-light-color-primary);
+}
+.btn-menu.border-primary {
+  border-color: var(--theme-light-color-primary);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
