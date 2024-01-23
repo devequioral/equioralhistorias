@@ -261,7 +261,7 @@ function ListUsers() {
                 },
                 { key: 'username', label: 'Usuario', type: 'text' },
                 { key: 'email', label: 'Email', type: 'text' },
-                { key: 'password', label: 'Password', type: 'text' },
+                { key: 'password', label: 'Password', type: 'password' },
                 {
                   key: 'role',
                   label: 'Rol',

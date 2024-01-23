@@ -106,9 +106,9 @@ function LoginForm(props) {
     }
   };
 
-  const [paswwordVisible, setPaswwordVisible] = React.useState(false);
+  const [passwordVisible, setPaswwordVisible] = React.useState(false);
 
-  const toggleVisibility = () => setPaswwordVisible(!paswwordVisible);
+  const toggleVisibility = () => setPaswwordVisible(!passwordVisible);
   return (
     <form className="main-container" onSubmit={handleSubmit(_handleSubmit)}>
       {options?.logo && (
@@ -160,14 +160,14 @@ function LoginForm(props) {
               type="button"
               onClick={toggleVisibility}
             >
-              {paswwordVisible ? (
+              {passwordVisible ? (
                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
               ) : (
                 <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
               )}
             </button>
           }
-          type={paswwordVisible ? 'text' : 'password'}
+          type={passwordVisible ? 'text' : 'password'}
           className="max-w-xs"
           {...register('password', {
             required: 'This Field is Required',
