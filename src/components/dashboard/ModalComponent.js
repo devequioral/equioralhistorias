@@ -11,10 +11,14 @@ import {
 } from '@nextui-org/react';
 
 import styles from '@/styles/dashboard/ModalComponent.module.css';
+import { set } from 'mongoose';
 
 export default function App(props) {
-  const { show, title, onSave, allowSave, children, onCloseModal } = props;
+  const { size, show, title, onSave, allowSave, children, onCloseModal } =
+    props;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const refModalBody = React.useRef(null);
 
@@ -22,15 +26,18 @@ export default function App(props) {
     if (show > 0) {
       onOpen();
     } else {
+      setIsLoading(false);
       onCloseModal();
     }
   }, [show]);
 
   const saveRecord = () => {
+    setIsLoading(true);
     onSave();
   };
 
   const closeModal = () => {
+    setIsLoading(false);
     onCloseModal();
   };
 
@@ -43,6 +50,7 @@ export default function App(props) {
           onOpenChange={onOpenChange}
           scrollBehavior={'inside'}
           onClose={() => closeModal()}
+          size={size}
         >
           <ModalContent>
             {(onClose) => (
@@ -59,6 +67,7 @@ export default function App(props) {
                     color={!allowSave ? 'default' : 'primary'}
                     onPress={saveRecord}
                     disabled={!allowSave}
+                    isLoading={isLoading}
                   >
                     Guardar
                   </Button>

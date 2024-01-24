@@ -12,6 +12,7 @@ import {
   CardBody,
   CardFooter,
   Divider,
+  Chip,
 } from '@nextui-org/react';
 
 import styles from '@/styles/dashboard/tickets/DetailTicket.module.css';
@@ -19,7 +20,7 @@ import styles from '@/styles/dashboard/tickets/DetailTicket.module.css';
 import { formatDate } from '@/utils/utils';
 
 export default function DetailTicket(props) {
-  const { addResponse, record, onFieldChange, onChangeImage } = props;
+  const { userRole, addResponse, record, onFieldChange, onChangeImage } = props;
   //const newRecord = { ...record };
 
   const [isNewRecord, setIsNewRecord] = React.useState(
@@ -37,8 +38,15 @@ export default function DetailTicket(props) {
     }
   };
 
-  const changeImage = (field) => {
-    onChangeImage(field);
+  const statusColorMap = {
+    active: 'primary',
+    pending: 'warning',
+    close: 'default',
+  };
+  const statusLabelMap = {
+    active: 'Activo',
+    pending: 'Pendiente',
+    close: 'Cerrado',
   };
 
   return (
@@ -62,7 +70,37 @@ export default function DetailTicket(props) {
           </>
         ) : (
           <>
-            <div className="flex flex-col gap-1">Estatus: {record.status}</div>
+            {userRole === 'admin' ? (
+              <Select
+                items={[
+                  { value: 'active', label: 'Activo' },
+                  { value: 'pending', label: 'Pendiente' },
+                  { value: 'close', label: 'Cerrado' },
+                ]}
+                placeholder={`Seleccione el estatus`}
+                className="max-w-xs"
+                defaultSelectedKeys={[record.status]}
+                onChange={(e) => {
+                  onFieldChange('status', e.target.value);
+                }}
+              >
+                {(item) => (
+                  <SelectItem key={item.value}>{item.label}</SelectItem>
+                )}
+              </Select>
+            ) : (
+              <div className={`${styles.statusDetail}`}>
+                <p className={`${styles.subtitle}`}>Estatus:</p>
+                <Chip
+                  className="capitalize"
+                  color={statusColorMap[record.status]}
+                  size="sm"
+                  variant="flat"
+                >
+                  {statusLabelMap[record.status]}
+                </Chip>
+              </div>
+            )}
             <Card className="max-w-[400px]">
               <CardHeader className="flex gap-3">
                 <div className="flex flex-col">
@@ -137,16 +175,18 @@ export default function DetailTicket(props) {
                 />
               </div>
             ) : (
-              <div className="flex flex-col">
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    setAddResponseVisible(true);
-                  }}
-                >
-                  Responder
-                </Button>
-              </div>
+              record.status !== 'close' && (
+                <div className="flex flex-col">
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      setAddResponseVisible(true);
+                    }}
+                  >
+                    Responder
+                  </Button>
+                </div>
+              )
             )}
           </>
         )}

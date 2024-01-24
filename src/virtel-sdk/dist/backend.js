@@ -24,9 +24,7 @@ const getRecords = async (options) => {
       },
     });
 
-    const records = response.data || null;
-
-    return records;
+    return response.data || null;
   } catch (error) {
     //console.error(error);
     return null;

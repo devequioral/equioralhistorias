@@ -1,6 +1,21 @@
 import axios from 'axios';
-import bcryptjs from 'bcryptjs';
+import { getRecords } from '@/virtel-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
+import { filterBy, filterValue } from '@/utils/filters';
+
+async function getRecord(recordid) {
+  return await getRecords({
+    backend_url: process.env.VIRTEL_DASHBOARD_URL,
+    organization: process.env.VIRTEL_DASHBOARD_ORGANIZATION,
+    database: process.env.VIRTEL_DASHBOARD_DATABASE,
+    object: 'tickets',
+    api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
+    params: {
+      filterBy: filterBy({ id: recordid }),
+      filterValue: filterValue({ id: recordid }),
+    },
+  });
+}
 
 async function updateRecord(user, record, ticket_response) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/tickets`;
@@ -19,6 +34,15 @@ async function updateRecord(user, record, ticket_response) {
         date: new Date().toISOString(),
       });
     }
+    //VERIFY IF RECORD IS CLOSE
+    const ticketDB = await getRecord(record.id);
+    if (ticketDB && ticketDB.records && ticketDB.records.length > 0) {
+      if (ticketDB.records[0].status === 'close') {
+        return null;
+      }
+    }
+
+    //UPDATE RECORD
     const record_update = {
       id: record.id,
       title: record.title,

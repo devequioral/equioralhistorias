@@ -12,11 +12,14 @@ import ModalComponent from '@/components/dashboard/ModalComponent';
 import ticketModel from '@/models/ticketModel';
 import { toast } from 'react-toastify';
 import DetailTicket from '@/components/dashboard/tickets/DetailTicket';
+import { useSession } from 'next-auth/react';
 
-async function getTickets(page = 1, pageSize = 5, status = 'all') {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/tickets/list?page=${page}&pageSize=${pageSize}`
-  );
+async function getTickets(page = 1, pageSize = 5, userRole) {
+  const url =
+    userRole == 'admin'
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/tickets/list?page=${page}&pageSize=${pageSize}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/list?page=${page}&pageSize=${pageSize}`;
+  const res = await fetch(url);
   return await res.json();
 }
 
@@ -36,6 +39,8 @@ function ListTickets() {
 
   const [newResponse, setNewResponse] = React.useState(null);
 
+  const { data: session } = useSession();
+
   const onRecordChange = (value) => {
     setRecordChange(value);
   };
@@ -51,7 +56,7 @@ function ListTickets() {
     if (typeof window !== 'undefined') {
       const fetchOrders = async () => {
         setLoading(true);
-        const usersBD = await getTickets(page, pageSize);
+        const usersBD = await getTickets(page, pageSize, session.user.role);
 
         const { records } = usersBD.data;
 
@@ -99,7 +104,7 @@ function ListTickets() {
     if (savingRecord) return;
     setSavingRecord(true);
     let url = recordModal.id
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/update`
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/tickets/update`
       : `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/new`;
 
     const body = { record: recordModal };
@@ -175,7 +180,7 @@ function ListTickets() {
             {cellValue ? (
               <Chip
                 className="capitalize"
-                color={statusColorMap[record.role]}
+                color={statusColorMap[cellValue]}
                 size="sm"
                 variant="flat"
               >
@@ -260,6 +265,7 @@ function ListTickets() {
             onRecordChange(false);
           }}
           allowSave={recordChange}
+          size={recordModal && recordModal.id ? '5xl' : 'md'}
         >
           <DetailTicket
             onRecordChange={(value) => {
@@ -270,6 +276,7 @@ function ListTickets() {
               onFieldChange(key, value);
             }}
             addResponse={addResponse}
+            userRole={session.user.role}
           />
         </ModalComponent>
       </Layout>
@@ -277,5 +284,5 @@ function ListTickets() {
   );
 }
 
-ListTickets.auth = { adminOnly: true };
+ListTickets.auth = true;
 export default ListTickets;
