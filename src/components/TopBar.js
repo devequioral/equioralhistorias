@@ -14,13 +14,12 @@ import {
   Avatar,
 } from '@nextui-org/react';
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
 import MainNavigation from '@/components/MainNavigation';
 import styles from '@/styles/TopBar.module.css';
+import TopBarNotifications from '@/components/TopBarNotifications';
 
-export default function ToBar() {
-  const { data: session } = useSession();
-  const user = session?.user;
+export default function ToBar(props) {
+  const { user } = props;
   const getUserName = () => {
     if (!user) return 'Invitado';
     let name = user.name || user.username;
@@ -32,7 +31,7 @@ export default function ToBar() {
   };
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
-    <Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpen}>
+    <Navbar isBordered maxWidth="full" onMenuOpenChange={setIsMenuOpen}>
       <NavbarMenuToggle
         aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
         className="hide-md hide-lg hide-xl"
@@ -49,14 +48,7 @@ export default function ToBar() {
       </NavbarBrand>
       <NavbarContent as="div" justify="end" className="hide-xss">
         <NavbarItem className="flex justify-center items-center">
-          <Link href="/dashboard">
-            <Image
-              src={`/assets/images/theme-light/icon-notification.svg`}
-              width={24}
-              height={24}
-              alt="Notification"
-            />
-          </Link>
+          <TopBarNotifications user={user} />
         </NavbarItem>
         <Dropdown placement="bottom-end">
           <DropdownTrigger>

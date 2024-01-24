@@ -11,11 +11,18 @@ import {
 } from '@nextui-org/react';
 
 import styles from '@/styles/dashboard/ModalComponent.module.css';
-import { set } from 'mongoose';
 
 export default function App(props) {
-  const { size, show, title, onSave, allowSave, children, onCloseModal } =
-    props;
+  const {
+    size,
+    show,
+    title,
+    onSave,
+    allowSave,
+    showButtonSave = true,
+    children,
+    onCloseModal,
+  } = props;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -63,14 +70,16 @@ export default function App(props) {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Cerrar
                   </Button>
-                  <Button
-                    color={!allowSave ? 'default' : 'primary'}
-                    onPress={saveRecord}
-                    disabled={!allowSave}
-                    isLoading={isLoading}
-                  >
-                    Guardar
-                  </Button>
+                  {showButtonSave && (
+                    <Button
+                      color={!allowSave ? 'default' : 'primary'}
+                      onPress={saveRecord}
+                      disabled={!allowSave}
+                      isLoading={isLoading}
+                    >
+                      Guardar
+                    </Button>
+                  )}
                 </ModalFooter>
               </>
             )}

@@ -16,7 +16,6 @@ export default function PieChartComponent(props) {
     { value: calcPercentage(addon), color: addon.color },
   ]);
   useEffect(() => {
-    console.log('product changed');
     // recalculate data[0].value here based on product
     const newValue = calcPercentage(addon); // assuming calcPercentage is a function that calculates the percentage
 

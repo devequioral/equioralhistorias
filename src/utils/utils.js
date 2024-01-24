@@ -18,6 +18,7 @@ function formatDateToISOSM(date) {
 
 //FUNCTION TO CAPITALIZE FIRST LETTER OF A STRING
 function capitalizeFirstLetter(string) {
+  if (string == null || string == undefined) return;
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 

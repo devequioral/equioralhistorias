@@ -4,28 +4,23 @@ import SideBar from '@/components/SideBar';
 
 import styles from '@/styles/Layout.module.css';
 
+import { useSession } from 'next-auth/react';
+
 export default function Layout({
   children,
   theme,
   toogleTheme,
   sidebarCollapsed = false,
 }) {
-  const [sidebarOpen, setSidebarOpen] = React.useState(!sidebarCollapsed);
-  const TopBarClick = (ev) => {
-    if (ev === 'toggle-sidebar') setSidebarOpen(!sidebarOpen);
-  };
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
     <>
       <div className={`${styles.LayoutWrapper} ${styles[theme]}`}>
-        <TopBar
-          onClickEvent={TopBarClick}
-          theme={theme}
-          toogleTheme={toogleTheme}
-          sidebarExpanded={!sidebarCollapsed}
-        />
+        <TopBar theme={theme} user={user} />
         <div className={`${styles.centerWrapper}`}>
-          <SideBar open={sidebarOpen} theme={theme} />
+          <SideBar theme={theme} />
           <div className={`${styles.body}`}>{children}</div>
         </div>
       </div>

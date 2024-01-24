@@ -5,39 +5,35 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import { Chip } from '@nextui-org/react';
-import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
 import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
-import ticketModel from '@/models/ticketModel';
 import { toast } from 'react-toastify';
-import DetailTicket from '@/components/dashboard/tickets/DetailTicket';
+import DetailNotification from '@/components/dashboard/notifications/DetailNotification';
 import { useSession } from 'next-auth/react';
 
-async function getTickets(page = 1, pageSize = 5, userRole) {
+async function getNotifications(page = 1, pageSize = 5, userRole) {
   const url =
     userRole == 'admin'
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/tickets/list?page=${page}&pageSize=${pageSize}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/list?page=${page}&pageSize=${pageSize}`;
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/notifications/list`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/notifications/list`;
+
   const res = await fetch(url);
   return await res.json();
 }
 
-function ListTickets() {
-  const [tickets, setTickets] = React.useState([]);
+function Notifications() {
+  const [notifications, setNotifications] = React.useState([]);
   const [totalPages, setTotalPages] = React.useState(1);
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(5);
   const [refreshTable, setRefreshTable] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const router = useRouter();
   const [showModalRecordDetail, setShowModalRecordDetail] = React.useState(0);
 
-  const [recordModal, setRecordModal] = React.useState(ticketModel);
+  const [recordModal, setRecordModal] = React.useState(null);
   const [recordChange, setRecordChange] = React.useState(false);
   const [savingRecord, setSavingRecord] = React.useState(false);
-
-  const [newResponse, setNewResponse] = React.useState(null);
 
   const { data: session } = useSession();
 
@@ -45,23 +41,27 @@ function ListTickets() {
     setRecordChange(value);
   };
 
-  const onFieldChange = (key, value) => {
-    const newRecord = { ...recordModal };
-    newRecord[key] = value;
-    setRecordModal(newRecord);
-    setRecordChange(true);
-  };
+  //   const onFieldChange = (key, value) => {
+  //     const newRecord = { ...recordModal };
+  //     newRecord[key] = value;
+  //     setRecordModal(newRecord);
+  //     setRecordChange(true);
+  //   };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const fetchRecords = async () => {
         setLoading(true);
-        const ticketsBD = await getTickets(page, pageSize, session.user.role);
+        const notificationsBD = await getNotifications(
+          page,
+          pageSize,
+          session.user.role
+        );
 
-        const { records } = ticketsBD.data;
+        const { records } = notificationsBD.data;
 
         if (records && records.length > 0) {
-          setTickets(
+          setNotifications(
             records.map((user, index) => {
               return {
                 ...user,
@@ -73,7 +73,7 @@ function ListTickets() {
           setTotalPages(records.totalPages);
           setPage(records.page);
         } else {
-          setTickets([]);
+          setNotifications([]);
           setTotalPages(1);
           setPage(1);
         }
@@ -90,29 +90,17 @@ function ListTickets() {
     setShowModalRecordDetail((currCount) => currCount + 1);
   };
 
-  const onNewRecord = () => {
-    setRecordModal(ticketModel);
-    setShowModalRecordDetail((currCount) => currCount + 1);
-  };
-
-  const addResponse = (message) => {
-    setNewResponse(message);
-    setRecordChange(true);
-  };
-
-  const saveRecord = () => {
+  const markAsReaded = () => {
     if (savingRecord) return;
     setSavingRecord(true);
-    let url = recordModal.id
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/tickets/update`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/new`;
+    if (recordModal && recordModal.status === 'readed') return;
+    let url =
+      session.user.role === 'admin'
+        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/notifications/markasreaded`
+        : `${process.env.NEXT_PUBLIC_BASE_URL}/api/notifications/markasreaded`;
 
     const body = { record: recordModal };
 
-    if (newResponse) {
-      url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/addresponse`;
-      body.ticket_response = newResponse;
-    }
     fetch(url, {
       method: 'POST',
       headers: {
@@ -123,24 +111,19 @@ function ListTickets() {
       .then((response) => {
         //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
         if (response.status !== 200) {
-          toast.error('No se pudo enviar la información');
+          //toast.error('No se pudo enviar la información');
           setSavingRecord(false);
-          setNewResponse(null);
         }
         return response.json();
       })
       .then((data) => {
-        toast.success('Registro Guardado con éxito');
-        setShowModalRecordDetail(0);
-        setRefreshTable((currCount) => currCount + 1);
+        //toast.success('Registro Guardado con éxito');
         setSavingRecord(false);
-        setNewResponse(null);
       })
       .catch((error) => {
         //console.error('Error:', error);
-        toast.error('El registro no se pudo guardar');
+        //toast.error('El registro no se pudo guardar');
         setSavingRecord(false);
-        setNewResponse(null);
       });
   };
 
@@ -165,14 +148,12 @@ function ListTickets() {
         );
       case 'status':
         const statusColorMap = {
-          active: 'primary',
-          pending: 'warning',
-          close: 'default',
+          unread: 'danger',
+          readed: 'primary',
         };
         const statusLabelMap = {
-          active: 'Activo',
-          pending: 'Pendiente',
-          close: 'Cerrado',
+          unread: 'No Leido',
+          readed: 'Leido',
         };
 
         return (
@@ -218,34 +199,29 @@ function ListTickets() {
 
   return (
     <>
-      <Metaheader title="Listado de Tickets | Arctic Bunker" />
+      <Metaheader title="Notificaciones | Arctic Bunker" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}
           data={{
             links: [
               { href: '/dashboard', title: 'Inicio' },
-              { href: false, title: 'Tickets' },
+              { href: false, title: 'Notificaciones' },
             ],
           }}
         />
         <TableComponent
           data={{
-            title: 'Listado de Tickets',
-            button: {
-              label: 'Nuevo Ticket',
-              callback: () => {
-                onNewRecord();
-              },
-            },
+            title: 'Listado de Notificaciones',
+            button: false,
             columns: [
               { key: 'expand', label: '' },
-              { key: 'id', label: 'Ticket ID' },
+              { key: 'id', label: 'Notification ID' },
               { key: 'title', label: 'Titulo' },
               { key: 'status', label: 'Estatus' },
               { key: 'date', label: 'Fecha' },
             ],
-            rows: tickets,
+            rows: notifications,
             pagination: {
               total: totalPages,
               initialPage: page,
@@ -259,24 +235,19 @@ function ListTickets() {
         />
         <ModalComponent
           show={showModalRecordDetail}
-          onSave={saveRecord}
-          title="Detalle del Ticket"
+          title="Detalle de la Notificación"
           onCloseModal={() => {
+            setRefreshTable((currCount) => currCount + 1);
             onRecordChange(false);
           }}
-          allowSave={recordChange}
-          size={recordModal && recordModal.id ? '5xl' : 'md'}
+          allowSave={false}
+          showButtonSave={false}
+          size={`md`}
         >
-          <DetailTicket
-            onRecordChange={(value) => {
-              onRecordChange(value);
-            }}
+          <DetailNotification
             record={recordModal}
-            onFieldChange={(key, value) => {
-              onFieldChange(key, value);
-            }}
-            addResponse={addResponse}
             userRole={session.user.role}
+            markAsReaded={markAsReaded}
           />
         </ModalComponent>
       </Layout>
@@ -284,5 +255,5 @@ function ListTickets() {
   );
 }
 
-ListTickets.auth = true;
-export default ListTickets;
+Notifications.auth = true;
+export default Notifications;
