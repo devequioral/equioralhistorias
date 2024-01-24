@@ -37,6 +37,30 @@ async function createOrder(userid, data_contact, product, addons) {
 
     const order = response.data || null;
 
+    if (order !== null) {
+      const notification_new = {
+        id: generateUUID(),
+        title: 'Nueva Cotización Recibida',
+        message: `Se ha recibido una nueva cotización`,
+        object: 'orders',
+        objectid: order_new.id,
+        userid: '',
+        role: 'admin',
+        status: 'unread',
+      };
+
+      const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+
+      await axios({
+        method: 'post',
+        url: url_notification,
+        headers: {
+          Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        },
+        data: notification_new,
+      });
+    }
+
     return order_new;
   } catch (error) {
     console.error(error);
