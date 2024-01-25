@@ -38,7 +38,7 @@ export default function TopBarNotifications(props) {
           setNumberNotifications(total);
           setIsBadgeVisible(true);
           if (total > 1)
-            setDefaultMessage(`Tienes notificaciones ${total} nuevas`);
+            setDefaultMessage(`Tienes ${total} notificaciones nuevas`);
           if (total == 1) setDefaultMessage(`Tienes una nueva notificación`);
         }
       };

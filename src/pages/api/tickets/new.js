@@ -39,7 +39,33 @@ async function createRecord(user, record) {
       },
       data: new_record,
     });
-    return response.data || null;
+    const ticket = response.data || null;
+
+    if (ticket !== null) {
+      const notification_new = {
+        id: generateUUID(),
+        title: 'Nuevo Ticket Recibido',
+        message: `Se ha recibido un nuevo ticket`,
+        object: 'tickets',
+        objectid: new_record.id,
+        userid: '',
+        role: 'admin',
+        status: 'unread',
+      };
+
+      const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+
+      axios({
+        method: 'post',
+        url: url_notification,
+        headers: {
+          Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        },
+        data: notification_new,
+      });
+    }
+
+    return ticket !== null ? new_record : null;
   } catch (error) {
     console.error(error);
     return null;

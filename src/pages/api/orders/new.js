@@ -51,7 +51,7 @@ async function createOrder(userid, data_contact, product, addons) {
 
       const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 
-      await axios({
+      axios({
         method: 'post',
         url: url_notification,
         headers: {
@@ -61,7 +61,7 @@ async function createOrder(userid, data_contact, product, addons) {
       });
     }
 
-    return order_new;
+    return order !== null ? order_new : null;
   } catch (error) {
     console.error(error);
     return null;
