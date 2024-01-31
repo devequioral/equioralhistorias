@@ -5,9 +5,11 @@ import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter } from '@/utils/utils';
-import { Chip } from '@nextui-org/react';
+import { Chip, Button, Spinner, Select, SelectItem } from '@nextui-org/react';
 import Image from 'next/image';
-import { Spinner } from '@nextui-org/react';
+import ModalComponent from '@/components/dashboard/ModalComponent';
+import { useSession } from 'next-auth/react';
+import { set } from 'mongoose';
 
 async function getOrder(order_id) {
   //SIMULATE SLOW CONNECTION
@@ -23,6 +25,9 @@ function DetailOrderScreen() {
   const [addons, setAddons] = React.useState([]);
   const mounted = React.useRef(false);
   const router = useRouter();
+  const [showModalChangeStatus, setShowModalChangeStatus] = React.useState(0);
+  const [statusOrderChange, setStatusOrderChange] = React.useState(false);
+  const { data: session } = useSession();
   useEffect(() => {
     if (mounted.current) return;
     mounted.current = true;
@@ -37,6 +42,8 @@ function DetailOrderScreen() {
         ) {
           const _order = orderBD.order.records[0];
           const product = _order.product;
+          const data_contact = _order.data_contact;
+          const userid = _order.userid;
 
           //VERIFY IF ORDER HAVE A ADDON SELECTED
           if (addons.length === 0) {
@@ -53,8 +60,10 @@ function DetailOrderScreen() {
             productImage: product
               ? `${product?.productImage.src}?w=158&q=75`
               : '',
-            date: formatDate(_order.createdAt),
-            status: capitalizeFirstLetter(_order.status),
+            date: _order.createdAt,
+            status: _order.status,
+            data_contact,
+            userid,
           });
         }
       };
@@ -63,18 +72,26 @@ function DetailOrderScreen() {
     }
   }, []);
 
+  const showRecordDetail = () => {
+    setShowModalChangeStatus((currCount) => currCount + 1);
+  };
+
+  const saveOrder = () => {
+    console.log('saveOrder', order);
+  };
+
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   const getColorStatus = (status) => {
     let color = 'default';
     switch (status) {
-      case 'Completada':
+      case 'completada':
         color = 'success';
         break;
-      case 'Pendiente':
+      case 'pendiente':
         color = 'danger';
         break;
-      case 'Procesada':
+      case 'procesada':
         color = 'warning';
         break;
     }
@@ -101,7 +118,7 @@ function DetailOrderScreen() {
               <div className="column">
                 <div className="div-3">
                   <div className="div-4">Detalle de la Cotización</div>
-                  <div className="div-5">Fecha: {order.date}</div>
+                  <div className="div-5">Fecha: {formatDate(order.date)}</div>
                   {order.productImage && (
                     <Image
                       src={order.productImage}
@@ -116,8 +133,24 @@ function DetailOrderScreen() {
                 <div className="div-6">
                   <div className="div-7">
                     <Chip color={getColorStatus(order.status)}>
-                      {order.status}
+                      {capitalizeFirstLetter(order.status)}
                     </Chip>
+                    {session.user.role === 'admin' && (
+                      <Button
+                        isIconOnly
+                        color="default"
+                        variant="light"
+                        aria-label="Edit"
+                        onClick={showRecordDetail}
+                      >
+                        <Image
+                          src="/assets/images/icon_pencil.svg"
+                          width={24}
+                          height={24}
+                          alt="Edit"
+                        />
+                      </Button>
+                    )}
                   </div>
                   <div className="div-8">
                     <span>
@@ -126,6 +159,27 @@ function DetailOrderScreen() {
                   </div>
                   <div className="div-9">Nombre del Producto</div>
                   <div className="div-10">{order.product}</div>
+                  <div className="divider" />
+                  <div className="clientTitle">Datos del Cliente</div>
+                  <div className="clientData">
+                    <p>
+                      <span>Nombre: </span>
+                      {order.data_contact.contact_name}
+                    </p>
+                    <p>
+                      <span>Teléfono: </span>
+                      {order.data_contact.contact_phone}
+                    </p>
+                    <p>
+                      <span>Facturar a: </span>
+                      {order.data_contact.invoice_to}
+                    </p>
+                    <p>
+                      <span>Dirección de entrega: </span>
+                      {order.data_contact.address}
+                    </p>
+                  </div>
+                  <div className="divider" />
                   <div className="div-11">Adicionales</div>
                   {addons.length > 0 ? (
                     addons.map((addon, index) => {
@@ -148,6 +202,42 @@ function DetailOrderScreen() {
             <Spinner />
           </div>
         )}
+        <ModalComponent
+          show={showModalChangeStatus}
+          onSave={saveOrder}
+          title="Cambiar Estatus de la Cotización"
+          onCloseModal={() => {
+            setStatusOrderChange(false);
+          }}
+          allowSave={statusOrderChange}
+          size={'md'}
+        >
+          {order && (
+            <>
+              <Select
+                items={[
+                  { label: 'Pendiente', value: 'pendiente' },
+                  { label: 'Procesada', value: 'procesada' },
+                  { label: 'Completada', value: 'completada' },
+                  { label: 'Cancelada', value: 'cancelada' },
+                ]}
+                placeholder={'Estatus de la Cotización'}
+                className="max-w-xs"
+                defaultSelectedKeys={[order.status]}
+                onChange={(e) => {
+                  const newOrder = { ...order };
+                  newOrder.status = e.target.value;
+                  setOrder(newOrder);
+                  setStatusOrderChange(true);
+                }}
+              >
+                {(item) => (
+                  <SelectItem key={item.value}>{item.label}</SelectItem>
+                )}
+              </Select>
+            </>
+          )}
+        </ModalComponent>
       </Layout>
       <style jsx>{`
         .OrderDeail {
@@ -260,6 +350,26 @@ function DetailOrderScreen() {
           margin-top: 27px;
           font: 400 22px/91% Roboto, -apple-system, Roboto, Helvetica,
             sans-serif;
+        }
+        .divider {
+          margin-top: 10px;
+          border-bottom: 1px solid #e0e0e0;
+        }
+        .clientTitle {
+          color: #153d68;
+          margin-top: 27px;
+          font: 400 18px/91% Roboto, -apple-system, Roboto, Helvetica,
+            sans-serif;
+        }
+        .clientData {
+          display: flex;
+          flex-direction: column;
+          padding: 20px 0;
+          gap: 10px;
+          font: 400 14px/167% Roboto, -apple-system, Roboto, Helvetica;
+        }
+        .clientData span {
+          font: 700 12px/167% Roboto, -apple-system, Roboto, Helvetica;
         }
         .div-10 {
           color: #153d68;
