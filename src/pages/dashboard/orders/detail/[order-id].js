@@ -9,7 +9,7 @@ import { Chip, Button, Spinner, Select, SelectItem } from '@nextui-org/react';
 import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
 import { useSession } from 'next-auth/react';
-import { set } from 'mongoose';
+import { toast } from 'react-toastify';
 
 async function getOrder(order_id) {
   //SIMULATE SLOW CONNECTION
@@ -27,6 +27,8 @@ function DetailOrderScreen() {
   const router = useRouter();
   const [showModalChangeStatus, setShowModalChangeStatus] = React.useState(0);
   const [statusOrderChange, setStatusOrderChange] = React.useState(false);
+  const [savingOrder, setSavingOrder] = React.useState(false);
+
   const { data: session } = useSession();
   useEffect(() => {
     if (mounted.current) return;
@@ -77,7 +79,34 @@ function DetailOrderScreen() {
   };
 
   const saveOrder = () => {
-    console.log('saveOrder', order);
+    if (savingOrder) return;
+    setSavingOrder(true);
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/orders/update`;
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ record: order }),
+    })
+      .then((response) => {
+        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+        if (response.status !== 200) {
+          toast.error('No se pudo enviar la información');
+          setSavingOrder(false);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        toast.success('Registro Guardado con éxito');
+        setShowModalChangeStatus(0);
+        setSavingOrder(false);
+      })
+      .catch((error) => {
+        //console.error('Error:', error);
+        toast.error('El Registro no se pudo guardar');
+        setSavingOrder(false);
+      });
   };
 
   const { theme, toggleTheme } = useContext(ThemeContext);
