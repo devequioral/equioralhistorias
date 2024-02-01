@@ -24,6 +24,10 @@ async function createRecord(userid, record) {
       username: record.username,
       email: record.email,
       role: record.role,
+      address: record.address,
+      invoice_to: record.invoice_to,
+      contact_name: record.contact_name,
+      contact_phone: record.contact_phone,
     };
 
     if (record.password) {

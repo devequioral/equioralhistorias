@@ -6,15 +6,15 @@ import GAScript from '@/components/GAScript';
 import { useRouter } from 'next/router';
 
 export default function Metaheader({
-  title = 'Artic Bunker Dashboard | Artic Bunker',
-  description = 'Artic Bunker Dashboard',
+  title = 'Arctic Bunker Dashboard | Arctic Bunker',
+  description = 'Arctic Bunker Dashboard',
   keywords = 'nextjs dashboard',
   og_image = '/assets/images/og/og.jpg',
   yoast_head = false,
-  author = 'Artic Bunker',
+  author = 'Arctic Bunker',
   link = '',
-  domain = 'Artic Bunker.co',
-  twitter = '@Artic Bunker',
+  domain = 'Arctic Bunker.co',
+  twitter = '@Arctic Bunker',
   noindex = false,
 }) {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function Metaheader({
             )}
             <link rel="canonical" href={link} />
             <meta property="og:locale" content={yoast_head.og_locale} />
-            <meta property="og:type" content={yoast_head.article} />
+            <meta property="og:type" content={yoast_head.Arcticle} />
             <meta property="og:title" content={yoast_head.og_title} />
             <meta
               property="og:description"
@@ -49,8 +49,8 @@ export default function Metaheader({
             <meta property="og:url" content={link} />
             <meta property="og:site_name" content={yoast_head.og_site_name} />
             <meta
-              property="article:published_time"
-              content={yoast_head.article_published_time}
+              property="Arcticle:published_time"
+              content={yoast_head.Arcticle_published_time}
             />
             {yoast_head.og_image && yoast_head.og_image.length > 0 && (
               <>

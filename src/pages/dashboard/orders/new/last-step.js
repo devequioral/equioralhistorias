@@ -12,10 +12,23 @@ import orderModel from '@/models/orderModel';
 import orderReducer from '@/reducers/OrderReducer';
 import ConfirmForm from '@/components/dashboard/orders/new/ConfirmForm';
 
+import userModel from '@/models/userModel';
+
+async function getProfile() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/profile/get`
+  );
+  return await res.json();
+}
+
 function LastStepScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   const [forceSubmitForm, setForceSubmitForm] = React.useState(0);
+  const flag = React.useRef();
+
+  const [loading, setLoading] = React.useState(true);
+  const [profile, setProfile] = React.useState(userModel);
 
   const currentOrder =
     JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || orderModel;
@@ -26,6 +39,26 @@ function LastStepScreen() {
       setForceSubmitForm(forceSubmitForm + 1);
     }
   };
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (flag.current) return;
+      flag.current = true;
+      const fetchProfile = async () => {
+        setLoading(true);
+        const profileBD = await getProfile();
+        if (!profileBD) {
+          return;
+        }
+        const record = profileBD.profile.records[0];
+        if (!record) return;
+        setProfile({ ...record, password: '', role: '' });
+        setLoading(false);
+      };
+      fetchProfile();
+    }
+  }, []);
+
   return (
     <>
       <Metaheader title="Último Paso de Cotización | Arctic Bunker" />
@@ -50,8 +83,10 @@ function LastStepScreen() {
             </div>
           </div>
           <div className={`row ${styles.row01}`}>
-            <div className={`col col-12`}>
-              <Actions onActionsEvent={onActionsEvent} />
+            <div className={`col col-12`} style={{ minHeight: '81px' }}>
+              {!loading && (
+                <Actions onActionsEvent={onActionsEvent} isLoading={loading} />
+              )}
             </div>
           </div>
           <div className={`row ${styles.row02}`}>
@@ -64,6 +99,8 @@ function LastStepScreen() {
               className={`col col-12 col-sm-6 col-md-8 col-lg-8 ${styles.colPreview}`}
             >
               <ConfirmForm
+                isLoading={loading}
+                profile={profile}
                 theme={theme}
                 order={order}
                 forceSubmitForm={forceSubmitForm}

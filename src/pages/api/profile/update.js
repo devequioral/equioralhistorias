@@ -5,13 +5,15 @@ import { getToken } from 'next-auth/jwt';
 async function updateRecord(userid, record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/users`;
 
+  if (!record.id) return null;
+  if (record.id !== userid) return null;
+
   try {
     const record_update = {
       id: record.id,
       name: record.name,
       username: record.username,
       email: record.email,
-      role: record.role,
       address: record.address,
       invoice_to: record.invoice_to,
       contact_name: record.contact_name,
@@ -47,10 +49,6 @@ export default async function handler(req, res) {
     if (!token) return res.status(401).send({ message: 'Not authorized' });
 
     const { id: userid, role } = token;
-
-    if (role !== 'admin') {
-      return res.status(401).send({ message: 'Not authorized' });
-    }
 
     const { record } = req.body;
 

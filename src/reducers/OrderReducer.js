@@ -1,6 +1,10 @@
 export default function orderReducer(state, action) {
   switch (action.type) {
     case 'SET_ORDER':
+      localStorage.setItem(
+        'ArcticBunker_draft_order',
+        JSON.stringify(action.order)
+      );
       return action.order;
     case 'CHANGE_OPTION':
       const newState = JSON.parse(JSON.stringify(state)); // Deep copy

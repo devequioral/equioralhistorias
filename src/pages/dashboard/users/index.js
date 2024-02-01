@@ -271,6 +271,22 @@ function ListUsers() {
                     { value: 'admin', label: 'Administrador' },
                   ],
                 },
+                {
+                  key: 'contact_name',
+                  label: 'Nombre de Contácto',
+                  type: 'text',
+                },
+                {
+                  key: 'contact_phone',
+                  label: 'Teléfono de Contácto',
+                  type: 'text',
+                },
+                { key: 'address', label: 'Dirección', type: 'text' },
+                {
+                  key: 'invoice_to',
+                  label: 'Facturar a nombre de',
+                  type: 'text',
+                },
               ],
             }}
           />

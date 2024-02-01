@@ -62,12 +62,12 @@ export default function ToBar(props) {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem key="welcome" className="h-14 gap-2">
               <p className="font-semibold">Bienvenido</p>
               <p className="font-semibold">{getUserName()}</p>
             </DropdownItem>
             <DropdownItem key="profile">
-              <Link href="/dashboard">Perfil</Link>
+              <Link href="/dashboard/profile">Perfil</Link>
             </DropdownItem>
             <DropdownItem key="orders">
               <Link href="/dashboard/orders">Mis Cotizaciones</Link>

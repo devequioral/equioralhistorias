@@ -23,7 +23,6 @@ const getRecords = async (options) => {
         Authorization: `Bearer ${api_key}`,
       },
     });
-
     return response.data || null;
   } catch (error) {
     //console.error(error);

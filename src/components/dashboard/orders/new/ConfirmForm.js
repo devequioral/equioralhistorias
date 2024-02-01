@@ -6,8 +6,10 @@ import { getError } from '@/utils/error';
 import contactData from '@/temp/contact-data.json';
 import { useRouter } from 'next/router';
 
+import { CircularProgress, Input } from '@nextui-org/react';
+
 function ConfirmForm(props) {
-  const { forceSubmitForm = 0 } = props;
+  const { forceSubmitForm = 0, isLoading, profile } = props;
   const ref = React.useRef();
   const { product, addons } = props.order;
 
@@ -33,6 +35,7 @@ function ConfirmForm(props) {
     contact_phone,
   }) => {
     if (isSubmitting) return;
+    setIsSubmitting(true);
 
     //FETCH DATA TO API/ORDERS/NEW
     fetch('/api/orders/new', {
@@ -73,202 +76,201 @@ function ConfirmForm(props) {
   };
   return (
     <form className="main-container" onSubmit={handleSubmit(_handleSubmit)}>
-      <div className="form-group">
-        <label htmlFor="address" className="form-label">
-          Dirección de envío
-        </label>
-        <input
-          type="text"
-          id="address"
-          className="form-input"
-          aria-label="Address"
-          value={contactData.address}
-          {...register('address', {
-            required: 'This Field is Required',
-            maxLength: {
-              value: 600,
-              message: 'Max length is 600',
-            },
-          })}
-        />
-        {errors.address && (
-          <div className={`form-error`}>{errors.address.message}</div>
-        )}
-      </div>
+      {isLoading ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <CircularProgress />
+        </div>
+      ) : (
+        <>
+          <div className="form-group">
+            <Input
+              id={`address`}
+              type={`text`}
+              label={`Dirección de envío`}
+              defaultValue={profile?.address}
+              {...register('address', {
+                required: 'This Field is Required',
+                maxLength: {
+                  value: 600,
+                  message: 'Max length is 600',
+                },
+              })}
+            />
+            {errors.address && (
+              <div className={`form-error`}>{errors.address.message}</div>
+            )}
+          </div>
 
-      <div className="form-group">
-        <label htmlFor="invoice_to" className="form-label">
-          Facturar a nombre de
-        </label>
-        <input
-          type="text"
-          id="invoice_to"
-          className="form-input"
-          aria-label="Invoice to"
-          value={contactData.invoice_to}
-          {...register('invoice_to', {
-            required: 'This Field is Required',
-            maxLength: {
-              value: 300,
-              message: 'Max length is 300',
-            },
-          })}
-        />
-        {errors.invoice_to && (
-          <div className={`form-error`}>{errors.invoice_to.message}</div>
-        )}
-      </div>
+          <div className="form-group">
+            <Input
+              id={`invoice_to`}
+              type={`text`}
+              label={`Facturar a nombre de`}
+              defaultValue={profile?.invoice_to}
+              {...register('invoice_to', {
+                required: 'This Field is Required',
+                maxLength: {
+                  value: 600,
+                  message: 'Max length is 300',
+                },
+              })}
+            />
+            {errors.invoice_to && (
+              <div className={`form-error`}>{errors.invoice_to.message}</div>
+            )}
+          </div>
 
-      <div className="form-group">
-        <label htmlFor="contact_name" className="form-label">
-          Nombre de Contacto
-        </label>
-        <input
-          type="text"
-          id="contact_name"
-          className="form-input"
-          aria-label="Contact Name"
-          value={contactData.contact_name}
-          {...register('contact_name', {
-            required: 'This Field is Required',
-            maxLength: {
-              value: 300,
-              message: 'Max length is 300',
-            },
-          })}
-        />
-        {errors.contact_name && (
-          <div className={`form-error`}>{errors.contact_name.message}</div>
-        )}
-      </div>
+          <div className="form-group">
+            <Input
+              id={`contact_name`}
+              type={`text`}
+              label={`Nombre de Contacto`}
+              defaultValue={profile?.contact_name}
+              {...register('contact_name', {
+                required: 'This Field is Required',
+                maxLength: {
+                  value: 600,
+                  message: 'Max length is 300',
+                },
+              })}
+            />
+            {errors.contact_name && (
+              <div className={`form-error`}>{errors.contact_name.message}</div>
+            )}
+          </div>
 
-      <div className="form-group">
-        <label htmlFor="contact_phone" className="form-label">
-          Teléfono de Contacto
-        </label>
-        <input
-          type="text"
-          id="contact_phone"
-          className="form-input"
-          aria-label="Contact Phone"
-          value={contactData.contact_phone}
-          {...register('contact_phone', {
-            required: 'This Field is Required',
-            maxLength: {
-              value: 300,
-              message: 'Max length is 300',
-            },
-          })}
-        />
-        {errors.contact_phone && (
-          <div className={`form-error`}>{errors.contact_phone.message}</div>
-        )}
-      </div>
+          <div className="form-group">
+            <Input
+              id={`contact_phone`}
+              type={`text`}
+              label={`Teléfono de Contacto`}
+              defaultValue={profile?.contact_phone}
+              {...register('contact_phone', {
+                required: 'This Field is Required',
+                maxLength: {
+                  value: 600,
+                  message: 'Max length is 300',
+                },
+              })}
+            />
+            {errors.contact_phone && (
+              <div className={`form-error`}>{errors.contact_phone.message}</div>
+            )}
+          </div>
 
-      <button className="login-button" ref={ref}>
-        Enviar
-      </button>
+          <button className="login-button" ref={ref}>
+            Enviar
+          </button>
 
-      <style jsx>{`
-        .main-container {
-          align-items: center;
-          border-radius: 10px;
-          background-color: #fff;
-          display: flex;
-          width: 100%;
-          flex-direction: column;
-          margin: 0 auto;
-          padding: 30px 24px;
-          max-width: 600px;
-        }
+          <style jsx>{`
+            .main-container {
+              align-items: center;
+              border-radius: 10px;
+              background-color: #fff;
+              display: flex;
+              width: 100%;
+              flex-direction: column;
+              margin: 0 auto;
+              padding: 30px 24px;
+              max-width: 600px;
+            }
 
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          margin-top: 20px;
-          width: 100%;
-        }
+            .form-group {
+              display: flex;
+              flex-direction: column;
+              margin-top: 20px;
+              width: 100%;
+            }
 
-        .form-label {
-          color: rgba(0, 0, 0, 0.6);
-          letter-spacing: 0.15px;
-          font: 400 16px/144% Roboto, -apple-system, Roboto, Helvetica,
-            sans-serif;
-        }
+            .form-label {
+              color: rgba(0, 0, 0, 0.6);
+              letter-spacing: 0.15px;
+              font: 400 16px/144% Roboto, -apple-system, Roboto, Helvetica,
+                sans-serif;
+            }
 
-        .form-input {
-          padding: 10px;
-          border-radius: 10px;
-          border: 1px solid #d4d4d4;
-        }
+            .form-input {
+              padding: 10px;
+              border-radius: 10px;
+              border: 1px solid #d4d4d4;
+            }
 
-        .form-error {
-          color: rgba(244, 11, 11, 0.6);
-          letter-spacing: 0.15px;
-          font: 400 12px/144% Roboto, -apple-system, Roboto, Helvetica,
-            sans-serif;
-          align-self: start;
-        }
+            .form-error {
+              color: rgba(244, 11, 11, 0.6);
+              letter-spacing: 0.15px;
+              font: 400 12px/144% Roboto, -apple-system, Roboto, Helvetica,
+                sans-serif;
+              align-self: start;
+            }
 
-        .login-button {
-          color: #fff;
-          text-align: center;
-          letter-spacing: 0.4px;
-          text-transform: uppercase;
-          border-radius: 10px;
-          box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.2);
-          background-color: #82bb30;
-          align-self: stretch;
-          margin-top: 17px;
-          justify-content: center;
-          align-items: center;
-          padding: 10px;
-          font: 400 14px/175% Roboto, -apple-system, Roboto, Helvetica,
-            sans-serif;
-          border: none;
-          cursor: pointer;
-          max-width: 144px;
-        }
+            .login-button {
+              color: #fff;
+              text-align: center;
+              letter-spacing: 0.4px;
+              text-transform: uppercase;
+              border-radius: 10px;
+              box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.2);
+              background-color: #82bb30;
+              align-self: stretch;
+              margin-top: 17px;
+              justify-content: center;
+              align-items: center;
+              padding: 10px;
+              font: 400 14px/175% Roboto, -apple-system, Roboto, Helvetica,
+                sans-serif;
+              border: none;
+              cursor: pointer;
+              max-width: 144px;
+            }
 
-        .terms-message {
-          letter-spacing: 0.4px;
-          align-self: stretch;
-          margin-top: 18px;
-          font: 400 10px/12px Roboto, -apple-system, Roboto, Helvetica,
-            sans-serif;
-        }
+            .terms-message {
+              letter-spacing: 0.4px;
+              align-self: stretch;
+              margin-top: 18px;
+              font: 400 10px/12px Roboto, -apple-system, Roboto, Helvetica,
+                sans-serif;
+            }
 
-        .terms-link {
-          color: #228ece;
-        }
+            .terms-link {
+              color: #228ece;
+            }
 
-        .remember-me-group {
-          align-self: stretch;
-          flex-direction: row;
-          margin-top: 12px;
-          justify-content: flex-start;
-          align-items: center;
-          display: flex;
-          gap: 10px;
-        }
+            .remember-me-group {
+              align-self: stretch;
+              flex-direction: row;
+              margin-top: 12px;
+              justify-content: flex-start;
+              align-items: center;
+              display: flex;
+              gap: 10px;
+            }
 
-        .remember-me-label {
-          color: rgba(0, 0, 0, 0.62);
-          letter-spacing: 0.4px;
-          margin: auto 0;
-          font: 400 10px/120% Roboto, -apple-system, Roboto, Helvetica,
-            sans-serif;
-        }
+            .remember-me-label {
+              color: rgba(0, 0, 0, 0.62);
+              letter-spacing: 0.4px;
+              margin: auto 0;
+              font: 400 10px/120% Roboto, -apple-system, Roboto, Helvetica,
+                sans-serif;
+            }
 
-        .checkbox {
-          border: 1px solid rgba(0, 0, 0, 0.6);
-          width: 14px;
-          height: 13px;
-          align-self: stretch;
-          display: flex;
-          flex-direction: column;
-        }
-      `}</style>
+            .checkbox {
+              border: 1px solid rgba(0, 0, 0, 0.6);
+              width: 14px;
+              height: 13px;
+              align-self: stretch;
+              display: flex;
+              flex-direction: column;
+            }
+          `}</style>
+        </>
+      )}
     </form>
   );
 }
