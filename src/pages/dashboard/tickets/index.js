@@ -58,7 +58,7 @@ function ListTickets() {
         setLoading(true);
         const ticketsBD = await getTickets(page, pageSize, session.user.role);
 
-        const { records } = ticketsBD.data;
+        const { records, totalPages } = ticketsBD.data;
 
         if (records && records.length > 0) {
           setTickets(
@@ -70,8 +70,8 @@ function ListTickets() {
               };
             })
           );
-          setTotalPages(records.totalPages);
-          setPage(records.page);
+          setTotalPages(totalPages);
+          setPage(page);
         } else {
           setTickets([]);
           setTotalPages(1);

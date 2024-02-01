@@ -51,7 +51,9 @@ function ListUsers() {
         setLoading(true);
         const usersBD = await getUsers(page, pageSize);
 
-        const { records } = usersBD.data;
+        const { records, totalPages } = usersBD.data;
+
+        console.log('usersBD', usersBD);
 
         if (records && records.length > 0) {
           setUsers(
@@ -63,8 +65,8 @@ function ListUsers() {
               };
             })
           );
-          setTotalPages(records.totalPages);
-          setPage(records.page);
+          setTotalPages(totalPages);
+          setPage(page);
         } else {
           setUsers([]);
           setTotalPages(1);
