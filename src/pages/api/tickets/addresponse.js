@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getRecords } from '@/virtel-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
 import { filterBy, filterValue } from '@/utils/filters';
+import { sanitizeOBJ, sanitize } from '@/utils/utils';
 
 function generateUUID() {
   let d = new Date().getTime();
@@ -48,7 +49,7 @@ async function updateRecord(user, record, ticket_response) {
       });
     }
     //VERIFY IF RECORD IS CLOSE
-    const ticketDB = await getRecord(record.id);
+    const ticketDB = await getRecord(sanitize(record.id));
     if (ticketDB && ticketDB.records && ticketDB.records.length > 0) {
       if (ticketDB.records[0].status === 'close') {
         return null;
@@ -56,11 +57,11 @@ async function updateRecord(user, record, ticket_response) {
     }
 
     //UPDATE RECORD
-    const record_update = {
+    const record_update = sanitizeOBJ({
       id: record.id,
       title: record.title,
       responses: record.responses,
-    };
+    });
 
     const response = await axios({
       method: 'patch',
@@ -74,7 +75,7 @@ async function updateRecord(user, record, ticket_response) {
     const ticket = response.data || null;
 
     if (ticket !== null) {
-      const notification_new = {
+      const notification_new = sanitizeOBJ({
         id: generateUUID(),
         title: 'Nueva Respuesta Recibida',
         message: `Se ha recibido una nueva respuesta en su ticket`,
@@ -83,7 +84,7 @@ async function updateRecord(user, record, ticket_response) {
         userid: user.role === 'admin' ? record.userOwner.userid : '',
         role: user.role === 'admin' ? 'regular' : 'admin',
         status: 'unread',
-      };
+      });
 
       const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 

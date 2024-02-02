@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 function generateUUID() {
   let d = new Date().getTime();
@@ -17,7 +18,7 @@ function generateUUID() {
 async function createRecord(user, record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/tickets`;
   try {
-    const new_record = {
+    const new_record = sanitizeOBJ({
       id: generateUUID(),
       title: record.title,
       userOwner: {
@@ -30,7 +31,7 @@ async function createRecord(user, record) {
       originalMessage: record.originalMessage,
       responses: [],
       status: 'active',
-    };
+    });
     const response = await axios({
       method: 'post',
       url,
@@ -42,7 +43,7 @@ async function createRecord(user, record) {
     const ticket = response.data || null;
 
     if (ticket !== null) {
-      const notification_new = {
+      const notification_new = sanitizeOBJ({
         id: generateUUID(),
         title: 'Nuevo Ticket Recibido',
         message: `Se ha recibido un nuevo ticket`,
@@ -51,7 +52,7 @@ async function createRecord(user, record) {
         userid: '',
         role: 'admin',
         status: 'unread',
-      };
+      });
 
       const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 

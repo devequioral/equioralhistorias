@@ -1,3 +1,29 @@
+import dompurify from 'isomorphic-dompurify';
+
+//create function to sanitize object from xss
+function sanitizeOBJ(obj) {
+  if (typeof obj === 'object') {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (typeof obj[key] === 'string') {
+          // Clean the string content to prevent XSS
+          obj[key] = sanitize(obj[key]);
+        } else if (typeof obj[key] === 'object') {
+          // Recursively clean nested objects
+          obj[key] = sanitizeOBJ(obj[key]);
+        }
+        // Add more conditions as needed for other data types
+      }
+    }
+  }
+  return obj;
+}
+
+//create function to sanitize the input with dompurify
+function sanitize(input) {
+  return dompurify.sanitize(input);
+}
+
 //FUNCTION CONVERT FORMAT DATE FROM ISO 8601 (2023-12-27T16:46:42.208Z) TO DD/MM/YYYY OR YYYY-MM-DD
 function formatDate(date, format = 'DD/MM/YYYY') {
   if (!date) return;
@@ -27,4 +53,11 @@ function shortUUID(uuid) {
   return `${uuid.substring(0, 5)}...${uuid.substring(uuid.length - 5)}`;
 }
 
-export { formatDate, formatDateToISOSM, capitalizeFirstLetter, shortUUID };
+export {
+  formatDate,
+  formatDateToISOSM,
+  capitalizeFirstLetter,
+  shortUUID,
+  sanitizeOBJ,
+  sanitize,
+};

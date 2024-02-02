@@ -143,7 +143,8 @@ function ListProducts() {
     setSavingRecord(true);
     const url = recordModal.id
       ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/update`
-      : '${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/new';
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/new`;
+
     fetch(url, {
       method: 'POST',
       headers: {

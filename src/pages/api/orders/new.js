@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 function generateUUID() {
   let d = new Date().getTime();
@@ -18,14 +19,14 @@ async function createOrder(userid, data_contact, product, addons) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders`;
 
   try {
-    const order_new = {
+    const order_new = sanitizeOBJ({
       id: generateUUID(),
       status: 'pendiente',
       userid,
       product,
       addons,
       data_contact,
-    };
+    });
     const response = await axios({
       method: 'post',
       url: url,
@@ -38,7 +39,7 @@ async function createOrder(userid, data_contact, product, addons) {
     const order = response.data || null;
 
     if (order !== null) {
-      const notification_new = {
+      const notification_new = sanitizeOBJ({
         id: generateUUID(),
         title: 'Nueva Cotización Recibida',
         message: `Se ha recibido una nueva cotización`,
@@ -47,7 +48,7 @@ async function createOrder(userid, data_contact, product, addons) {
         userid: '',
         role: 'admin',
         status: 'unread',
-      };
+      });
 
       const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 

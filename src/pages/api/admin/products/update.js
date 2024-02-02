@@ -1,18 +1,19 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 async function updateProduct(userid, product_request) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/products`;
 
   try {
-    const product_update = {
+    const product_update = sanitizeOBJ({
       id: product_request.id,
       productName: product_request.productName,
       productSubtitle: product_request.productSubtitle,
       description: product_request.description,
       productImage: product_request.productImage,
       status: product_request.status,
-    };
+    });
 
     const response = await axios({
       method: 'patch',

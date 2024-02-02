@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 function generateUUID() {
   let d = new Date().getTime();
@@ -18,10 +19,10 @@ async function updateRecord(record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders`;
 
   try {
-    const record_update = {
+    const record_update = sanitizeOBJ({
       id: record.id,
       status: record.status,
-    };
+    });
 
     const response = await axios({
       method: 'patch',
@@ -35,7 +36,7 @@ async function updateRecord(record) {
     const order = response.data || null;
 
     if (order !== null) {
-      const notification_new = {
+      const notification_new = sanitizeOBJ({
         id: generateUUID(),
         title: 'Cambios en su cotización',
         message: `Su cotización ha cambiado de estado`,
@@ -44,7 +45,7 @@ async function updateRecord(record) {
         userid: record.userid,
         role: 'regular',
         status: 'unread',
-      };
+      });
 
       const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 

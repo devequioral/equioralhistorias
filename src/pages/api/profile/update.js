@@ -1,6 +1,7 @@
 import axios from 'axios';
 import bcryptjs from 'bcryptjs';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 async function updateRecord(userid, record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/users`;
@@ -9,7 +10,7 @@ async function updateRecord(userid, record) {
   if (record.id !== userid) return null;
 
   try {
-    const record_update = {
+    const record_update = sanitizeOBJ({
       id: record.id,
       name: record.name,
       username: record.username,
@@ -18,7 +19,7 @@ async function updateRecord(userid, record) {
       invoice_to: record.invoice_to,
       contact_name: record.contact_name,
       contact_phone: record.contact_phone,
-    };
+    });
 
     if (record.password) {
       const salt = `$2a$10$${process.env.BCRIPT_SALT}`;

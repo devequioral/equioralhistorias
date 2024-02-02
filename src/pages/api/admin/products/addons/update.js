@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 async function updateRecord(userid, record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/addons`;
 
   try {
-    const record_update = {
+    const record_update = sanitizeOBJ({
       id: record.id,
       category: record.category,
       productID: record.productID,
@@ -13,7 +14,7 @@ async function updateRecord(userid, record) {
       text: record.text,
       help: record.help,
       percent: record.percent,
-    };
+    });
 
     const response = await axios({
       method: 'patch',

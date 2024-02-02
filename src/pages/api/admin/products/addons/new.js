@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from 'next-auth/jwt';
+import { sanitizeOBJ } from '@/utils/utils';
 
 function generateUUID() {
   let d = new Date().getTime();
@@ -18,11 +19,11 @@ async function createRecord(userid, record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/addons`;
 
   try {
-    const new_record = {
+    const new_record = sanitizeOBJ({
       id: generateUUID(),
       userid,
       ...record,
-    };
+    });
     const response = await axios({
       method: 'post',
       url,

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getRecords } from '@/virtel-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
 import { filterBy, filterValue } from '@/utils/filters';
+import { sanitizeOBJ } from '@/utils/utils';
 
 async function updateRecord(userid, record) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
@@ -14,10 +15,10 @@ async function updateRecord(userid, record) {
       return null;
     }
     //UPDATE RECORD
-    const record_update = {
+    const record_update = sanitizeOBJ({
       id: record.id,
       status: 'readed',
-    };
+    });
 
     const response = await axios({
       method: 'patch',
