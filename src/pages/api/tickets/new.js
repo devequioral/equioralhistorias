@@ -32,6 +32,7 @@ async function createRecord(user, record) {
       responses: [],
       status: 'active',
     });
+    
     const response = await axios({
       method: 'post',
       url,
