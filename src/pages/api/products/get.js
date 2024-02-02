@@ -26,7 +26,14 @@ export default async function handler(req, res) {
 
     let record = await getRecord(productid, 'products');
 
-    if (!record) return res.status(404).send({ message: 'Record Not found' });
+    if (!record || !record.records || record.records.length === 0)
+      return res.status(404).send({ record, message: 'Record Not found' });
+
+    //REMOVE SENSIBLE DATA OF RECORDS
+    record.records.map((_record) => {
+      delete _record._id;
+      delete _record.updatedAt;
+    });
 
     res.status(200).json({ record });
   } catch (error) {

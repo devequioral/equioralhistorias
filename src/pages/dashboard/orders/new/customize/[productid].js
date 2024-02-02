@@ -51,6 +51,7 @@ function CustomizeOrderScreen() {
         orderModel.product = records[0];
 
         const addonsBD = await getAddons(productid);
+
         const { records: recordsAddons } = addonsBD.records;
 
         if (addonsBD || recordsAddons.length > 0) {

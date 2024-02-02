@@ -26,7 +26,17 @@ export default async function handler(req, res) {
 
     const profile = await getProfile(userid);
 
-    if (!profile) return res.status(404).send({ message: 'Record Not found' });
+    if (!profile || !profile.records || profile.records.length === 0)
+      return res.status(404).send({ profile, message: 'Record Not found' });
+
+    //REMOVE SENSIBLE DATA OF RECORDS
+    profile.records.map((record) => {
+      delete record._id;
+      delete record.updatedAt;
+      delete record.createdAt;
+      delete record.password;
+      delete record.role;
+    });
 
     res.status(200).json({ profile });
   } catch (error) {

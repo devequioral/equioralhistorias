@@ -37,7 +37,14 @@ export default async function handler(req, res) {
       order = await getOrder(userid, order_id);
     }
 
-    if (!order) return res.status(404).send({ message: 'Order Not found' });
+    if (!order || !order.records || order.records.length === 0)
+      return res.status(404).send({ order, message: 'Order Not found' });
+
+    //REMOVE SENSIBLE DATA OF RECORDS
+    order.records.map((_record) => {
+      delete _record._id;
+      delete _record.updatedAt;
+    });
 
     res.status(200).json({ order });
   } catch (error) {

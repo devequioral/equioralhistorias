@@ -33,7 +33,14 @@ export default async function handler(req, res) {
 
     const records = await listRecords(page, pageSize);
 
-    if (!records) return res.status(404).send({ message: 'Records Not found' });
+    if (!records || !records.records || records.records.length === 0)
+      return res.status(404).send({ records, message: 'Records Not found' });
+
+    //REMOVE SENSIBLE DATA OF RECORDS
+    records.records.map((_record) => {
+      delete _record._id;
+      delete _record.updatedAt;
+    });
 
     res.status(200).json({ records });
   } catch (error) {
