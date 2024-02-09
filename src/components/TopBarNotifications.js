@@ -32,6 +32,8 @@ export default function TopBarNotifications(props) {
       const fetchRecords = async () => {
         const recordsBD = await getNotifications(user.role);
 
+        if (!recordsBD.data || !recordsBD.data.total) return;
+
         const { total } = recordsBD.data;
 
         if (total > 0) {

@@ -35,29 +35,29 @@ async function updateRecord(userid, record) {
 
     const ticket = response.data || null;
 
-    if (ticket !== null) {
-      const notification_new = sanitizeOBJ({
-        id: generateUUID(),
-        title: 'Actualización en su cotización',
-        message: `Su cotización ha cambiado de estado`,
-        object: 'tickets',
-        objectid: record_update.id,
-        userid: record.userOwner.userid,
-        role: 'regular',
-        status: 'unread',
-      });
+    // if (ticket !== null) {
+    //   const notification_new = sanitizeOBJ({
+    //     id: generateUUID(),
+    //     title: 'Actualización en su ticket',
+    //     message: `Su ticket ha cambiado de estado`,
+    //     object: 'tickets',
+    //     objectid: record_update.id,
+    //     userid: record.userOwner.userid,
+    //     role: 'regular',
+    //     status: 'unread',
+    //   });
 
-      const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+    //   const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 
-      axios({
-        method: 'post',
-        url: url_notification,
-        headers: {
-          Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
-        },
-        data: notification_new,
-      });
-    }
+    //   axios({
+    //     method: 'post',
+    //     url: url_notification,
+    //     headers: {
+    //       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+    //     },
+    //     data: notification_new,
+    //   });
+    // }
 
     return ticket !== null ? record_update : null;
   } catch (error) {

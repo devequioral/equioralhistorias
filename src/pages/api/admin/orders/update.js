@@ -35,29 +35,29 @@ async function updateRecord(record) {
 
     const order = response.data || null;
 
-    if (order !== null) {
-      const notification_new = sanitizeOBJ({
-        id: generateUUID(),
-        title: 'Cambios en su cotización',
-        message: `Su cotización ha cambiado de estado`,
-        object: 'orders',
-        objectid: record_update.id,
-        userid: record.userid,
-        role: 'regular',
-        status: 'unread',
-      });
+    // if (order !== null) {
+    //   const notification_new = sanitizeOBJ({
+    //     id: generateUUID(),
+    //     title: 'Cambios en su cotización',
+    //     message: `Su cotización ha cambiado de estado`,
+    //     object: 'orders',
+    //     objectid: record_update.id,
+    //     userid: record.userid,
+    //     role: 'regular',
+    //     status: 'unread',
+    //   });
 
-      const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+    //   const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 
-      axios({
-        method: 'post',
-        url: url_notification,
-        headers: {
-          Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
-        },
-        data: notification_new,
-      });
-    }
+    //   axios({
+    //     method: 'post',
+    //     url: url_notification,
+    //     headers: {
+    //       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+    //     },
+    //     data: notification_new,
+    //   });
+    // }
 
     return order !== null ? record_update : null;
   } catch (error) {

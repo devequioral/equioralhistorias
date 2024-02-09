@@ -32,7 +32,7 @@ async function createRecord(user, record) {
       responses: [],
       status: 'active',
     });
-    
+
     const response = await axios({
       method: 'post',
       url,
@@ -43,29 +43,29 @@ async function createRecord(user, record) {
     });
     const ticket = response.data || null;
 
-    if (ticket !== null) {
-      const notification_new = sanitizeOBJ({
-        id: generateUUID(),
-        title: 'Nuevo Ticket Recibido',
-        message: `Se ha recibido un nuevo ticket`,
-        object: 'tickets',
-        objectid: new_record.id,
-        userid: '',
-        role: 'admin',
-        status: 'unread',
-      });
+    // if (ticket !== null) {
+    //   const notification_new = sanitizeOBJ({
+    //     id: generateUUID(),
+    //     title: 'Nuevo Ticket Recibido',
+    //     message: `Se ha recibido un nuevo ticket`,
+    //     object: 'tickets',
+    //     objectid: new_record.id,
+    //     userid: '',
+    //     role: 'admin',
+    //     status: 'unread',
+    //   });
 
-      const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+    //   const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 
-      axios({
-        method: 'post',
-        url: url_notification,
-        headers: {
-          Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
-        },
-        data: notification_new,
-      });
-    }
+    //   axios({
+    //     method: 'post',
+    //     url: url_notification,
+    //     headers: {
+    //       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+    //     },
+    //     data: notification_new,
+    //   });
+    // }
 
     return ticket !== null ? new_record : null;
   } catch (error) {
