@@ -33,7 +33,6 @@ async function getRecord(recordid) {
 
 async function updateRecord(user, record, ticket_response) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/tickets`;
-
   try {
     if (ticket_response) {
       record.responses.push({
@@ -60,6 +59,7 @@ async function updateRecord(user, record, ticket_response) {
     const record_update = sanitizeOBJ({
       id: record.id,
       title: record.title,
+      userOwner: record.userOwner,
       responses: record.responses,
     });
 
@@ -74,29 +74,29 @@ async function updateRecord(user, record, ticket_response) {
 
     const ticket = response.data || null;
 
-    if (ticket !== null) {
-      const notification_new = sanitizeOBJ({
-        id: generateUUID(),
-        title: 'Nueva Respuesta Recibida',
-        message: `Se ha recibido una nueva respuesta en su ticket`,
-        object: 'tickets',
-        objectid: record_update.id,
-        userid: user.role === 'admin' ? record.userOwner.userid : '',
-        role: user.role === 'admin' ? 'regular' : 'admin',
-        status: 'unread',
-      });
+    // if (ticket !== null) {
+    //   const notification_new = sanitizeOBJ({
+    //     id: generateUUID(),
+    //     title: 'Nueva Respuesta Recibida',
+    //     message: `Se ha recibido una nueva respuesta en su ticket`,
+    //     object: 'tickets',
+    //     objectid: record_update.id,
+    //     userid: user.role === 'admin' ? record.userOwner.userid : '',
+    //     role: user.role === 'admin' ? 'regular' : 'admin',
+    //     status: 'unread',
+    //   });
 
-      const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+    //   const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
 
-      axios({
-        method: 'post',
-        url: url_notification,
-        headers: {
-          Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
-        },
-        data: notification_new,
-      });
-    }
+    //   axios({
+    //     method: 'post',
+    //     url: url_notification,
+    //     headers: {
+    //       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+    //     },
+    //     data: notification_new,
+    //   });
+    // }
 
     return ticket !== null ? record_update : null;
   } catch (error) {
