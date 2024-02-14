@@ -60,6 +60,7 @@ async function updateRecord(user, record, ticket_response) {
       id: record.id,
       title: record.title,
       userOwner: record.userOwner,
+      userid: record.userOwner.userid,
       responses: record.responses,
     });
 

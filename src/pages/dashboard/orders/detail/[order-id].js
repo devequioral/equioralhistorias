@@ -189,26 +189,30 @@ function DetailOrderScreen() {
                   <div className="div-9">Nombre del Producto</div>
                   <div className="div-10">{order.product}</div>
                   <div className="divider" />
-                  <div className="clientTitle">Datos del Cliente</div>
-                  <div className="clientData">
-                    <p>
-                      <span>Nombre: </span>
-                      {order.data_contact.contact_name}
-                    </p>
-                    <p>
-                      <span>Teléfono: </span>
-                      {order.data_contact.contact_phone}
-                    </p>
-                    <p>
-                      <span>Facturar a: </span>
-                      {order.data_contact.invoice_to}
-                    </p>
-                    <p>
-                      <span>Dirección de entrega: </span>
-                      {order.data_contact.address}
-                    </p>
-                  </div>
-                  <div className="divider" />
+                  {order.data_contact && (
+                    <>
+                      <div className="clientTitle">Datos del Cliente</div>
+                      <div className="clientData">
+                        <p>
+                          <span>Nombre: </span>
+                          {order.data_contact.contact_name}
+                        </p>
+                        <p>
+                          <span>Teléfono: </span>
+                          {order.data_contact.contact_phone}
+                        </p>
+                        <p>
+                          <span>Facturar a: </span>
+                          {order.data_contact.invoice_to}
+                        </p>
+                        <p>
+                          <span>Dirección de entrega: </span>
+                          {order.data_contact.address}
+                        </p>
+                      </div>
+                      <div className="divider" />
+                    </>
+                  )}
                   <div className="div-11">Adicionales</div>
                   {addons.length > 0 ? (
                     addons.map((addon, index) => {

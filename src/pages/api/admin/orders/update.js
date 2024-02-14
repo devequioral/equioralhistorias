@@ -21,6 +21,7 @@ async function updateRecord(record) {
   try {
     const record_update = sanitizeOBJ({
       id: record.id,
+      userid: record.userid,
       status: record.status,
     });
 
