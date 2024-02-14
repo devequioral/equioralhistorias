@@ -42,6 +42,7 @@ function ListProducts() {
   const [recordImage, setRecordImage] = React.useState(null);
   const [savingRecord, setSavingRecord] = React.useState(false);
   const [savingImage, setSavingImage] = React.useState(false);
+  const [validation, setValidation] = React.useState({});
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -107,39 +108,32 @@ function ListProducts() {
     setShowModalChangeImage((currCount) => currCount + 1);
   };
 
-  const saveProduct = () => {
+  const saveProduct = async () => {
     if (savingRecord) return;
     setSavingRecord(true);
     const url = recordModal.id
       ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/update`
       : `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/new`;
 
-    fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ product_request: recordModal }),
-    })
-      .then((response) => {
-        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
-        if (response.status !== 200) {
-          toast.error('No se pudo enviar la información');
-          setSavingRecord(false);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        toast.success('Producto Guardado con éxito');
-        setShowModalProductDetail(0);
-        setRefreshTable((currCount) => currCount + 1);
-        setSavingRecord(false);
-      })
-      .catch((error) => {
-        //console.error('Error:', error);
-        toast.error('El Producto no se pudo guardar');
-        setSavingRecord(false);
-      });
+    });
+
+    if (response.ok) {
+      toast.success('Producto Guardado con éxito');
+      setShowModalProductDetail(0);
+      setRefreshTable((currCount) => currCount + 1);
+      setSavingRecord(false);
+    } else {
+      const { message, validation } = await response.json();
+      if (validation) setValidation(validation);
+      //toast.error(message);
+      setSavingRecord(false);
+    }
   };
 
   const uploadImage = async () => {
@@ -297,6 +291,7 @@ function ListProducts() {
             onRecordChange(false);
           }}
           allowSave={recordChange}
+          savingRecord={savingRecord}
         >
           <DetailProduct
             onRecordChange={(value) => {
@@ -309,6 +304,7 @@ function ListProducts() {
             onChangeImage={(image) => {
               showChangeImage(image);
             }}
+            validation={validation}
             schema={{
               title: 'Detalle de Producto',
               fields: [
@@ -321,8 +317,14 @@ function ListProducts() {
                   key: 'productName',
                   label: 'Nombre del Producto',
                   type: 'text',
+                  isRequired: true,
                 },
-                { key: 'description', label: 'Descripción', type: 'text' },
+                {
+                  key: 'description',
+                  label: 'Descripción',
+                  type: 'text',
+                  isRequired: true,
+                },
                 {
                   key: 'productImage',
                   label: 'Imágen',
@@ -333,6 +335,7 @@ function ListProducts() {
                   key: 'status',
                   label: 'Status',
                   type: 'select',
+                  isRequired: true,
                   items: [
                     { value: 'disponible', label: 'Disponible' },
                     { value: 'agotado', label: 'Agotado' },

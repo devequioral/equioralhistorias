@@ -29,6 +29,7 @@ function LastStepScreen() {
 
   const [loading, setLoading] = React.useState(true);
   const [profile, setProfile] = React.useState(userModel);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const currentOrder =
     JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || orderModel;
@@ -38,6 +39,10 @@ function LastStepScreen() {
     if (event === 'next') {
       setForceSubmitForm(forceSubmitForm + 1);
     }
+  };
+
+  const onSubmit = (state) => {
+    setIsSubmitting(state);
   };
 
   React.useEffect(() => {
@@ -85,7 +90,11 @@ function LastStepScreen() {
           <div className={`row ${styles.row01}`}>
             <div className={`col col-12`} style={{ minHeight: '81px' }}>
               {!loading && (
-                <Actions onActionsEvent={onActionsEvent} isLoading={loading} />
+                <Actions
+                  onActionsEvent={onActionsEvent}
+                  isLoading={loading}
+                  isSubmitting={isSubmitting}
+                />
               )}
             </div>
           </div>
@@ -104,6 +113,7 @@ function LastStepScreen() {
                 theme={theme}
                 order={order}
                 forceSubmitForm={forceSubmitForm}
+                onSubmit={onSubmit}
               />
             </div>
           </div>

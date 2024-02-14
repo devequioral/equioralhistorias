@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { getError } from '@/utils/error';
-
-import contactData from '@/temp/contact-data.json';
 import { useRouter } from 'next/router';
+import { Button } from '@nextui-org/react';
 
 import { CircularProgress, Input } from '@nextui-org/react';
 
@@ -12,6 +11,7 @@ function ConfirmForm(props) {
   const { forceSubmitForm = 0, isLoading, profile } = props;
   const ref = React.useRef();
   const { product, addons } = props.order;
+  const [allowSubmit, setAllowSubmit] = React.useState(true);
 
   React.useEffect(() => {
     if (forceSubmitForm > 0) {
@@ -36,6 +36,7 @@ function ConfirmForm(props) {
   }) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    props.onSubmit(true);
 
     //FETCH DATA TO API/ORDERS/NEW
     fetch('/api/orders/new', {
@@ -63,6 +64,7 @@ function ConfirmForm(props) {
       })
       .then((data) => {
         setIsSubmitting(false);
+        props.onSubmit(false);
         toast.success('Cotización enviada con éxito');
         router.push(
           `/dashboard/orders/new/complete/?order_id=${data.order.id}`
@@ -71,6 +73,7 @@ function ConfirmForm(props) {
       .catch((error) => {
         console.error('Error:', error);
         setIsSubmitting(false);
+        props.onSubmit(false);
         toast.error('Error al enviar la cotización');
       });
   };
@@ -165,9 +168,18 @@ function ConfirmForm(props) {
             )}
           </div>
 
-          <button className="login-button" ref={ref}>
+          {/* <button className="login-button" ref={ref}>
             Enviar
-          </button>
+          </button> */}
+          <Button
+            color={!allowSubmit ? 'default' : 'success'}
+            disabled={!allowSubmit}
+            isLoading={isSubmitting}
+            type="submit"
+            className={`text-white`}
+          >
+            Enviar
+          </Button>
 
           <style jsx>{`
             .main-container {

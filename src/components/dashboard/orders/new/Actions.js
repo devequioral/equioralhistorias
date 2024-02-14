@@ -1,11 +1,14 @@
 import Image from 'next/image';
 import * as React from 'react';
+import { Button } from '@nextui-org/react';
 
 export default function MyComponent(props) {
+  const [allowSubmit, setAllowSubmit] = React.useState(true);
+
   return (
     <>
       <div className="div">
-        <div
+        {/* <div
           className="div-4"
           onClick={() => props.onActionsEvent && props.onActionsEvent('next')}
         >
@@ -16,7 +19,24 @@ export default function MyComponent(props) {
             alt=""
           />
           <div className="div-5">Siguiente</div>
-        </div>
+        </div> */}
+        <Button
+          color={!allowSubmit ? 'default' : 'success'}
+          disabled={!allowSubmit}
+          isLoading={props.isSubmitting}
+          onPress={() => props.onActionsEvent && props.onActionsEvent('next')}
+          className={`text-white`}
+          startContent={
+            <Image
+              src="/assets/images/icon-check.svg"
+              width={20}
+              height={20}
+              alt=""
+            />
+          }
+        >
+          Siguiente
+        </Button>
       </div>
       <style jsx>{`
         .div {

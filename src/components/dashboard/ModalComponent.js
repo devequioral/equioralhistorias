@@ -22,10 +22,9 @@ export default function App(props) {
     showButtonSave = true,
     children,
     onCloseModal,
+    savingRecord,
   } = props;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const [isLoading, setIsLoading] = React.useState(false);
 
   const refModalBody = React.useRef(null);
 
@@ -33,18 +32,15 @@ export default function App(props) {
     if (show > 0) {
       onOpen();
     } else {
-      setIsLoading(false);
       onCloseModal();
     }
   }, [show]);
 
   const saveRecord = () => {
-    setIsLoading(true);
     onSave();
   };
 
   const closeModal = () => {
-    setIsLoading(false);
     onCloseModal();
   };
 
@@ -75,7 +71,7 @@ export default function App(props) {
                       color={!allowSave ? 'default' : 'primary'}
                       onPress={saveRecord}
                       disabled={!allowSave}
-                      isLoading={isLoading}
+                      isLoading={savingRecord}
                     >
                       Guardar
                     </Button>

@@ -54,6 +54,26 @@ export default async function handler(req, res) {
 
     const { product_request } = req.body;
 
+    const validation = {};
+
+    if (!product_request.productName || product_request.productName === '') {
+      validation.productName = 'Field Required';
+    }
+    if (!product_request.description || product_request.description === '') {
+      validation.description = 'Field Required';
+    }
+    if (!product_request.status || product_request.status === '') {
+      validation.status = 'Field Required';
+    }
+
+    //EVALUATE IF VALIDATION IS NOT EMPTY
+    if (Object.keys(validation).length > 0) {
+      return res.status(500).send({
+        message: 'Product could not be processed',
+        validation,
+      });
+    }
+
     const product = await createProduct(userid, product_request);
 
     if (!product)

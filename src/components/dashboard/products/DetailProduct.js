@@ -7,7 +7,7 @@ import styles from '@/styles/dashboard/products/DetailProduct.module.css';
 import { formatDateToISOSM } from '@/utils/utils';
 
 export default function DetailProduct(props) {
-  const { schema, record, onFieldChange, onChangeImage } = props;
+  const { schema, record, onFieldChange, onChangeImage, validation } = props;
   //const newRecord = { ...record };
 
   const formatValue = (key, type) => {
@@ -40,8 +40,11 @@ export default function DetailProduct(props) {
               {(field.type === 'text' || field.type === 'date') && (
                 <Input
                   isReadOnly={field.readOnly ? true : false}
+                  isRequired={field.isRequired ? true : false}
                   type={field.type}
                   label={field.label}
+                  isInvalid={validation[field.key] ? true : false}
+                  errorMessage={validation[field.key]}
                   onChange={(e) => {
                     onFieldChange(field.key, e.target.value);
                   }}
@@ -79,6 +82,9 @@ export default function DetailProduct(props) {
                   defaultSelectedKeys={
                     record && record[field.key] ? [record[field.key]] : null
                   }
+                  isRequired={field.isRequired ? true : false}
+                  isInvalid={validation[field.key] ? true : false}
+                  errorMessage={validation[field.key]}
                   onChange={(e) => {
                     onFieldChange(field.key, e.target.value);
                   }}
