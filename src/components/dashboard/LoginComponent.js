@@ -194,12 +194,13 @@ function LoginForm(props) {
       <p className="terms-message">
         Al Ingresar a nuestra plataforma usted está de acuerdo a nuestros{' '}
         <a
-          href="#"
+          href="/privacy_policy"
           className="terms-link"
           style={{ textDecorationLine: 'underline', color: '#228ece' }}
-          aria-label="Terms and conditions"
+          aria-label="Privacy Policy"
+          target="_blank"
         >
-          términos y condiciones
+          políticas de privacidad
         </a>
       </p>
       <div className="remember-me-group">
