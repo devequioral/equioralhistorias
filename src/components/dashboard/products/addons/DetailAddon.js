@@ -14,7 +14,7 @@ import styles from '@/styles/dashboard/products/addons/DetailAddon.module.css';
 import { formatDateToISOSM } from '@/utils/utils';
 
 export default function DetailAddon(props) {
-  const { schema, record, onFieldChange, onChangeImage } = props;
+  const { schema, record, onFieldChange, onChangeImage, validation } = props;
   //const newRecord = { ...record };
 
   const formatValue = (key, type) => {
@@ -40,8 +40,11 @@ export default function DetailAddon(props) {
               {(field.type === 'text' || field.type === 'date') && (
                 <Input
                   isReadOnly={field.readOnly ? true : false}
+                  isRequired={field.isRequired ? true : false}
                   type={field.type}
                   label={field.label}
+                  isInvalid={validation[field.key] ? true : false}
+                  errorMessage={validation[field.key]}
                   onChange={(e) => {
                     onFieldChange(field, e.target.value);
                   }}
@@ -74,11 +77,14 @@ export default function DetailAddon(props) {
               {field.type === 'select' && (
                 <Select
                   items={field.items}
-                  placeholder={field.label}
+                  label={field.label}
                   className="max-w-xs"
                   defaultSelectedKeys={
                     record && record[field.key] ? [record[field.key]] : null
                   }
+                  isRequired={field.isRequired ? true : false}
+                  isInvalid={validation[field.key] ? true : false}
+                  errorMessage={validation[field.key]}
                   onChange={(e) => {
                     onFieldChange(field, e.target.value);
                   }}
@@ -89,11 +95,15 @@ export default function DetailAddon(props) {
                 </Select>
               )}
               {field.type === 'autocomplete' && (
+                //TODO VALIDATION MESSAGE NOT SHOWING
                 <Autocomplete
                   defaultItems={field.items}
                   label={field.label}
                   placeholder={field.placeholder}
                   className="max-w-xs"
+                  isRequired={field.isRequired ? true : false}
+                  isInvalid={validation[field.key] ? true : false}
+                  errorMessage={validation[field.key]}
                   onSelectionChange={(key) => {
                     onFieldChange(field, key);
                   }}

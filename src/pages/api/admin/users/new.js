@@ -65,6 +65,44 @@ export default async function handler(req, res) {
 
     const { record } = req.body;
 
+    const validation = {};
+
+    if (!record.name || record.name === '') {
+      validation.name = 'Field Required';
+    }
+    if (!record.username || record.username === '') {
+      validation.username = 'Field Required';
+    }
+    if (!record.email || record.email === '') {
+      validation.email = 'Field Required';
+    }
+    if (!record.role || record.role === '') {
+      validation.role = 'Field Required';
+    }
+    if (!record.password || record.password === '') {
+      validation.password = 'Field Required';
+    }
+    if (!record.address || record.address === '') {
+      validation.address = 'Field Required';
+    }
+    if (!record.invoice_to || record.invoice_to === '') {
+      validation.invoice_to = 'Field Required';
+    }
+    if (!record.contact_name || record.contact_name === '') {
+      validation.contact_name = 'Field Required';
+    }
+    if (!record.contact_phone || record.contact_phone === '') {
+      validation.contact_phone = 'Field Required';
+    }
+
+    //EVALUATE IF VALIDATION IS NOT EMPTY
+    if (Object.keys(validation).length > 0) {
+      return res.status(500).send({
+        message: 'Record could not be processed',
+        validation,
+      });
+    }
+
     const response = await createRecord(userid, record);
 
     if (!response)

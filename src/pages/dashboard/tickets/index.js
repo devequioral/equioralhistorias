@@ -36,6 +36,7 @@ function ListTickets() {
   const [recordModal, setRecordModal] = React.useState(ticketModel);
   const [recordChange, setRecordChange] = React.useState(false);
   const [savingRecord, setSavingRecord] = React.useState(false);
+  const [validation, setValidation] = React.useState({});
 
   const [newResponse, setNewResponse] = React.useState(null);
 
@@ -100,7 +101,7 @@ function ListTickets() {
     setRecordChange(true);
   };
 
-  const saveRecord = () => {
+  const saveRecord = async () => {
     if (savingRecord) return;
     setSavingRecord(true);
     let url = recordModal.id
@@ -113,35 +114,48 @@ function ListTickets() {
       url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets/addresponse`;
       body.ticket_response = newResponse;
     }
-    fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    })
-      .then((response) => {
-        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
-        if (response.status !== 200) {
-          toast.error('No se pudo enviar la información');
-          setSavingRecord(false);
-          setNewResponse(null);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        toast.success('Registro Guardado con éxito');
-        setShowModalRecordDetail(0);
-        setRefreshTable((currCount) => currCount + 1);
-        setSavingRecord(false);
-        setNewResponse(null);
-      })
-      .catch((error) => {
-        //console.error('Error:', error);
-        toast.error('El registro no se pudo guardar');
-        setSavingRecord(false);
-        setNewResponse(null);
-      });
+    });
+
+    if (response.ok) {
+      toast.success('Registro Guardado con éxito');
+      setShowModalRecordDetail(0);
+      setRefreshTable((currCount) => currCount + 1);
+      setSavingRecord(false);
+      setValidation({});
+    } else {
+      const { message, validation } = await response.json();
+      if (validation) setValidation(validation);
+      //toast.error(message);
+      setSavingRecord(false);
+    }
+    // .then((response) => {
+    //   //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+    //   if (response.status !== 200) {
+    //     toast.error('No se pudo enviar la información');
+    //     setSavingRecord(false);
+    //     setNewResponse(null);
+    //   }
+    //   return response.json();
+    // })
+    // .then((data) => {
+    //   toast.success('Registro Guardado con éxito');
+    //   setShowModalRecordDetail(0);
+    //   setRefreshTable((currCount) => currCount + 1);
+    //   setSavingRecord(false);
+    //   setNewResponse(null);
+    // })
+    // .catch((error) => {
+    //   //console.error('Error:', error);
+    //   toast.error('El registro no se pudo guardar');
+    //   setSavingRecord(false);
+    //   setNewResponse(null);
+    // });
   };
 
   const renderCell = React.useCallback((record, columnKey) => {
@@ -265,6 +279,7 @@ function ListTickets() {
             onRecordChange(false);
           }}
           allowSave={recordChange}
+          savingRecord={savingRecord}
           size={recordModal && recordModal.id ? '5xl' : 'md'}
         >
           <DetailTicket
@@ -277,6 +292,7 @@ function ListTickets() {
             }}
             addResponse={addResponse}
             userRole={session.user.role}
+            validation={validation}
           />
         </ModalComponent>
       </Layout>

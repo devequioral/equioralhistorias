@@ -84,6 +84,23 @@ export default async function handler(req, res) {
 
     const { record } = req.body;
 
+    const validation = {};
+
+    if (!record.title || record.title === '') {
+      validation.title = 'Field Required';
+    }
+    if (!record.originalMessage || record.originalMessage === '') {
+      validation.originalMessage = 'Field Required';
+    }
+
+    //EVALUATE IF VALIDATION IS NOT EMPTY
+    if (Object.keys(validation).length > 0) {
+      return res.status(500).send({
+        message: 'Record could not be processed',
+        validation,
+      });
+    }
+
     const response = await createRecord(
       { userid, role, username, email, name },
       record

@@ -79,6 +79,7 @@ export default function DetailProfile(props) {
     allowSave,
     onSave,
     savingRecord,
+    validation,
   } = props;
   //const newRecord = { ...record };
 
@@ -127,9 +128,12 @@ export default function DetailProfile(props) {
                 {(field.type === 'text' || field.type === 'date') && (
                   <Input
                     isReadOnly={field.readOnly ? true : false}
+                    isRequired={field.isRequired ? true : false}
                     id={field.key}
                     type={field.type}
                     label={field.label}
+                    isInvalid={validation[field.key] ? true : false}
+                    errorMessage={validation[field.key]}
                     onChange={(e) => {
                       onFieldChange(field.key, e.target.value);
                     }}
@@ -139,6 +143,9 @@ export default function DetailProfile(props) {
                 {field.type === 'password' && (
                   <Input
                     label={field.label}
+                    isRequired={field.isRequired ? true : false}
+                    isInvalid={validation[field.key] ? true : false}
+                    errorMessage={validation[field.key]}
                     onChange={(e) => {
                       onFieldChange(field.key, e.target.value);
                     }}
@@ -190,6 +197,9 @@ export default function DetailProfile(props) {
                     defaultSelectedKeys={
                       record && record[field.key] ? [record[field.key]] : null
                     }
+                    isRequired={field.isRequired ? true : false}
+                    isInvalid={validation[field.key] ? true : false}
+                    errorMessage={validation[field.key]}
                     onChange={(e) => {
                       onFieldChange(field.key, e.target.value);
                     }}

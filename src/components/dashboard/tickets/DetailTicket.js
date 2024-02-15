@@ -20,7 +20,14 @@ import styles from '@/styles/dashboard/tickets/DetailTicket.module.css';
 import { formatDate } from '@/utils/utils';
 
 export default function DetailTicket(props) {
-  const { userRole, addResponse, record, onFieldChange, onChangeImage } = props;
+  const {
+    userRole,
+    addResponse,
+    record,
+    onFieldChange,
+    onChangeImage,
+    validation,
+  } = props;
   //const newRecord = { ...record };
 
   const [isNewRecord, setIsNewRecord] = React.useState(
@@ -57,12 +64,18 @@ export default function DetailTicket(props) {
             <Input
               type={`text`}
               label={`Titulo`}
+              isRequired={true}
+              isInvalid={validation.title ? true : false}
+              errorMessage={validation.title}
               onChange={(e) => {
                 onFieldChange('title', e.target.value);
               }}
             />
             <Textarea
               label={`Mensaje`}
+              isRequired={true}
+              isInvalid={validation.originalMessage ? true : false}
+              errorMessage={validation.originalMessage}
               onChange={(e) => {
                 onFieldChange('originalMessage', e.target.value);
               }}
@@ -78,6 +91,9 @@ export default function DetailTicket(props) {
                   { value: 'close', label: 'Cerrado' },
                 ]}
                 placeholder={`Seleccione el estatus`}
+                isRequired={true}
+                isInvalid={validation.status ? true : false}
+                errorMessage={validation.status}
                 className="max-w-xs"
                 defaultSelectedKeys={[record.status]}
                 onChange={(e) => {

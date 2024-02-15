@@ -6,7 +6,6 @@ import DetailProfile from '@/components/dashboard/profile/DetailProfile';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useContext, useEffect, useState } from 'react';
 
-import productJSON from '@/temp/product.json';
 import userModel from '@/models/userModel';
 import { toast } from 'react-toastify';
 
@@ -26,6 +25,7 @@ function DashBoardScreen() {
   const [record, setRecord] = React.useState(userModel);
   const [recordChange, setRecordChange] = React.useState(false);
   const [savingRecord, setSavingRecord] = React.useState(false);
+  const [validation, setValidation] = React.useState({});
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -57,40 +57,53 @@ function DashBoardScreen() {
     }
   }, []);
 
-  const saveRecord = () => {
+  const saveRecord = async () => {
     if (savingRecord) return;
     setSavingRecord(true);
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/profile/update`;
 
-    fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ record }),
-    })
-      .then((response) => {
-        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
-        if (response.status !== 200) {
-          toast.error('No se pudo enviar la información');
-          setSavingRecord(false);
-          setRecordChange(false);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        toast.success('Registro Guardado con éxito');
-        setShowModalRecordDetail(0);
-        setRefreshTable((currCount) => currCount + 1);
-        setSavingRecord(false);
-        setRecordChange(false);
-      })
-      .catch((error) => {
-        //console.error('Error:', error);
-        toast.error('El registro no se pudo guardar');
-        setSavingRecord(false);
-        setRecordChange(false);
-      });
+    });
+
+    if (response.ok) {
+      toast.success('Registro Guardado con éxito');
+      setSavingRecord(false);
+      setRecordChange(false);
+      setValidation({});
+    } else {
+      const { message, validation } = await response.json();
+      if (validation) setValidation(validation);
+      //toast.error(message);
+      setSavingRecord(false);
+      setRecordChange(false);
+    }
+    // .then((response) => {
+    //   //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+    //   if (response.status !== 200) {
+    //     toast.error('No se pudo enviar la información');
+    //     setSavingRecord(false);
+    //     setRecordChange(false);
+    //   }
+    //   return response.json();
+    // })
+    // .then((data) => {
+    //   toast.success('Registro Guardado con éxito');
+    //   setShowModalRecordDetail(0);
+    //   setRefreshTable((currCount) => currCount + 1);
+    //   setSavingRecord(false);
+    //   setRecordChange(false);
+    // })
+    // .catch((error) => {
+    //   //console.error('Error:', error);
+    //   toast.error('El registro no se pudo guardar');
+    //   setSavingRecord(false);
+    //   setRecordChange(false);
+    // });
   };
 
   return (
@@ -109,6 +122,7 @@ function DashBoardScreen() {
           onSave={saveRecord}
           allowSave={recordChange}
           savingRecord={savingRecord}
+          validation={validation}
           schema={{
             title: 'Perfil',
             fields: [
@@ -121,25 +135,39 @@ function DashBoardScreen() {
                 key: 'name',
                 label: 'Nombre',
                 type: 'text',
+                isRequerid: true,
               },
-              { key: 'username', label: 'Usuario', type: 'text' },
-              { key: 'email', label: 'Email', type: 'text' },
+              {
+                key: 'username',
+                label: 'Usuario',
+                type: 'text',
+                isRequerid: true,
+              },
+              { key: 'email', label: 'Email', type: 'text', isRequerid: true },
               { key: 'password', label: 'Password', type: 'password' },
               {
                 key: 'contact_name',
                 label: 'Nombre de Contácto',
                 type: 'text',
+                isRequerid: true,
               },
               {
                 key: 'contact_phone',
                 label: 'Teléfono de Contácto',
                 type: 'text',
+                isRequerid: true,
               },
-              { key: 'address', label: 'Dirección', type: 'text' },
+              {
+                key: 'address',
+                label: 'Dirección',
+                type: 'text',
+                isRequerid: true,
+              },
               {
                 key: 'invoice_to',
                 label: 'Facturar a nombre de',
                 type: 'text',
+                isRequerid: true,
               },
             ],
           }}

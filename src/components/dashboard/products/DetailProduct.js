@@ -52,32 +52,37 @@ export default function DetailProduct(props) {
                 />
               )}
               {field.type === 'image' && (
-                <div className={`${styles.FieldImage}`}>
-                  {field.preview && (
-                    <div className={`${styles.ImagePreview}`}>
-                      {record && record[field.key] && (
-                        <Image
-                          className="w-full"
-                          src={record[field.key].src}
-                          alt=""
-                        />
-                      )}
+                <>
+                  <div className={`${styles.FieldImage}`}>
+                    {field.preview && (
+                      <div className={`${styles.ImagePreview}`}>
+                        {record && record[field.key] && (
+                          <Image
+                            className="w-full"
+                            src={record[field.key].src}
+                            alt=""
+                          />
+                        )}
+                      </div>
+                    )}
+                    <div
+                      className={`${styles.ChangeImage}`}
+                      onClick={() => {
+                        changeImage(field, record);
+                      }}
+                    >
+                      <span>Change Image</span>
                     </div>
-                  )}
-                  <div
-                    className={`${styles.ChangeImage}`}
-                    onClick={() => {
-                      changeImage(field, record);
-                    }}
-                  >
-                    <span>Change Image</span>
                   </div>
-                </div>
+                  <div data-slot="error-message" class="text-tiny text-danger">
+                    {validation[field.key]}
+                  </div>
+                </>
               )}
               {field.type === 'select' && (
                 <Select
                   items={field.items}
-                  placeholder={field.label}
+                  label={field.label}
                   className="max-w-xs"
                   defaultSelectedKeys={
                     record && record[field.key] ? [record[field.key]] : null

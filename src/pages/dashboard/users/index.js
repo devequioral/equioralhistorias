@@ -33,6 +33,7 @@ function ListUsers() {
   const [recordModal, setRecordModal] = React.useState(userModel);
   const [recordChange, setRecordChange] = React.useState(false);
   const [savingRecord, setSavingRecord] = React.useState(false);
+  const [validation, setValidation] = React.useState({});
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -90,39 +91,52 @@ function ListUsers() {
     setShowModalRecordDetail((currCount) => currCount + 1);
   };
 
-  const saveRecord = () => {
+  const saveRecord = async () => {
     if (savingRecord) return;
     setSavingRecord(true);
     const url = recordModal.id
       ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/users/update`
       : `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/users/new`;
 
-    fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ record: recordModal }),
-    })
-      .then((response) => {
-        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
-        if (response.status !== 200) {
-          toast.error('No se pudo enviar la información');
-          setSavingRecord(false);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        toast.success('Registro Guardado con éxito');
-        setShowModalRecordDetail(0);
-        setRefreshTable((currCount) => currCount + 1);
-        setSavingRecord(false);
-      })
-      .catch((error) => {
-        //console.error('Error:', error);
-        toast.error('El registro no se pudo guardar');
-        setSavingRecord(false);
-      });
+    });
+
+    if (response.ok) {
+      toast.success('Registro Guardado con éxito');
+      setShowModalRecordDetail(0);
+      setRefreshTable((currCount) => currCount + 1);
+      setSavingRecord(false);
+      setValidation({});
+    } else {
+      const { message, validation } = await response.json();
+      if (validation) setValidation(validation);
+      //toast.error(message);
+      setSavingRecord(false);
+    }
+    // .then((response) => {
+    //   //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
+    //   if (response.status !== 200) {
+    //     toast.error('No se pudo enviar la información');
+    //     setSavingRecord(false);
+    //   }
+    //   return response.json();
+    // })
+    // .then((data) => {
+    //   toast.success('Registro Guardado con éxito');
+    //   setShowModalRecordDetail(0);
+    //   setRefreshTable((currCount) => currCount + 1);
+    //   setSavingRecord(false);
+    // })
+    // .catch((error) => {
+    //   //console.error('Error:', error);
+    //   toast.error('El registro no se pudo guardar');
+    //   setSavingRecord(false);
+    // });
   };
 
   const renderCell = React.useCallback((record, columnKey) => {
@@ -239,6 +253,7 @@ function ListUsers() {
             onRecordChange(false);
           }}
           allowSave={recordChange}
+          savingRecord={savingRecord}
         >
           <DetailUser
             onRecordChange={(value) => {
@@ -248,6 +263,7 @@ function ListUsers() {
             onFieldChange={(key, value) => {
               onFieldChange(key, value);
             }}
+            validation={validation}
             schema={{
               title: 'Detalle del Usuario',
               fields: [
@@ -260,14 +276,31 @@ function ListUsers() {
                   key: 'name',
                   label: 'Nombre',
                   type: 'text',
+                  isRequired: true,
                 },
-                { key: 'username', label: 'Usuario', type: 'text' },
-                { key: 'email', label: 'Email', type: 'text' },
-                { key: 'password', label: 'Password', type: 'password' },
+                {
+                  key: 'username',
+                  label: 'Usuario',
+                  type: 'text',
+                  isRequired: true,
+                },
+                {
+                  key: 'email',
+                  label: 'Email',
+                  type: 'text',
+                  isRequired: true,
+                },
+                {
+                  key: 'password',
+                  label: 'Password',
+                  type: 'password',
+                  isRequired: true,
+                },
                 {
                   key: 'role',
                   label: 'Rol',
                   type: 'select',
+                  isRequired: true,
                   items: [
                     { value: 'regular', label: 'Regular' },
                     { value: 'admin', label: 'Administrador' },
@@ -276,18 +309,26 @@ function ListUsers() {
                 {
                   key: 'contact_name',
                   label: 'Nombre de Contácto',
+                  isRequired: true,
                   type: 'text',
                 },
                 {
                   key: 'contact_phone',
                   label: 'Teléfono de Contácto',
+                  isRequired: true,
                   type: 'text',
                 },
-                { key: 'address', label: 'Dirección', type: 'text' },
+                {
+                  key: 'address',
+                  label: 'Dirección',
+                  type: 'text',
+                  isRequired: true,
+                },
                 {
                   key: 'invoice_to',
                   label: 'Facturar a nombre de',
                   type: 'text',
+                  isRequired: true,
                 },
               ],
             }}

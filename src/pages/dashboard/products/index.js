@@ -353,6 +353,7 @@ function ListProducts() {
             setAllowUploadImage(false);
           }}
           allowSave={allowUploadImage}
+          savingRecord={savingImage}
         >
           <MediaUpload
             onImageChange={(image) => {

@@ -54,6 +54,38 @@ export default async function handler(req, res) {
 
     const { record } = req.body;
 
+    const validation = {};
+
+    if (!record.text || record.text === '') {
+      validation.text = 'Field Required';
+    }
+    if (!record.productName || record.productName === '') {
+      validation.productName = 'Field Required';
+    }
+    if (!record.help || record.help === '') {
+      validation.help = 'Field Required';
+    }
+    if (!record.percent || record.percent === '') {
+      validation.percent = 'Field Required';
+    }
+    if (record.percent && isNaN(Number.parseInt(record.percent))) {
+      validation.percent = 'This field must be a number';
+    }
+    if (!record.category || record.category === '') {
+      validation.category = 'Field Required';
+    }
+    if (!record.productName || record.productName === '') {
+      validation.productName = 'Field Required';
+    }
+
+    //EVALUATE IF VALIDATION IS NOT EMPTY
+    if (Object.keys(validation).length > 0) {
+      return res.status(500).send({
+        message: 'Record could not be processed',
+        validation,
+      });
+    }
+
     const response = await createRecord(userid, record);
 
     if (!response)

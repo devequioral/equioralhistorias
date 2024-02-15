@@ -65,6 +65,12 @@ export default async function handler(req, res) {
     if (!product_request.status || product_request.status === '') {
       validation.status = 'Field Required';
     }
+    if (
+      !product_request.productImage.src ||
+      product_request.productImage.src === ''
+    ) {
+      validation.productImage = 'Field Required';
+    }
 
     //EVALUATE IF VALIDATION IS NOT EMPTY
     if (Object.keys(validation).length > 0) {

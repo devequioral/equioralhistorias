@@ -8,18 +8,20 @@ export default function MyComponent(props) {
   return (
     <>
       <div className={`div ${theme}`}>
-        <div className="cntImage">
-          <Image
-            src={`${image}`}
-            width={105}
-            height={105}
-            alt={product.productName}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        </div>
+        {product.productImage.src && (
+          <div className="cntImage">
+            <Image
+              src={`${image}`}
+              width={105}
+              height={105}
+              alt={product.productName}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
+          </div>
+        )}
         <div className="div-2">
           <div className="div-3">{product.productName}</div>
           <div className="div-4">{product.description}</div>

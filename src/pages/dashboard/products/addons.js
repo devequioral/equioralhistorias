@@ -46,6 +46,7 @@ function ListProducts() {
   const [recordModal, setRecordModal] = React.useState(addonModel);
   const [recordChange, setRecordChange] = React.useState(false);
   const [savingRecord, setSavingRecord] = React.useState(false);
+  const [validation, setValidation] = React.useState({});
 
   const onRecordChange = (value) => {
     setRecordChange(value);
@@ -138,39 +139,32 @@ function ListProducts() {
     setShowModalRecord((currCount) => currCount + 1);
   };
 
-  const saveRecord = () => {
+  const saveRecord = async () => {
     if (savingRecord) return;
     setSavingRecord(true);
     const url = recordModal.id
       ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/update`
       : `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/products/addons/new`;
 
-    fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ record: recordModal }),
-    })
-      .then((response) => {
-        //IF RESPONSE STATUS IS NOT 200 THEN THROW ERROR
-        if (response.status !== 200) {
-          toast.error('No se pudo enviar la información');
-          setSavingRecord(false);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        toast.success('Registro Guardado con éxito');
-        setShowModalRecord(0);
-        setRefreshTable((currCount) => currCount + 1);
-        setSavingRecord(false);
-      })
-      .catch((error) => {
-        //console.error('Error:', error);
-        toast.error('El Registro no se pudo guardar');
-        setSavingRecord(false);
-      });
+    });
+    if (response.ok) {
+      toast.success('Registro Guardado con éxito');
+      setShowModalRecord(0);
+      setRefreshTable((currCount) => currCount + 1);
+      setSavingRecord(false);
+      setValidation({});
+    } else {
+      const { message, validation } = await response.json();
+      if (validation) setValidation(validation);
+      //toast.error(message);
+      setSavingRecord(false);
+    }
   };
 
   const renderCell = React.useCallback((record, columnKey) => {
@@ -287,6 +281,7 @@ function ListProducts() {
             onRecordChange(false);
           }}
           allowSave={recordChange}
+          savingRecord={savingRecord}
         >
           <DetailAddon
             onRecordChange={(value) => {
@@ -299,6 +294,7 @@ function ListProducts() {
             onChangeImage={(image) => {
               showChangeImage(image);
             }}
+            validation={validation}
             schema={{
               title: 'Detalle del Adicional',
               fields: [
@@ -311,17 +307,25 @@ function ListProducts() {
                   key: 'text',
                   label: 'Nombre',
                   type: 'text',
+                  isRequired: true,
                 },
-                { key: 'help', label: 'Descripción', type: 'text' },
+                {
+                  key: 'help',
+                  label: 'Descripción',
+                  type: 'text',
+                  isRequired: true,
+                },
                 {
                   key: 'percent',
                   label: '% Valor agregado',
                   type: 'text',
+                  isRequired: true,
                 },
                 {
                   key: 'category',
                   label: 'Categoria',
                   type: 'select',
+                  isRequired: true,
                   items: [
                     { value: 'Seguridad', label: 'Seguridad' },
                     { value: 'Energía', label: 'Energía' },
@@ -336,6 +340,7 @@ function ListProducts() {
                   key: 'productID',
                   label: 'Producto',
                   type: 'autocomplete',
+                  isRequired: true,
                   placeholder: 'Elija un Producto',
                   items: products,
                 },
