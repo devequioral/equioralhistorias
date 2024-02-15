@@ -274,6 +274,8 @@ export default function MyComponent(props) {
         .secondaryBanner {
           display: flex;
           width: 100%;
+          max-width: 700px;
+          margin: 0 auto;
         }
         .cardContainer {
           width: 100%;
