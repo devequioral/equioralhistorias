@@ -66,6 +66,11 @@ export default NextAuth({
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
+        const maxAges = {
+          _30Days: 10 * 24 * 60 * 60,
+          _1Day: 24 * 60 * 60,
+        };
+        const maxAge = credentials.remember ? maxAges._30Days : maxAges._1Day;
         const user = await fetchUser(credentials.username);
         if (user && bcryptjs.compareSync(credentials.password, user.password)) {
           return {
@@ -74,6 +79,7 @@ export default NextAuth({
             username: user.username,
             email: user.email,
             role: user.role,
+            maxAge,
           };
         }
         throw new Error('Invalid email or password');

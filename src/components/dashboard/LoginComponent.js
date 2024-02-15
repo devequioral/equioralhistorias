@@ -68,6 +68,7 @@ const EyeFilledIcon = (props) => (
 function LoginForm(props) {
   const { options } = props;
   const { data: session } = useSession();
+  const [remember, setRemember] = React.useState(false);
 
   const router = useRouter();
   const { redirect } = router.query;
@@ -95,6 +96,7 @@ function LoginForm(props) {
         redirect: false,
         username,
         password,
+        remember,
       });
       if (result.error) {
         toast.error(result.error);
@@ -204,7 +206,13 @@ function LoginForm(props) {
         </a>
       </p>
       <div className="remember-me-group">
-        <Checkbox size="sm" radius="none">
+        <Checkbox
+          size="sm"
+          radius="none"
+          onValueChange={(val) => {
+            setRemember(val);
+          }}
+        >
           Recordar mis datos
         </Checkbox>
       </div>
