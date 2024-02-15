@@ -1,26 +1,26 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
-import ModalComponent from '@/components/dashboard/ModalComponent';
 import { Card, CardHeader, CardFooter, Button } from '@nextui-org/react';
+import secondaryBannerModel from '@/models/secondaryBannerModel';
+import ModalComponent from '@/components/dashboard/ModalComponent';
 import DetailMainBanner from '@/components/dashboard/mainbanner/DetailMainBanner';
 import MediaUpload from '@/components/dashboard/MediaUpload';
-import mainBannerModel from '@/models/mainBannerModel';
 import { toast } from 'react-toastify';
 
 async function getBannerData() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/mainbanner/get`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/secondarybanner/get`
   );
   return await res.json();
 }
 
-export default function MainBanner(props) {
-  const { role } = props;
+export default function MyComponent(props) {
+  const { data, role } = props;
   const flag = React.useRef(false);
   const [showModalRecord, setShowModalRecord] = React.useState(0);
   const [showModalChangeImage, setShowModalChangeImage] = React.useState(0);
-  const [recordModal, setRecordModal] = React.useState(mainBannerModel);
+  const [recordModal, setRecordModal] = React.useState(secondaryBannerModel);
   const [loading, setLoading] = React.useState(false);
 
   const [recordChange, setRecordChange] = React.useState(false);
@@ -78,7 +78,7 @@ export default function MainBanner(props) {
   const saveBanner = async () => {
     if (savingRecord) return;
     setSavingRecord(true);
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/mainbanner/update`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/secondarybanner/update`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -141,24 +141,31 @@ export default function MainBanner(props) {
       setSavingImage(false);
     }
   };
-
   return (
     <>
-      <div className="mainBanner">
+      <div className="secondaryBanner">
         {loading && <div>Loading...</div>}
         {!loading && (
           <div className="cardContainer">
             <Card isFooterBlurred className="card">
               <CardHeader className="absolute z-10 top-1 flex-col items-start">
-                <div className="title">{recordModal.title}</div>
-                <div className="description">{recordModal.description}</div>
+                <div className="cardHeader">
+                  <div className="title">{recordModal.title}</div>
+                  <div className="description">{recordModal.description}</div>
+                </div>
               </CardHeader>
               <Image
-                alt="Main Banner"
-                className=""
+                alt="Secondary Banner"
+                className="img"
                 src={recordModal.image.src}
-                width={721}
-                height={291}
+                width={306}
+                height={428}
+                style={{
+                  height: '100%',
+                  width: 'auto',
+                  maxWidth: '210px',
+                  objectFit: 'contain',
+                }}
               />
               <CardFooter className="cardFooter absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 gap-3">
                 <Button radius="full" size="sm">
@@ -264,46 +271,39 @@ export default function MainBanner(props) {
         </ModalComponent>
       </div>
       <style jsx>{`
-        .mainBanner {
-          justify-content: center;
+        .secondaryBanner {
           display: flex;
-          max-width: 721px;
-          flex-direction: column;
-          margin: 0 auto;
-        }
-        @media (max-width: 991px) {
-          .mainBanner {
-            margin: 0 auto;
-          }
+          width: 100%;
         }
         .cardContainer {
-          height: auto;
-        }
-        .card {
-          min-height: 306px;
-        }
-        .cardFooter {
-          display: flex;
-          flex-direction: row;
-          gap: 50px;
-        }
-        .cntMainImage {
-          position: absolute;
-          inset: 0;
-          height: 100%;
           width: 100%;
-          object-fit: cover;
-          object-position: center;
+        }
+        .img {
+          height: 100%;
+          width: auto;
+          max-width: 210px;
+          object-fit: contain;
+        }
+
+        .cardHeader {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: flex-end;
+          height: 100%;
+          margin-top: 50px;
         }
 
         .title {
           position: relative;
-          color: #fff;
+          color: #333;
           max-width: 451px;
           font-size: clamp(18px, 2.5vw, 24px);
           line-height: 120%;
           font-family: 'Roboto', -apple-system, Roboto, Helvetica, sans-serif;
           font-weight: 700;
+          text-align: right;
         }
         @media (max-width: 991px) {
           .title {
@@ -312,7 +312,7 @@ export default function MainBanner(props) {
         }
         .description {
           position: relative;
-          color: #fff;
+          color: #333;
           letter-spacing: 0.15px;
           margin-top: 9px;
           max-width: 451px;
@@ -320,6 +320,7 @@ export default function MainBanner(props) {
           line-height: 120%;
           font-family: 'Roboto', -apple-system, Roboto, Helvetica, sans-serif;
           font-weight: 400;
+          text-align: right;
         }
         @media (max-width: 510px) {
           .description {
@@ -329,6 +330,159 @@ export default function MainBanner(props) {
         @media (max-width: 991px) {
           .description {
             max-width: 100%;
+          }
+        }
+
+        .div-2 {
+          gap: 20px;
+          display: flex;
+          position: relative;
+          justify-content: flex-end;
+        }
+        @media (max-width: 991px) {
+          .div-2 {
+            align-items: stretch;
+            gap: 0px;
+          }
+        }
+        .column {
+          display: flex;
+          flex-direction: column;
+          line-height: normal;
+          width: 180px;
+          margin-left: 0px;
+          position: absolute;
+          top: -20px;
+          left: 0;
+          z-index: 1;
+        }
+
+        @media (max-width: 492px) {
+          .column {
+            display: none;
+          }
+        }
+        .img {
+          aspect-ratio: 0.71;
+          object-fit: contain;
+          object-position: center;
+          width: 153px;
+          overflow: hidden;
+          max-width: 100%;
+          flex-grow: 1;
+        }
+
+        @media (max-width: 640px) {
+          .img {
+            position: absolute;
+            z-index: 1;
+          }
+        }
+        .column-2 {
+          display: flex;
+          flex-direction: column;
+          line-height: normal;
+          width: 75%;
+          margin-left: 20px;
+          z-index: 2;
+        }
+        @media (max-width: 991px) {
+          .column-2 {
+            width: 70%;
+          }
+        }
+        @media (max-width: 492px) {
+          .column-2 {
+            width: 100%;
+          }
+        }
+        .div-3 {
+          display: flex;
+          flex-direction: column;
+          margin: auto 0;
+        }
+        @media (max-width: 991px) {
+          .div-3 {
+            max-width: 80%;
+            margin: 40px auto 0;
+          }
+        }
+        @media (max-width: 640px) {
+          .div-3 {
+            max-width: 50%;
+            margin-left: auto;
+            z-index: 2;
+          }
+        }
+        .div-4 {
+          color: #153d68;
+          align-self: center;
+          white-space: nowrap;
+          font: 700 32px/100% Roboto, -apple-system, Roboto, Helvetica,
+            sans-serif;
+        }
+        @media (max-width: 991px) {
+          .div-4 {
+            white-space: initial;
+            text-align: center;
+          }
+        }
+        @media (max-width: 640px) {
+          .div-4 {
+            text-align: center;
+          }
+        }
+        .div-5 {
+          color: rgba(0, 0, 0, 0.6);
+          text-align: center;
+          letter-spacing: 0.15px;
+          width: 90%;
+          margin-top: 32px;
+          font: 400 12px/14px Roboto, -apple-system, Roboto, Helvetica,
+            sans-serif;
+        }
+        @media (max-width: 991px) {
+          .div-5 {
+            max-width: 95%;
+          }
+          .div-5 {
+            display: none;
+          }
+        }
+        .div-6 {
+          justify-content: center;
+          align-items: center;
+          border-radius: 10px;
+          box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.2);
+          background-color: #4f3cc9;
+          align-self: center;
+          display: flex;
+          margin-top: 27px;
+          gap: 8px;
+          padding: 8px 14px;
+        }
+        .img-2 {
+          aspect-ratio: 1;
+          object-fit: contain;
+          object-position: center;
+          width: 20px;
+          overflow: hidden;
+          max-width: 100%;
+          margin: auto 0;
+        }
+        .div-7 {
+          color: #fff;
+          letter-spacing: 0.4px;
+          text-transform: uppercase;
+          align-self: stretch;
+          flex-grow: 1;
+          white-space: nowrap;
+          font: 400 14px/25px Roboto, -apple-system, Roboto, Helvetica,
+            sans-serif;
+        }
+        @media (max-width: 991px) {
+          .div-7 {
+            white-space: initial;
           }
         }
       `}</style>

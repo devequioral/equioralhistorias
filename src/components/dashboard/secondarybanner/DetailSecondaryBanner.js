@@ -2,11 +2,11 @@ import React from 'react';
 
 import { Input, Image, Select, SelectItem, Button } from '@nextui-org/react';
 
-import styles from '@/styles/dashboard/products/DetailProduct.module.css';
+import styles from '@/styles/dashboard/secondarybanner/DetailSecondaryBanner.module.css';
 
 import { formatDateToISOSM } from '@/utils/utils';
 
-export default function DetailProduct(props) {
+export default function DetailSecondaryBanner(props) {
   const { schema, record, onFieldChange, onChangeImage, validation } = props;
   //const newRecord = { ...record };
 

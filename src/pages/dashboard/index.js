@@ -1,13 +1,13 @@
 import Layout from '@/components/Layout';
 import Metaheader from '@/components/Metaheader';
-import Banner02 from '@/components/dashboard/Banner02';
+import SecondaryBanner from '@/components/dashboard/SecondaryBanner';
 import MainBanner from '@/components/dashboard/MainBanner';
 import NewOrderBanner from '@/components/dashboard/NewOrderBanner';
 import ProductList from '@/components/dashboard/ProductList';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useContext, useEffect, useState } from 'react';
-
-import productJSON from '@/temp/product.json';
+import { useSession } from 'next-auth/react';
+import { Image, Button } from '@nextui-org/react';
 
 async function getProducts(page = 1, pageSize = 5, status = 'all') {
   //SIMULATE SLOW CONNECTION
@@ -22,6 +22,7 @@ function DashBoardScreen() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -53,39 +54,10 @@ function DashBoardScreen() {
       <Metaheader />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <NewOrderBanner />
-        <MainBanner
-          theme={theme}
-          data={{
-            title: 'Nuevo Gabinete MDC, con más espacio y nuevas funciones',
-            description:
-              'Se puede aplicar en entornos de menos de 8 metros cuadrados o con una carga informática de menos de 7,0 kW. Es adecuado para aplicaciones de TI en entornos regionales o de pequeñas empresas.',
-            image: {
-              src: '/assets/images/main-image-banner.jpg?v=0.1',
-              width: 721,
-              height: 291,
-            },
-            button01: {
-              label: 'Mas información',
-              icon: {
-                src: '/assets/images/icon-eye.svg',
-                width: 20,
-                height: 20,
-              },
-              href: '#',
-            },
-            button02: {
-              label: 'Personalizar Producto',
-              icon: {
-                src: '/assets/images/icon-customize.svg',
-                width: 20,
-                height: 20,
-              },
-              href: '#',
-            },
-          }}
-        />
+        <MainBanner theme={theme} role={session?.user?.role} />
         <ProductList theme={theme} products={products} isLoading={loading} />
-        <Banner02
+        <SecondaryBanner
+          role={session?.user?.role}
           data={{
             title: 'MONITOREO INTEGRAL',
             description:
