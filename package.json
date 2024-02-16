@@ -25,6 +25,7 @@
     "next": "14.0.4",
     "next-auth": "^4.24.5",
     "node-fetch": "^3.3.2",
+    "nookies": "^2.5.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.49.2",

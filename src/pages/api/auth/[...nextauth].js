@@ -3,6 +3,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 import { consoleError } from '@/utils/error';
+import nookies from 'nookies';
 
 async function getUser(value, filterBy) {
   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/users?filterBy=${filterBy}&filterValue=${value}`;
@@ -42,48 +43,111 @@ async function fetchUser(username) {
   return user;
 }
 
-export default NextAuth({
-  session: {
-    strategy: 'jwt',
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user?.id) token.id = user.id;
-      if (user?.role) token.role = user.role;
-      if (user?.name) token.name = user.name;
-      if (user?.username) token.username = user.username;
-      return token;
+export default async function auth(req, res) {
+  //TODO IMPLEMENT REMEMBER ME
+  const maxAge = req.body.remember ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60;
+  if (req.body.remember === true) {
+    nookies.set({ res }, 'rememberSession', true, {
+      maxAge: 5 * 24 * 60 * 60,
+      path: '/',
+    });
+  } else if (req.body.remember === false) {
+    nookies.set({ res }, 'rememberSession', false, {
+      maxAge: 5 * 24 * 60 * 60,
+      path: '/',
+    });
+  }
+
+  return await NextAuth(req, res, {
+    session: {
+      strategy: 'jwt',
+      maxAge: 1 * 24 * 60 * 60,
     },
-    async session({ session, token }) {
-      if (token?.id) session.user.id = token.id;
-      if (token?.role) session.user.role = token.role;
-      if (token?.name) session.name = token.name;
-      if (token?.username) session.username = token.username;
-      return session;
-    },
-  },
-  providers: [
-    CredentialsProvider({
-      async authorize(credentials) {
-        const maxAges = {
-          _30Days: 10 * 24 * 60 * 60,
-          _1Day: 24 * 60 * 60,
-        };
-        const maxAge = credentials.remember ? maxAges._30Days : maxAges._1Day;
-        const user = await fetchUser(credentials.username);
-        if (user && bcryptjs.compareSync(credentials.password, user.password)) {
-          return {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            role: user.role,
-            maxAge,
-          };
-        }
-        throw new Error('Invalid email or password');
+    secret: process.env.NEXTAUTH_SECRET,
+    callbacks: {
+      async jwt({ token, user }) {
+        if (user?.id) token.id = user.id;
+        if (user?.role) token.role = user.role;
+        if (user?.name) token.name = user.name;
+        if (user?.username) token.username = user.username;
+        //if (user?.username) token.maxAge = maxAge;
+        return token;
       },
-    }),
-  ],
-});
+      async session({ session, token }) {
+        if (token?.id) session.user.id = token.id;
+        if (token?.role) session.user.role = token.role;
+        if (token?.name) session.name = token.name;
+        if (token?.username) session.username = token.username;
+        //if (token?.username) session.maxAge = maxAge;
+        return session;
+      },
+    },
+    providers: [
+      CredentialsProvider({
+        async authorize(credentials) {
+          const user = await fetchUser(credentials.username);
+          if (
+            user &&
+            bcryptjs.compareSync(credentials.password, user.password)
+          ) {
+            return {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              email: user.email,
+              role: user.role,
+            };
+          }
+          throw new Error('Invalid email or password');
+        },
+      }),
+    ],
+  });
+}
+
+// export default NextAuth({
+//   session: {
+//     strategy: 'jwt',
+//     maxAge: 1 * 24 * 60 * 60,
+//   },
+//   secret: process.env.NEXTAUTH_SECRET,
+//   callbacks: {
+//     async jwt({ token, user }) {
+//       if (user?.id) token.id = user.id;
+//       if (user?.role) token.role = user.role;
+//       if (user?.name) token.name = user.name;
+//       if (user?.username) token.username = user.username;
+//       return token;
+//     },
+//     async session({ session, token }) {
+//       if (token?.id) session.user.id = token.id;
+//       if (token?.role) session.user.role = token.role;
+//       if (token?.name) session.name = token.name;
+//       if (token?.username) session.username = token.username;
+//       return session;
+//     },
+//   },
+//   providers: [
+//     CredentialsProvider({
+//       async authorize(credentials) {
+//         const maxAges = {
+//           _30Days: 10 * 24 * 60 * 60,
+//           _1Day: 24 * 60 * 60,
+//         };
+//         const maxAge = credentials.remember ? maxAges._30Days : maxAges._1Day;
+//         const user = await fetchUser(credentials.username);
+//         if (user && bcryptjs.compareSync(credentials.password, user.password)) {
+//           return {
+//             id: user.id,
+//             name: user.name,
+//             username: user.username,
+//             email: user.email,
+//             role: user.role,
+//             maxAge,
+//           };
+//         }
+//         throw new Error('Invalid email or password');
+//       },
+//     }),
+//   ],
+// });

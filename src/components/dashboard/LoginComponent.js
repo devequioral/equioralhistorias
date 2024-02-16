@@ -206,7 +206,7 @@ function LoginForm(props) {
         </a>
       </p>
       <div className="remember-me-group">
-        <Checkbox
+        {/* <Checkbox
           size="sm"
           radius="none"
           onValueChange={(val) => {
@@ -214,7 +214,7 @@ function LoginForm(props) {
           }}
         >
           Recordar mis datos
-        </Checkbox>
+        </Checkbox> */}
       </div>
       <style jsx>{`
         .main-container {
