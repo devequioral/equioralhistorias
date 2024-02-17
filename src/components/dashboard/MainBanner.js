@@ -62,10 +62,6 @@ export default function MainBanner(props) {
           setRecordModal({
             ...mainBannerBD.record.records[0],
           });
-          console.log(
-            'mainBannerBD.record.records[0]',
-            mainBannerBD.record.records[0]
-          );
         } else {
           setRecordModal({});
         }

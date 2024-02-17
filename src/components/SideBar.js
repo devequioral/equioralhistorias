@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '@/styles/SideBar.module.css';
-import MainNavigation from './MainNavigation';
+import MainNavigation from '@/components/MainNavigation';
 
 export default function SideBar() {
   return (
