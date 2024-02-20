@@ -1,14 +1,14 @@
 import { getToken } from 'next-auth/jwt';
-import { getRecords } from '@/virtel-sdk/dist/backend';
+import { getRecords } from '@/vidashy-sdk/dist/backend';
 import { filterBy, filterValue } from '@/utils/filters';
 
 async function getRecord() {
   return await getRecords({
-    backend_url: process.env.VIRTEL_DASHBOARD_URL,
-    organization: process.env.VIRTEL_DASHBOARD_ORGANIZATION,
-    database: process.env.VIRTEL_DASHBOARD_DATABASE,
+    backend_url: process.env.VIDASHY_URL,
+    organization: process.env.VIDASHY_ORGANIZATION,
+    database: process.env.VIDASHY_DATABASE,
     object: 'secondarybanner',
-    api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
+    api_key: process.env.VIDASHY_API_KEY,
     params: {},
   });
 }

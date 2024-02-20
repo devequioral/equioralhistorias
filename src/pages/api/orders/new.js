@@ -16,7 +16,7 @@ function generateUUID() {
 }
 
 async function createOrder(userid, data_contact, product, addons) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/orders`;
+  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/orders`;
 
   try {
     const order_new = sanitizeOBJ({
@@ -31,7 +31,7 @@ async function createOrder(userid, data_contact, product, addons) {
       method: 'post',
       url: url,
       headers: {
-        Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
       },
       data: order_new,
     });
@@ -50,13 +50,13 @@ async function createOrder(userid, data_contact, product, addons) {
     //     status: 'unread',
     //   });
 
-    //   const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+    //   const url_notification = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/notifications`;
 
     //   axios({
     //     method: 'post',
     //     url: url_notification,
     //     headers: {
-    //       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+    //       Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
     //     },
     //     data: notification_new,
     //   });

@@ -15,12 +15,12 @@ export const config = {
 };
 
 // async function preparePost(filename, contentType) {
-//   const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/media`;
+//   const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/media`;
 
 //   const response = await fetch(url, {
 //     method: 'PUT',
 //     headers: {
-//       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+//       Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
 //     },
 //     body: JSON.stringify({ filename, contentType }),
 //   });
