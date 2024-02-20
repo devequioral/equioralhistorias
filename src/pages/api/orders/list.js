@@ -1,4 +1,4 @@
-import { getRecords } from '@/virtel-sdk/dist/backend';
+import { getRecords } from '@/vidashy-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
 import { filterBy, filterValue } from '@/utils/filters';
 
