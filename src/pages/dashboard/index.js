@@ -30,7 +30,11 @@ function DashBoardScreen() {
         setLoading(true);
         const productsBD = await getProducts(1, 4, 'all');
 
-        if (!productsBD) {
+        if (
+          !productsBD ||
+          !productsBD.products ||
+          !productsBD.products.records
+        ) {
           setProducts([]);
           return;
         }
