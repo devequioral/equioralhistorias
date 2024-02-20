@@ -149,17 +149,21 @@ export default function MainBanner(props) {
                 <div className="title">{recordModal.title}</div>
                 <div className="description">{recordModal.description}</div>
               </CardHeader>
-              <Image
-                alt="Main Banner"
-                className=""
-                src={recordModal.image.src}
-                width={721}
-                height={291}
-              />
+              {recordModal && recordModal.image && recordModal.image.src && (
+                <Image
+                  alt="Main Banner"
+                  className=""
+                  src={recordModal.image.src}
+                  width={721}
+                  height={291}
+                />
+              )}
               <CardFooter className="cardFooter absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 gap-3">
-                <Button radius="full" size="sm">
-                  <Link href={recordModal.url}>Cotizar</Link>
-                </Button>
+                {recordModal && recordModal.url && (
+                  <Button radius="full" size="sm">
+                    <Link href={recordModal.url}>Cotizar</Link>
+                  </Button>
+                )}
                 {role === 'admin' && (
                   <Button
                     isIconOnly

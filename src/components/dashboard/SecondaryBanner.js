@@ -150,23 +150,27 @@ export default function MyComponent(props) {
                   <div className="description">{recordModal.description}</div>
                 </div>
               </CardHeader>
-              <Image
-                alt="Secondary Banner"
-                className="img"
-                src={recordModal.image.src}
-                width={306}
-                height={428}
-                style={{
-                  height: '100%',
-                  width: 'auto',
-                  maxWidth: '210px',
-                  objectFit: 'contain',
-                }}
-              />
+              {recordModal && recordModal.image && recordModal.image.src && (
+                <Image
+                  alt="Secondary Banner"
+                  className="img"
+                  src={recordModal.image.src}
+                  width={306}
+                  height={428}
+                  style={{
+                    height: '100%',
+                    width: 'auto',
+                    maxWidth: '210px',
+                    objectFit: 'contain',
+                  }}
+                />
+              )}
               <CardFooter className="cardFooter absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 gap-3">
-                <Button radius="full" size="sm">
-                  <Link href={recordModal.url}>Cotizar</Link>
-                </Button>
+                {recordModal && recordModal.url && (
+                  <Button radius="full" size="sm">
+                    <Link href={recordModal.url}>Cotizar</Link>
+                  </Button>
+                )}
                 {role === 'admin' && (
                   <Button
                     isIconOnly
