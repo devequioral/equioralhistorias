@@ -3,7 +3,7 @@ import { getToken } from 'next-auth/jwt';
 import { sanitizeOBJ } from '@/utils/utils';
 
 async function updateProduct(userid, product_request) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/products`;
+  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/products`;
 
   try {
     const product_update = sanitizeOBJ({
@@ -19,7 +19,7 @@ async function updateProduct(userid, product_request) {
       method: 'patch',
       url: url,
       headers: {
-        Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
       },
       data: product_update,
     });

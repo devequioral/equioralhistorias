@@ -4,11 +4,11 @@ import { filterBy, filterValue } from '@/utils/filters';
 
 async function getOrders(userid, page = 1, pageSize = 5, status = 'all') {
   return await getRecords({
-    backend_url: process.env.VIRTEL_DASHBOARD_URL,
-    organization: process.env.VIRTEL_DASHBOARD_ORGANIZATION,
-    database: process.env.VIRTEL_DASHBOARD_DATABASE,
+    backend_url: process.env.VIDASHY_URL,
+    organization: process.env.VIDASHY_ORGANIZATION,
+    database: process.env.VIDASHY_DATABASE,
     object: 'orders',
-    api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
+    api_key: process.env.VIDASHY_API_KEY,
     params: {
       filterBy: filterBy({ userid, status }),
       filterValue: filterValue({ userid, status }),

@@ -17,7 +17,7 @@ function generateUUID() {
 }
 
 async function createRecord(userid, record) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/users`;
+  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/users`;
   try {
     const new_record = sanitizeOBJ({
       id: generateUUID(),
@@ -40,7 +40,7 @@ async function createRecord(userid, record) {
       method: 'post',
       url,
       headers: {
-        Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
       },
       data: new_record,
     });

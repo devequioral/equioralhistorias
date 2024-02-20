@@ -16,7 +16,7 @@ function generateUUID() {
 }
 
 async function createProduct(userid, product_request) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/products`;
+  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/products`;
   try {
     const product_new = sanitizeOBJ({
       id: generateUUID(),
@@ -26,7 +26,7 @@ async function createProduct(userid, product_request) {
       method: 'post',
       url: url,
       headers: {
-        Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
       },
       data: product_new,
     });

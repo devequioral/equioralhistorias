@@ -19,11 +19,11 @@ function generateUUID() {
 
 async function getRecord(recordid) {
   return await getRecords({
-    backend_url: process.env.VIRTEL_DASHBOARD_URL,
-    organization: process.env.VIRTEL_DASHBOARD_ORGANIZATION,
-    database: process.env.VIRTEL_DASHBOARD_DATABASE,
+    backend_url: process.env.VIDASHY_URL,
+    organization: process.env.VIDASHY_ORGANIZATION,
+    database: process.env.VIDASHY_DATABASE,
     object: 'tickets',
-    api_key: process.env.VIRTEL_DASHBOARD_API_KEY,
+    api_key: process.env.VIDASHY_API_KEY,
     params: {
       filterBy: filterBy({ id: recordid }),
       filterValue: filterValue({ id: recordid }),
@@ -32,7 +32,7 @@ async function getRecord(recordid) {
 }
 
 async function updateRecord(user, record, ticket_response) {
-  const url = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/tickets`;
+  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/tickets`;
   try {
     if (ticket_response) {
       record.responses.push({
@@ -68,7 +68,7 @@ async function updateRecord(user, record, ticket_response) {
       method: 'patch',
       url: url,
       headers: {
-        Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+        Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
       },
       data: record_update,
     });
@@ -87,13 +87,13 @@ async function updateRecord(user, record, ticket_response) {
     //     status: 'unread',
     //   });
 
-    //   const url_notification = `${process.env.VIRTEL_DASHBOARD_URL}6d498a2a94a3/quoter/notifications`;
+    //   const url_notification = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/notifications`;
 
     //   axios({
     //     method: 'post',
     //     url: url_notification,
     //     headers: {
-    //       Authorization: `Bearer ${process.env.VIRTEL_DASHBOARD_API_KEY}`,
+    //       Authorization: `Bearer ${process.env.VIDASHY_API_KEY}`,
     //     },
     //     data: notification_new,
     //   });
