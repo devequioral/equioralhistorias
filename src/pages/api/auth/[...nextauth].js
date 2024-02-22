@@ -6,7 +6,7 @@ import { consoleError } from '@/utils/error';
 import nookies from 'nookies';
 
 async function getUser(value, filterBy) {
-  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/users?filterBy=${filterBy}&filterValue=${value}`;
+  const url = `${process.env.VIDASHY_URL}${process.env.VIDASHY_ORGANIZATION}/${process.env.VIDASHY_DATABASE}/users?filterBy=${filterBy}&filterValue=${value}`;
   try {
     const response = await axios({
       method: 'get',

@@ -19,10 +19,7 @@ export default function productReducer(state, action) {
           newState.addons.splice(index, 1);
         }
       }
-      localStorage.setItem(
-        'ArcticBunker_draft_order',
-        JSON.stringify(newState)
-      );
+      localStorage.setItem('Equioral_draft_order', JSON.stringify(newState));
       return newState;
     default:
       throw new Error();

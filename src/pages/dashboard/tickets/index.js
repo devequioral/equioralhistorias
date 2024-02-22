@@ -232,7 +232,7 @@ function ListTickets() {
 
   return (
     <>
-      <Metaheader title="Listado de Tickets | Arctic Bunker" />
+      <Metaheader title="Listado de Tickets | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}

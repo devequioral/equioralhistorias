@@ -4,16 +4,16 @@ import React from 'react';
 export default function PrivacyPolicy() {
   return (
     <>
-      <Metaheader title="Política de Privacidad | Arctic Bunker" />
+      <Metaheader title="Política de Privacidad | Equioral" />
       <div className="privacyPolicy">
         <div className="container">
-          <h1>Política de Privacidad de Arctic Bunker</h1>
+          <h1>Política de Privacidad de Equioral</h1>
 
-          <p>Última actualización: 15-02-2024</p>
+          <p>Última actualización: 22-02-2024</p>
 
           <p>
-            Arctic Bunker opera el sitio web http://arcticbunker.com/ (en
-            adelante, el &quot;Servicio&quot;).
+            Equioral opera el sitio web https://equioral.com (en adelante, el
+            &quot;Servicio&quot;).
           </p>
 
           <p>
@@ -92,9 +92,7 @@ export default function PrivacyPolicy() {
           </ul>
           <h2>Uso de datos</h2>
 
-          <p>
-            Arctic Bunker utiliza los datos recopilados para diversos fines:
-          </p>
+          <p>Equioral utiliza los datos recopilados para diversos fines:</p>
 
           <ul>
             <li>- Para proporcionar y mantener nuestro Servicio</li>
@@ -133,9 +131,9 @@ export default function PrivacyPolicy() {
           </p>
 
           <p>
-            Arctic Bunker tomará todas las medidas razonablemente necesarias
-            para garantizar que sus datos sean tratados de forma segura y de
-            acuerdo con esta Política de Privacidad y no se realizará ninguna
+            Equioral tomará todas las medidas razonablemente necesarias para
+            garantizar que sus datos sean tratados de forma segura y de acuerdo
+            con esta Política de Privacidad y no se realizará ninguna
             transferencia de sus Datos personales a una organización o un país a
             menos que existan controles adecuados establecidos, incluida la
             seguridad de sus datos y otra información personal.
@@ -146,14 +144,14 @@ export default function PrivacyPolicy() {
           <h2>Requisitos legales</h2>
 
           <p>
-            Arctic Bunker puede divulgar sus Datos personales de buena fe cuando
+            Equioral puede divulgar sus Datos personales de buena fe cuando
             considere que esta acción es necesaria para:
           </p>
 
           <ul>
             <li>- Cumplir con una obligación legal</li>
             <li>
-              - Proteger y defender los derechos o la propiedad de Arctic Bunker
+              - Proteger y defender los derechos o la propiedad de Equioral
             </li>
             <li>
               - Prevenir o investigar posibles irregularidades en relación con

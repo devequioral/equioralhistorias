@@ -17,31 +17,31 @@ function CompleteScreen() {
   const { order_id } = router.query;
 
   const initialProduct =
-    JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || productJSON;
+    JSON.parse(localStorage.getItem('Equioral_draft_order')) || productJSON;
   const [product, dispatch] = useReducer(productReducer, initialProduct);
 
   React.useEffect(() => {
-    if (localStorage.getItem('ArcticBunker_draft_order')) {
-      // if (!localStorage.getItem('ArcticBunker_orders')) {
-      //   localStorage.setItem('ArcticBunker_orders', JSON.stringify([]));
+    if (localStorage.getItem('Equioral_draft_order')) {
+      // if (!localStorage.getItem('Equioral_orders')) {
+      //   localStorage.setItem('Equioral_orders', JSON.stringify([]));
       // }
-      // if (localStorage.getItem('ArcticBunker_orders')) {
-      //   const orders = JSON.parse(localStorage.getItem('ArcticBunker_orders'));
+      // if (localStorage.getItem('Equioral_orders')) {
+      //   const orders = JSON.parse(localStorage.getItem('Equioral_orders'));
       //   orders.push({
       //     product,
       //     order_id,
       //     status: 'Pendiente',
       //     date: new Date().toLocaleDateString(),
       //   });
-      //   localStorage.setItem('ArcticBunker_orders', JSON.stringify(orders));
+      //   localStorage.setItem('Equioral_orders', JSON.stringify(orders));
       // }
-      localStorage.removeItem('ArcticBunker_draft_order');
+      localStorage.removeItem('Equioral_draft_order');
     }
   }, []);
 
   return (
     <>
-      <Metaheader title="Orden Completada | Arctic Bunker" />
+      <Metaheader title="Orden Completada | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme} sidebarCollapsed={false}>
         <div className={`container ${styles.container}`}>
           <div className={`row ${styles.row01}`}>

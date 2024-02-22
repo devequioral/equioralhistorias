@@ -206,7 +206,7 @@ function ListUsers() {
 
   return (
     <>
-      <Metaheader title="Listado de Usuarios | Arctic Bunker" />
+      <Metaheader title="Listado de Usuarios | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}

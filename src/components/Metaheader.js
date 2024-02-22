@@ -6,15 +6,15 @@ import GAScript from '@/components/GAScript';
 import { useRouter } from 'next/router';
 
 export default function Metaheader({
-  title = 'Arctic Bunker Dashboard | Arctic Bunker',
-  description = 'Arctic Bunker Dashboard',
+  title = 'Equioral Dashboard | Equioral',
+  description = 'Equioral Dashboard',
   keywords = 'nextjs dashboard',
   og_image = '/assets/images/og/og.jpg',
   yoast_head = false,
-  author = 'Arctic Bunker',
+  author = 'Equioral',
   link = '',
-  domain = 'Arctic Bunker.co',
-  twitter = '@Arctic Bunker',
+  domain = 'Equioral.co',
+  twitter = '@Equioral',
   noindex = false,
 }) {
   const router = useRouter();

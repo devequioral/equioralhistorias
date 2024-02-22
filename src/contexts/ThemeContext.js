@@ -7,7 +7,7 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     // This code runs after the component has mounted, which means it runs on the client side.
-    const themeDefault = localStorage.getItem('ArcticBunker_theme') || 'light';
+    const themeDefault = localStorage.getItem('Equioral_theme') || 'light';
     setTheme(themeDefault);
   }, []);
 
@@ -16,7 +16,7 @@ export const ThemeProvider = ({ children }) => {
     setTheme(newTheme);
 
     // This code also runs on the client side, so it's safe to use localStorage here.
-    localStorage.setItem('ArcticBunker_theme', newTheme);
+    localStorage.setItem('Equioral_theme', newTheme);
   };
 
   return (

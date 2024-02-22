@@ -2,11 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      'localhost',
-      'test-nextjs-image-upload-02.s3.amazonaws.com',
-      'arcticbunker.s3.amazonaws.com',
-    ],
+    domains: ['localhost'],
   },
 };
 

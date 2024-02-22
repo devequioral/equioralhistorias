@@ -129,7 +129,7 @@ function DetailOrderScreen() {
 
   return (
     <>
-      <Metaheader title="Detalle de Cotización | Arctic Bunker" />
+      <Metaheader title="Detalle de Cotización | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}

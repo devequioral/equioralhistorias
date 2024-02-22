@@ -2,7 +2,7 @@ export default function orderReducer(state, action) {
   switch (action.type) {
     case 'SET_ORDER':
       localStorage.setItem(
-        'ArcticBunker_draft_order',
+        'Equioral_draft_order',
         JSON.stringify(action.order)
       );
       return action.order;
@@ -37,10 +37,7 @@ export default function orderReducer(state, action) {
         }
       });
 
-      localStorage.setItem(
-        'ArcticBunker_draft_order',
-        JSON.stringify(newState)
-      );
+      localStorage.setItem('Equioral_draft_order', JSON.stringify(newState));
       return newState;
     default:
       throw new Error();

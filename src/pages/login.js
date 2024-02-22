@@ -11,18 +11,18 @@ export default function LoginScreen() {
       <div className={`${style.LoginScreen}`}>
         <div className={`${style.bg}`}>
           <Image
-            src="/assets/images/bg-login.jpg"
-            width={1920}
-            height={1280}
+            src="/assets/images/bg-login.jpg?v=0.1"
+            width={952}
+            height={627}
             alt=""
           />
         </div>
         <LoginComponent
           options={{
             logo: {
-              src: '/assets/images/logo.svg',
-              width: 268,
-              height: 63,
+              src: '/assets/images/logo.png',
+              width: 175,
+              height: 89,
               alt: 'Logo',
             },
           }}

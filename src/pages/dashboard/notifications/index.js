@@ -199,7 +199,7 @@ function Notifications() {
 
   return (
     <>
-      <Metaheader title="Notificaciones | Arctic Bunker" />
+      <Metaheader title="Notificaciones | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}

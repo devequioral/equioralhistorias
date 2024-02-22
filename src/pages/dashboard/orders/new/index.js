@@ -54,7 +54,7 @@ function NewOrderScreen() {
   }, [page, pageSize]);
 
   useEffect(() => {
-    const draftOrder = localStorage.getItem('ArcticBunker_draft_order');
+    const draftOrder = localStorage.getItem('Equioral_draft_order');
     if (draftOrder) {
       setDraftOrder(JSON.parse(draftOrder));
       setShowModal(true);
@@ -66,14 +66,14 @@ function NewOrderScreen() {
       router.push(`/dashboard/orders/new/customize/${draftOrder.product.id}`);
     }
     if (name_event === 'option02') {
-      localStorage.removeItem('ArcticBunker_draft_order');
+      localStorage.removeItem('Equioral_draft_order');
       setShowModal(false);
     }
   };
 
   return (
     <>
-      <Metaheader title="Nueva Cotización | Arctic Bunker" />
+      <Metaheader title="Nueva Cotización | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme} sidebarCollapsed={true}>
         <BreadCrumbs
           theme={theme}

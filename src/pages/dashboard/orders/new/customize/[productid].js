@@ -70,7 +70,7 @@ function CustomizeOrderScreen() {
         }
 
         const currentOrder =
-          JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) ||
+          JSON.parse(localStorage.getItem('Equioral_draft_order')) ||
           orderModel;
 
         dispatch({ type: 'SET_ORDER', order: currentOrder });
@@ -93,7 +93,7 @@ function CustomizeOrderScreen() {
 
   return (
     <>
-      <Metaheader title="Personalizar Orden | Arctic Bunker" />
+      <Metaheader title="Personalizar Orden | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme} sidebarCollapsed={true}>
         <div className={`container ${styles.container}`}>
           <div className={`row ${styles.row01}`}>

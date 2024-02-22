@@ -244,7 +244,7 @@ function ListProducts() {
   }, []);
   return (
     <>
-      <Metaheader title="Listado de Productos | Arctic Bunker" />
+      <Metaheader title="Listado de Productos | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}

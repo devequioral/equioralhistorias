@@ -32,7 +32,7 @@ function LastStepScreen() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const currentOrder =
-    JSON.parse(localStorage.getItem('ArcticBunker_draft_order')) || orderModel;
+    JSON.parse(localStorage.getItem('Equioral_draft_order')) || orderModel;
   const [order, dispatch] = useReducer(orderReducer, currentOrder);
 
   const onActionsEvent = (event) => {
@@ -66,7 +66,7 @@ function LastStepScreen() {
 
   return (
     <>
-      <Metaheader title="Último Paso de Cotización | Arctic Bunker" />
+      <Metaheader title="Último Paso de Cotización | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme} sidebarCollapsed={true}>
         <div className={`container ${styles.container}`}>
           <div className={`row ${styles.row01}`}>

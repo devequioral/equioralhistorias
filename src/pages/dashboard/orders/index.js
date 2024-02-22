@@ -102,7 +102,7 @@ function ListOrders() {
   }, []);
   return (
     <>
-      <Metaheader title="Listado de Cotizaciones | Arctic Bunker" />
+      <Metaheader title="Listado de Cotizaciones | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}

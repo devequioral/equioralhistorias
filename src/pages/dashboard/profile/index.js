@@ -108,7 +108,7 @@ function DashBoardScreen() {
 
   return (
     <>
-      <Metaheader title="Perfil | Arctic Bunker" />
+      <Metaheader title="Perfil | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <DetailProfile
           onRecordChange={(value) => {

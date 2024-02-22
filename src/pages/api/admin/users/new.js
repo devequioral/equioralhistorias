@@ -17,7 +17,7 @@ function generateUUID() {
 }
 
 async function createRecord(userid, record) {
-  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/users`;
+  const url = `${process.env.VIDASHY_URL}${process.env.VIDASHY_ORGANIZATION}/${process.env.VIDASHY_DATABASE}/users`;
   try {
     const new_record = sanitizeOBJ({
       id: generateUUID(),
