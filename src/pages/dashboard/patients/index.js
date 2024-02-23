@@ -8,12 +8,17 @@ import MainScreenObject from '@/components/dashboard/MainScreenObject';
 import { Chip } from '@nextui-org/react';
 import Image from 'next/image';
 import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
+import { useRouter } from 'next/router';
 
 function ListPatients() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const urlGetRecords = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/list`;
   const urlNewRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/new`;
   const urlUpdateRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/update`;
+  const router = useRouter();
+  const viewHistory = (record) => {
+    router.push('/dashboard/patients/history/' + record.id);
+  };
   const renderCell = (record, columnKey, showRecordDetail) => {
     const cellValue = record[columnKey];
     switch (columnKey) {
@@ -57,6 +62,22 @@ function ListPatients() {
 
       case 'date':
         return <div>{formatDate(cellValue)}</div>;
+
+      case 'history':
+        return (
+          <div
+            style={{
+              textDecoration: 'none',
+              color: '#0070f0',
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              viewHistory(record);
+            }}
+          >
+            Ver Historia
+          </div>
+        );
 
       case 'id':
         return (
@@ -108,7 +129,7 @@ function ListPatients() {
               { key: 'horse_farm', label: 'Criadero' },
               { key: 'horse', label: 'Caballo' },
               { key: 'date', label: 'Fecha' },
-              { key: 'status', label: 'Status' },
+              { key: 'history', label: 'Historia' },
             ],
             renderCell,
           }}
