@@ -1,14 +1,11 @@
-import TableComponent from '@/components/dashboard/TableComponent';
-import React, { useContext, useEffect } from 'react';
-import { Chip } from '@nextui-org/react';
-import { useRouter } from 'next/router';
-import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
-import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
+import TableComponent from '@/components/dashboard/TableComponent';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 
-import { toast } from 'react-toastify';
 import DetailRecord from '@/components/dashboard/DetailRecord';
 import MediaUpload from '@/components/dashboard/MediaUpload';
+import { toast } from 'react-toastify';
 
 async function getRecords(
   urlGetRecords,
@@ -16,7 +13,9 @@ async function getRecords(
   pageSize = 5,
   status = 'all'
 ) {
-  const url = `${urlGetRecords}?page=${page}&pageSize=${pageSize}&status=${status}`;
+  let url = `${urlGetRecords}`;
+  url += url.indexOf('?') === -1 ? '?' : '&';
+  url += `page=${page}&pageSize=${pageSize}&status=${status}`;
   const res = await fetch(url);
   return await res.json();
 }
@@ -39,13 +38,8 @@ function formatSchema(schema, listRecords) {
       }
     })(field);
     newSchema.fields.push({
-      key: field.key,
-      label: field.label,
-      type: field.type,
-      isRequired: field.isRequired,
-      placeholder: field.placeholder,
+      ...field,
       items: fieldItems,
-      selectionMode: field.selectionMode,
     });
   });
   return newSchema;
@@ -81,6 +75,7 @@ export default function MainScreenObject(props) {
   const [savingImage, setSavingImage] = React.useState(false);
   const [validation, setValidation] = React.useState({});
   const [formatedSchema, setFormatedSchema] = React.useState({ fields: [] });
+  const [fieldImage, setFieldImage] = React.useState(null);
 
   const flag = React.useRef(false);
 
@@ -98,6 +93,7 @@ export default function MainScreenObject(props) {
   useEffect(() => {
     // if (flag.current) return;
     // flag.current = true;
+    if (!urlGetRecords) return;
     if (typeof window !== 'undefined') {
       const fetchRecords = async () => {
         setLoading(true);
@@ -134,7 +130,7 @@ export default function MainScreenObject(props) {
       };
       fetchRecords(page, pageSize);
     }
-  }, [page, pageSize, status, refreshTable]);
+  }, [page, pageSize, status, refreshTable, urlGetRecords]);
 
   useEffect(() => {
     setFormatedSchema(formatSchema(schema, listRecords));
@@ -150,7 +146,9 @@ export default function MainScreenObject(props) {
     setShowModalRecord((currCount) => currCount + 1);
   };
 
-  const showChangeImage = (image) => {
+  const showChangeImage = (fieldImage, multiple = false) => {
+    console.log('fieldImage', fieldImage, multiple);
+    setFieldImage(multiple ? [fieldImage] : fieldImage);
     setShowModalChangeImage((currCount) => currCount + 1);
   };
 
@@ -209,7 +207,14 @@ export default function MainScreenObject(props) {
       if (uploadResponse.ok) {
         //toast.success('Image Saved');
         const newRecord = { ...recordModal };
-        newRecord.image.src = urlMedia;
+        if (Array.isArray(fieldImage)) {
+          newRecord[fieldImage[0]] = [
+            ...newRecord[fieldImage[0]],
+            { src: urlMedia },
+          ];
+        } else {
+          newRecord[fieldImage] = { src: urlMedia };
+        }
         setRecordModal(newRecord);
         setRecordChange(true);
       } else {
@@ -217,76 +222,13 @@ export default function MainScreenObject(props) {
       }
       setShowModalChangeImage(0);
       setSavingImage(false);
+      setFieldImage(null);
     } else {
       setSavingImage(false);
+      setFieldImage(null);
     }
   };
 
-  // const renderCell = React.useCallback((record, columnKey) => {
-  //   const cellValue = record[columnKey];
-  //   console.log(record);
-  //   switch (columnKey) {
-  //     case 'expand':
-  //       return (
-  //         <div
-  //           className="expand-cell"
-  //           onClick={() => {
-  //             showRecordDetail(record);
-  //           }}
-  //         >
-  //           <Image
-  //             src="/assets/images/icon-expand.svg"
-  //             width={12}
-  //             height={12}
-  //             alt=""
-  //           />
-  //         </div>
-  //       );
-  //     case 'status':
-  //       const statusColorMap = {
-  //         active: 'success',
-  //         inactive: 'danger',
-  //       };
-  //       return (
-  //         <>
-  //           {cellValue ? (
-  //             <Chip
-  //               className="capitalize"
-  //               color={statusColorMap[record.status]}
-  //               size="sm"
-  //               variant="flat"
-  //             >
-  //               {capitalizeFirstLetter(cellValue)}
-  //             </Chip>
-  //           ) : (
-  //             <div></div>
-  //           )}
-  //         </>
-  //       );
-
-  //     case 'date':
-  //       return <div>{formatDate(cellValue)}</div>;
-
-  //     case 'id':
-  //       return (
-  //         <div
-  //           style={{
-  //             textDecoration: 'none',
-  //             color: '#0070f0',
-  //             cursor: 'pointer',
-  //           }}
-  //           onClick={() => {
-  //             showRecordDetail(record);
-  //           }}
-  //         >
-  //           {shortUUID(cellValue)}
-  //         </div>
-  //       );
-
-  //     default:
-  //       return cellValue;
-  //   }
-  // }, []);
   return (
     <>
       <TableComponent
@@ -331,8 +273,8 @@ export default function MainScreenObject(props) {
           onFieldChange={(key, value) => {
             onFieldChange(key, value);
           }}
-          onChangeImage={(image) => {
-            showChangeImage(image);
+          onChangeImage={(image, multiple) => {
+            showChangeImage(image, multiple);
           }}
           validation={validation}
           schema={formatedSchema}

@@ -92,10 +92,6 @@ export default function DetailRecord(props) {
     }
   };
 
-  const changeImage = (field) => {
-    onChangeImage(field);
-  };
-
   return (
     <>
       <div className="flex flex-col gap-1">
@@ -197,10 +193,47 @@ export default function DetailRecord(props) {
                     <div
                       className={`${styles.ChangeImage}`}
                       onClick={() => {
-                        changeImage(field, record);
+                        onChangeImage(field.key);
                       }}
                     >
                       <span>Change Image</span>
+                    </div>
+                  </div>
+                  <div
+                    data-slot="error-message"
+                    className="text-tiny text-danger"
+                  >
+                    {validation[field.key]}
+                  </div>
+                </>
+              )}
+              {field.type === 'images' && (
+                <>
+                  <div className={`${styles.FieldImage}`}>
+                    {field.preview && (
+                      <div
+                        className={`${styles.ImagePreview} ${styles.multiple}`}
+                      >
+                        {record &&
+                          record[field.key] &&
+                          record[field.key].length > 0 &&
+                          record[field.key].map((image, index) => (
+                            <Image
+                              key={index}
+                              className="w-full"
+                              src={image.src}
+                              alt=""
+                            />
+                          ))}
+                      </div>
+                    )}
+                    <div
+                      className={`${styles.ChangeImage}`}
+                      onClick={() => {
+                        onChangeImage(field.key, true);
+                      }}
+                    >
+                      <span>Add Image</span>
                     </div>
                   </div>
                   <div
