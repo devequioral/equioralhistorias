@@ -82,18 +82,6 @@ export default async function handler(req, res) {
     if (!record.password || record.password === '') {
       validation.password = 'Field Required';
     }
-    if (!record.address || record.address === '') {
-      validation.address = 'Field Required';
-    }
-    if (!record.invoice_to || record.invoice_to === '') {
-      validation.invoice_to = 'Field Required';
-    }
-    if (!record.contact_name || record.contact_name === '') {
-      validation.contact_name = 'Field Required';
-    }
-    if (!record.contact_phone || record.contact_phone === '') {
-      validation.contact_phone = 'Field Required';
-    }
 
     //EVALUATE IF VALIDATION IS NOT EMPTY
     if (Object.keys(validation).length > 0) {
