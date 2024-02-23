@@ -11,9 +11,9 @@ import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
 
 function ListPatients() {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const urlGetRecords = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/organizations/list`;
-  const urlNewRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/organizations/new`;
-  const urlUpdateRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/organizations/update`;
+  const urlGetRecords = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/list`;
+  const urlNewRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/new`;
+  const urlUpdateRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/update`;
   const renderCell = (record, columnKey, showRecordDetail) => {
     const cellValue = record[columnKey];
     switch (columnKey) {
@@ -80,14 +80,14 @@ function ListPatients() {
   };
   return (
     <>
-      <Metaheader title="Organizations List | Vidashy" />
+      <Metaheader title="Lista de Pacientes | Equioral" />
       <Layout theme={theme} toogleTheme={toggleTheme}>
         <BreadCrumbs
           theme={theme}
           data={{
             links: [
               { href: '/dashboard', title: 'Home' },
-              { href: false, title: 'Organizations' },
+              { href: false, title: 'Pacientes' },
             ],
           }}
         />
@@ -98,32 +98,51 @@ function ListPatients() {
           tablePageSize={5}
           model={patientModel}
           tableComponentData={{
-            title: 'Organizations List',
+            title: 'Lista de pacientes',
             button: {
-              label: 'New Organization',
+              label: 'Nuevo paciente',
             },
             columns: [
               { key: 'expand', label: '' },
-              { key: 'id', label: 'Organization ID' },
-              { key: 'name', label: 'Organization' },
-              { key: 'date', label: 'Date' },
+              { key: 'id', label: 'Paciente ID' },
+              { key: 'horse_farm', label: 'Criadero' },
+              { key: 'horse', label: 'Caballo' },
+              { key: 'date', label: 'Fecha' },
               { key: 'status', label: 'Status' },
             ],
             renderCell,
           }}
           modalComponentData={{
-            title: 'Organization Details',
+            title: 'Detalle de Paciente',
           }}
           schema={{
             fields: [
               {
                 key: 'id',
-                label: 'Organization ID',
+                label: 'Paciente ID',
                 type: 'hidden',
               },
               {
-                key: 'name',
-                label: 'Organization Name',
+                key: 'horse',
+                label: 'Caballo',
+                type: 'text',
+                isRequired: true,
+              },
+              {
+                key: 'horse_farm',
+                label: 'Criadero',
+                type: 'text',
+                isRequired: true,
+              },
+              {
+                key: 'owner_name',
+                label: 'Nombre del Dueño',
+                type: 'text',
+                isRequired: true,
+              },
+              {
+                key: 'owner_phone',
+                label: 'Teléfono del Dueño',
                 type: 'text',
                 isRequired: true,
               },
