@@ -51,7 +51,7 @@ function ListHistory() {
 
   const viewHistoryDetail = (record) => {
     router.push(
-      '/dashboard/patients/history-detail/' +
+      '/dashboard/patients/history/detail/' +
         record.patient_id +
         '/' +
         record.id
@@ -193,7 +193,7 @@ function ListHistory() {
             links: [
               { href: '/dashboard', title: 'Home' },
               { href: '/dashboard/patients', title: 'Pacientes' },
-              { href: false, title: 'Historia Clínica' },
+              { href: false, title: 'Historias Clínicas' },
             ],
           }}
         />
