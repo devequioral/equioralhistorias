@@ -57,8 +57,6 @@ export default async function handler(req, res) {
 
     const response = await updateRecord(record_request);
 
-    console.log(record_request.first_observation);
-
     if (!response)
       return res
         .status(500)

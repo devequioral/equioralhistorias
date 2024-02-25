@@ -18,6 +18,17 @@ import {
   CircularProgress,
 } from '@nextui-org/react';
 
+// Debounce function
+function debounce(func, delay) {
+  let timeoutId = setTimeout(func, delay);
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
 async function getPatient(patient_id) {
   let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/get?id=${patient_id}`;
   const res = await fetch(url);
@@ -38,12 +49,14 @@ function HistoryDetail() {
   const [urlGetRecords, setUrlGetRecords] = useState(null);
   const urlNewRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/history/new`;
   const urlUpdateRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/history/update`;
-  historyModel.patient_id = patient_id;
 
   const [patient, setPatient] = useState(null);
   const [history, setHistory] = useState(null);
   const [changeField, setChangeField] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
+
+  const first_observation_ref = React.useRef(null);
+  const treatment_ref = React.useRef(null);
 
   useEffect(() => {
     async function fetchData(patient_id) {
@@ -61,7 +74,7 @@ function HistoryDetail() {
       setUrlGetRecords(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/history/list?patient_id=${patient_id}`
       );
-
+      historyModel.patient_id = patient_id;
       fetchData(patient_id);
     }
   }, [patient_id]);
@@ -92,26 +105,24 @@ function HistoryDetail() {
     );
   };
 
-  let debounceTimer;
+  const debouncedOnChange = React.useCallback(
+    debounce((key, e, history) => {
+      if (!key || !e) return;
+      changeRecord(key, e.target.value, history);
+    }, 3000),
+    []
+  );
 
-  const onChangeField = (field, value) => {
-    console.log('onchangeField');
-    setChangeField(true);
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      console.log('Debounce Timer');
-      const new_history = { ...history };
-      new_history[field] = value;
-      setHistory(new_history);
-    }, 3000);
+  const changeRecord = (key, value, history) => {
+    const new_history = { ...history };
+    new_history[key] = value;
+    setHistory(new_history);
   };
 
   const saveRecord = useCallback(async () => {
     if (!changeField) return;
-    console.log('Saving Record', history);
-
     if (savingRecord) return;
-    setSavingRecord(true);
+    setSavingRecord(changeField);
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/history/update`;
     const response = await fetch(url, {
       method: 'POST',
@@ -133,7 +144,7 @@ function HistoryDetail() {
   useEffect(() => {
     if (!history) return;
     saveRecord();
-  }, [history, saveRecord]);
+  }, [history]);
 
   return (
     <>
@@ -270,18 +281,30 @@ function HistoryDetail() {
               <div className={`${styles.FieldGroup}`}>
                 <div className={`${styles.FieldGroupTitle}`}>
                   Observación Inicial{' '}
-                  {changeField && (
+                  {changeField && changeField === 'first_observation' && (
                     <Button
                       color="primary"
                       variant="solid"
-                      isDisabled={savingRecord ? true : false}
+                      isDisabled={
+                        savingRecord && savingRecord === 'first_observation'
+                          ? true
+                          : false
+                      }
                       size="sm"
                       className={`${styles.SaveButton}`}
+                      onClick={() => {
+                        changeRecord(
+                          'first_observation',
+                          first_observation_ref.current.value,
+                          history
+                        );
+                        setChangeField('first_observation');
+                      }}
                     >
                       Save
                     </Button>
                   )}
-                  {savingRecord && (
+                  {savingRecord && savingRecord === 'first_observation' && (
                     <>
                       <CircularProgress
                         color="primary"
@@ -296,8 +319,11 @@ function HistoryDetail() {
                   <Textarea
                     isReadOnly={false}
                     placeholder={'Ingrese La Observación Inicial'}
+                    ref={first_observation_ref}
                     onChange={(e) => {
-                      onChangeField('first_observation', e.target.value);
+                      e.persist(); // React pools events, so we need to persist the event
+                      setChangeField('first_observation');
+                      debouncedOnChange('first_observation', e, history);
                     }}
                     defaultValue={history ? history.first_observation : ''}
                   />
@@ -310,21 +336,49 @@ function HistoryDetail() {
               <div className={`${styles.FieldGroup}`}>
                 <div className={`${styles.FieldGroupTitle}`}>
                   Tratamiento{' '}
-                  {changeField && (
-                    <CircularProgress
-                      color="success"
-                      aria-label="Saving..."
+                  {changeField && changeField === 'treatment' && (
+                    <Button
+                      color="primary"
+                      variant="solid"
+                      isDisabled={
+                        savingRecord && savingRecord === 'treatment'
+                          ? true
+                          : false
+                      }
                       size="sm"
-                      className={`${styles.CircularProgress}`}
-                    />
+                      className={`${styles.SaveButton}`}
+                      onClick={() => {
+                        changeRecord(
+                          'treatment',
+                          treatment_ref.current.value,
+                          history
+                        );
+                        setChangeField('treatment');
+                      }}
+                    >
+                      Save
+                    </Button>
+                  )}
+                  {savingRecord && savingRecord === 'treatment' && (
+                    <>
+                      <CircularProgress
+                        color="primary"
+                        aria-label="Saving..."
+                        size="sm"
+                        className={`${styles.CircularProgress}`}
+                      />
+                    </>
                   )}
                 </div>
                 {history ? (
                   <Textarea
                     isReadOnly={false}
                     placeholder={'Ingrese el Tratamiento'}
+                    ref={treatment_ref}
                     onChange={(e) => {
-                      onChangeField('treatment', e.target.value);
+                      e.persist(); // React pools events, so we need to persist the event
+                      setChangeField('treatment');
+                      debouncedOnChange('treatment', e, history);
                     }}
                     defaultValue={history ? history.treatment : ''}
                   />
@@ -339,7 +393,7 @@ function HistoryDetail() {
                   <Button color="primary" variant="solid" size="sm">
                     Añadir Foto
                   </Button>
-                  {changeField && (
+                  {savingRecord && savingRecord === 'photos' && (
                     <CircularProgress
                       color="success"
                       aria-label="Saving..."
