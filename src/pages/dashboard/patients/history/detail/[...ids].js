@@ -21,6 +21,8 @@ import {
 import ModalComponent from '@/components/dashboard/ModalComponent';
 import MediaUpload from '@/components/dashboard/MediaUpload';
 
+import generatePDF from 'react-to-pdf';
+
 // Debounce function
 function debounce(func, delay) {
   let timeoutId = setTimeout(func, delay);
@@ -74,6 +76,8 @@ function HistoryDetail() {
   const first_observation_ref = React.useRef(null);
   const treatment_ref = React.useRef(null);
   const modalImagePreview = React.useRef(null);
+
+  const targetPdfRef = React.useRef();
 
   useEffect(() => {
     async function fetchData(patient_id) {
@@ -196,7 +200,6 @@ function HistoryDetail() {
           newRecord[fieldImage] = { src: urlMedia };
         }
         setHistory(newRecord);
-        console.log('History', newRecord);
         setChangeField('photos');
         //setRecordChange(true);
       } else {
@@ -234,7 +237,7 @@ function HistoryDetail() {
             ],
           }}
         />
-        <div className={`${styles.HistoryDetail}`}>
+        <div className={`${styles.HistoryDetail}`} ref={targetPdfRef}>
           <div className={`${styles.Container}`}>
             <div className={`${styles.Header}`}>
               <Card className="" style={{ width: 'auto', margin: '30px 0' }}>
@@ -332,19 +335,25 @@ function HistoryDetail() {
                 </CardHeader>
               </Card>
               <Button
-                color="success"
+                color="danger"
                 variant="shadow"
-                className={`${styles.ShareButton}`}
+                className={`${styles.MainButton}`}
+                onClick={() => {
+                  const filename = history.id
+                    ? `${history.id}.pdf`
+                    : 'history.pdf';
+                  generatePDF(targetPdfRef, { filename });
+                }}
                 startContent={
                   <Image
-                    src="/assets/images/icon-share.svg"
+                    src="/assets/images/icon-pdf.svg"
                     width={24}
                     height={24}
                     alt=""
                   />
                 }
               >
-                Compartir Historia
+                PDF
               </Button>
             </div>
             <div className={`${styles.Body}`}>
