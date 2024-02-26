@@ -18,6 +18,9 @@ import {
   CircularProgress,
 } from '@nextui-org/react';
 
+import ModalComponent from '@/components/dashboard/ModalComponent';
+import MediaUpload from '@/components/dashboard/MediaUpload';
+
 // Debounce function
 function debounce(func, delay) {
   let timeoutId = setTimeout(func, delay);
@@ -50,6 +53,19 @@ function HistoryDetail() {
   const urlNewRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/history/new`;
   const urlUpdateRecord = `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/patients/history/update`;
 
+  const [showModalChangeImage, setShowModalChangeImage] = React.useState(0);
+  const [allowUploadImage, setAllowUploadImage] = React.useState(false);
+  const [savingImage, setSavingImage] = React.useState(false);
+  const [recordImage, setRecordImage] = React.useState(null);
+  const [fieldImage, setFieldImage] = React.useState(null);
+
+  const [previewImage, setPreviewImage] = React.useState(null);
+
+  const showChangeImage = (fieldImage, multiple = false) => {
+    setFieldImage(multiple ? [fieldImage] : fieldImage);
+    setShowModalChangeImage((currCount) => currCount + 1);
+  };
+
   const [patient, setPatient] = useState(null);
   const [history, setHistory] = useState(null);
   const [changeField, setChangeField] = useState(false);
@@ -57,6 +73,7 @@ function HistoryDetail() {
 
   const first_observation_ref = React.useRef(null);
   const treatment_ref = React.useRef(null);
+  const modalImagePreview = React.useRef(null);
 
   useEffect(() => {
     async function fetchData(patient_id) {
@@ -140,6 +157,59 @@ function HistoryDetail() {
       setSavingRecord(false);
     }
   }, [history, savingRecord]);
+
+  const uploadImage = async () => {
+    if (savingImage) return;
+    setSavingImage(true);
+    const body = new FormData();
+    body.append('file', recordImage);
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_BASE_URL + '/api/admin/media/upload',
+      {
+        method: 'POST',
+        body,
+      }
+    );
+
+    if (response.ok) {
+      const { url, fields, mediaKey, urlMedia } = await response.json();
+      const formData = new FormData();
+      Object.entries(fields).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      formData.append('file', recordImage);
+
+      const uploadResponse = await fetch(url, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (uploadResponse.ok) {
+        //toast.success('Image Saved');
+        const newRecord = { ...history };
+        if (Array.isArray(fieldImage)) {
+          newRecord[fieldImage[0]] = [
+            ...newRecord[fieldImage[0]],
+            { src: urlMedia },
+          ];
+        } else {
+          newRecord[fieldImage] = { src: urlMedia };
+        }
+        setHistory(newRecord);
+        console.log('History', newRecord);
+        setChangeField('photos');
+        //setRecordChange(true);
+      } else {
+        //toast.error('Error saving image');
+      }
+      setShowModalChangeImage(0);
+      setSavingImage(false);
+      setFieldImage(null);
+    } else {
+      setSavingImage(false);
+      setFieldImage(null);
+    }
+  };
 
   useEffect(() => {
     if (!history) return;
@@ -390,7 +460,14 @@ function HistoryDetail() {
               </div>
               <div className={`${styles.Photos}`}>
                 <div className={`${styles.ButtonPhotoCnt}`}>
-                  <Button color="primary" variant="solid" size="sm">
+                  <Button
+                    color="primary"
+                    variant="solid"
+                    size="sm"
+                    onClick={() => {
+                      showChangeImage('photos', true);
+                    }}
+                  >
                     Añadir Foto
                   </Button>
                   {savingRecord && savingRecord === 'photos' && (
@@ -405,22 +482,86 @@ function HistoryDetail() {
                 <div className={`${styles.PhotosCnt}`}>
                   {history &&
                     Array.isArray(history.photos) &&
-                    history.photos.map((photo, index) =>
-                      index > 2 ? null : (
-                        <Image
-                          key={index}
-                          src={photo.src}
-                          width={100}
-                          height={100}
-                          alt=""
-                          className={`${styles.Photo}`}
-                        />
-                      )
-                    )}
+                    history.photos.map((photo, index) => (
+                      <Image
+                        key={index}
+                        src={photo.src}
+                        width={100}
+                        height={100}
+                        alt=""
+                        className={`${styles.Photo}`}
+                        onClick={() => {
+                          setPreviewImage([index, photo.src]);
+                          modalImagePreview.current.classList.add(
+                            `${styles.show}`
+                          );
+                        }}
+                      />
+                    ))}
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <ModalComponent
+          show={showModalChangeImage}
+          onSave={uploadImage}
+          title="Añadir Imágen"
+          onCloseModal={() => {
+            setAllowUploadImage(false);
+          }}
+          allowSave={allowUploadImage}
+          savingRecord={savingImage}
+        >
+          <MediaUpload
+            onImageChange={(image) => {
+              setRecordImage(image);
+              setAllowUploadImage(true);
+            }}
+          />
+        </ModalComponent>
+        <div className={`${styles.ModalImageCnt}`} ref={modalImagePreview}>
+          <div className={`${styles.ModalImageBar}`}>
+            <Button
+              color="primary"
+              variant="light"
+              size="sm"
+              onClick={() => {
+                modalImagePreview.current.classList.remove(`${styles.show}`);
+                setPreviewImage(null);
+              }}
+            >
+              Cerrar
+            </Button>
+            <Button
+              color="danger"
+              variant="solid"
+              size="sm"
+              onClick={() => {
+                const new_record = { ...history };
+                new_record.photos.splice(previewImage[0], 1);
+                setHistory(new_record);
+                setChangeField('photos');
+                modalImagePreview.current.classList.remove(`${styles.show}`);
+                setPreviewImage(null);
+              }}
+            >
+              Borrar
+            </Button>
+          </div>
+          {previewImage && previewImage[1] ? (
+            <Image
+              src={previewImage ? previewImage[1] : ''}
+              width={200}
+              height={200}
+              alt=""
+              className={`${styles.ModalImage}`}
+            />
+          ) : (
+            <Skeleton className={`${styles.Skeleton} ${styles.big}`}>
+              <div className={`${styles.SkeletonBody}`}></div>
+            </Skeleton>
+          )}
         </div>
       </Layout>
     </>

@@ -147,7 +147,6 @@ export default function MainScreenObject(props) {
   };
 
   const showChangeImage = (fieldImage, multiple = false) => {
-    console.log('fieldImage', fieldImage, multiple);
     setFieldImage(multiple ? [fieldImage] : fieldImage);
     setShowModalChangeImage((currCount) => currCount + 1);
   };
