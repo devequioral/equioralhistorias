@@ -51,7 +51,7 @@ export default function MainNavigation() {
         color="default"
         variant="light"
         className="btn-menu"
-        onClick={() => onClickMenu('/dashboard/patients')}
+        onClick={() => onClickMenu('/dashboard')}
         startContent={
           <Image
             src={`/assets/images/theme-light/icon-home.svg`}

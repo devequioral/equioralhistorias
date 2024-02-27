@@ -70,9 +70,11 @@ export default function ToBar(props) {
             <DropdownItem key="profile">
               <Link href="/dashboard/profile">Perfil</Link>
             </DropdownItem>
-            <DropdownItem key="patients">
-              <Link href="/dashboard/patients">Mis Pacientes</Link>
-            </DropdownItem>
+            {user && user?.role === 'admin' && (
+              <DropdownItem key="patients">
+                <Link href="/dashboard/patients">Mis Pacientes</Link>
+              </DropdownItem>
+            )}
             <DropdownItem key="logout" color="danger">
               <Link href="/close-session">Cerrar Sesión</Link>
             </DropdownItem>
