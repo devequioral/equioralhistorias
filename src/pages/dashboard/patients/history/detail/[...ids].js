@@ -145,7 +145,7 @@ function HistoryDetail() {
             share_expiration: 1,
             share_password: '',
             share_enabled: 'enabled',
-            share_url: `${process.env.NEXT_PUBLIC_BASE_URL}/share/${share_id}`,
+            share_url: `${process.env.NEXT_PUBLIC_BASE_URL}/share-history/${share_id}`,
           };
         }
         setHistory(newhistory);
