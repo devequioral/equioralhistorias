@@ -165,6 +165,7 @@
 
 .PdfTarget{
     width: 100%;
+    min-width: 900px;
     padding: 20px 50px;
 }
 
