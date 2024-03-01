@@ -18,6 +18,14 @@
     gap: 20px;
 }
 
+.HeaderActions{
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .MainButton{
     font-weight: 600;
     color: #fff;
@@ -124,7 +132,7 @@
     gap:10px;
 }
 
-.FieldGroupTitle .CircularProgress svg, .ButtonPhotoCnt .CircularProgress svg{
+.CircularProgress svg{
     width: 20px;
 }
 
@@ -241,4 +249,27 @@
 .PdfPhotos img{
     width: 250px;
     height: auto;
+}
+
+.ShareOptions{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+}
+
+.ShareOption{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.smallText{
+    font-size: 12px;
+    color: #52525b;
 }
