@@ -40,7 +40,7 @@ async function createRecord(record) {
   const url = `${process.env.VIDASHY_URL}${process.env.VIDASHY_ORGANIZATION}/${process.env.VIDASHY_DATABASE}/histories`;
   try {
     const new_record = sanitizeOBJ({
-      id: new_id,
+      id: new_id.toString(),
       patient_id: record.patient_id,
       first_observation: record.first_observation,
     });
