@@ -2,7 +2,7 @@ import { getRecords } from '@/vidashy-sdk/dist/backend';
 import { getToken } from 'next-auth/jwt';
 import { filterBy, filterValue } from '@/utils/filters';
 
-async function getRecord(id) {
+async function getRecord(share_id) {
   return await getRecords({
     backend_url: process.env.VIDASHY_URL,
     organization: process.env.VIDASHY_ORGANIZATION,
@@ -10,8 +10,8 @@ async function getRecord(id) {
     object: 'histories',
     api_key: process.env.VIDASHY_API_KEY,
     params: {
-      filterBy: filterBy({ id }),
-      filterValue: filterValue({ id }),
+      filterBy: filterBy({ share_id }),
+      filterValue: filterValue({ share_id }),
     },
   });
 }
