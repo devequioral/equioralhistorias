@@ -788,7 +788,7 @@ function HistoryDetail() {
                 errorMessage={validation['share_password']}
                 onChange={(e) => {
                   const new_record = { ...history };
-                  new_record.share_options.password = e.target.value;
+                  new_record.share_options.share_password = e.target.value;
                   setHistory(new_record);
                 }}
                 defaultValue={
