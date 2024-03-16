@@ -27,6 +27,8 @@ import MediaUpload from '@/components/dashboard/MediaUpload';
 import generatePDF, { Resolution, Margin } from 'react-to-pdf';
 import { toast } from 'react-toastify';
 
+import Resizer from 'react-image-file-resizer';
+
 // Debounce function
 function debounce(func, delay) {
   let timeoutId = setTimeout(func, delay);
@@ -221,38 +223,84 @@ function HistoryDetail() {
     );
 
     if (response.ok) {
-      const { url, fields, mediaKey, urlMedia } = await response.json();
-      const formData = new FormData();
-      Object.entries(fields).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      formData.append('file', recordImage);
+      Resizer.imageFileResizer(
+        recordImage,
+        300,
+        300,
+        'JPEG',
+        100,
+        0,
+        async (imageResized) => {
+          console.log(imageResized);
+          const { url, fields, mediaKey, urlMedia } = await response.json();
+          const formData = new FormData();
+          Object.entries(fields).forEach(([key, value]) => {
+            formData.append(key, value);
+          });
+          formData.append('file', imageResized);
 
-      const uploadResponse = await fetch(url, {
-        method: 'POST',
-        body: formData,
-      });
+          const uploadResponse = await fetch(url, {
+            method: 'POST',
+            body: formData,
+          });
 
-      if (uploadResponse.ok) {
-        //toast.success('Image Saved');
-        const newRecord = { ...history };
-        if (Array.isArray(fieldImage)) {
-          newRecord[fieldImage[0]] = [
-            ...newRecord[fieldImage[0]],
-            { src: urlMedia },
-          ];
-        } else {
-          newRecord[fieldImage] = { src: urlMedia };
-        }
-        setHistory(newRecord);
-        setChangeField('photos');
-        //setRecordChange(true);
-      } else {
-        //toast.error('Error saving image');
-      }
-      setShowModalChangeImage(0);
-      setSavingImage(false);
-      setFieldImage(null);
+          if (uploadResponse.ok) {
+            //toast.success('Image Saved');
+            const newRecord = { ...history };
+            if (Array.isArray(fieldImage)) {
+              newRecord[fieldImage[0]] = [
+                ...newRecord[fieldImage[0]],
+                { src: urlMedia },
+              ];
+            } else {
+              newRecord[fieldImage] = { src: urlMedia };
+            }
+            setHistory(newRecord);
+            setChangeField('photos');
+            //setRecordChange(true);
+          } else {
+            //toast.error('Error saving image');
+          }
+          setShowModalChangeImage(0);
+          setSavingImage(false);
+          setFieldImage(null);
+        },
+        'file',
+        200,
+        200
+      );
+      // const { url, fields, mediaKey, urlMedia } = await response.json();
+      // const formData = new FormData();
+      // Object.entries(fields).forEach(([key, value]) => {
+      //   formData.append(key, value);
+      // });
+      // formData.append('file', recordImage);
+
+      // const uploadResponse = await fetch(url, {
+      //   method: 'POST',
+      //   body: formData,
+      // });
+
+      // if (uploadResponse.ok) {
+      //   //toast.success('Image Saved');
+      //   const newRecord = { ...history };
+      //   if (Array.isArray(fieldImage)) {
+      //     newRecord[fieldImage[0]] = [
+      //       ...newRecord[fieldImage[0]],
+      //       { src: urlMedia },
+      //     ];
+      //   } else {
+      //     newRecord[fieldImage] = { src: urlMedia };
+      //   }
+      //   setHistory(newRecord);
+      //   setChangeField('photos');
+      //   //setRecordChange(true);
+      // } else {
+      //   //toast.error('Error saving image');
+      // }
+      // setShowModalChangeImage(0);
+      // setSavingImage(false);
+      // setFieldImage(null);
     } else {
       setSavingImage(false);
       setFieldImage(null);
@@ -688,12 +736,12 @@ function HistoryDetail() {
                         <img
                           key={index}
                           src={photo.base64}
-                          width={100}
-                          height={100}
+                          width={150}
+                          height={150}
                           alt=""
                           className={`${styles.PdfPhoto}`}
                           style={{
-                            width: '100px',
+                            width: '150px',
                             height: 'auto',
                             minHeight: '50px',
                             border: '2px solid #000',
@@ -701,12 +749,12 @@ function HistoryDetail() {
                         />
                         {/* <Image
                           src={photo.src}
-                          width={100}
-                          height={100}
+                          width={150}
+                          height={150}
                           alt=""
                           className={`${styles.PdfPhoto}`}
                           style={{
-                            width: '100px',
+                            width: '150px',
                             height: 'auto',
                             minHeight: '50px',
                             border: '2px solid #f00',
