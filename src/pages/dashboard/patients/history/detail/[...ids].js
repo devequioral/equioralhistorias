@@ -29,7 +29,7 @@ import { toast } from 'react-toastify';
 
 import Resizer from 'react-image-file-resizer';
 
-// Debounce function
+// Debounce function.
 function debounce(func, delay) {
   let timeoutId = setTimeout(func, delay);
   return function (...args) {
