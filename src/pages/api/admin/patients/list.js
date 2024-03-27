@@ -26,7 +26,6 @@ async function listRecords(
             { horse_farm: { regex: `.*${search}.*`, optionsRegex: 'i' } },
             { owner_name: { regex: `.*${search}.*`, optionsRegex: 'i' } },
             { owner_phone: { regex: `.*${search}.*`, optionsRegex: 'i' } },
-            { status: { regex: `.*${search}.*`, optionsRegex: 'i' } },
           ],
         },
       ],
