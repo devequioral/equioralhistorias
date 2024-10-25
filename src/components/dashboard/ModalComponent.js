@@ -12,7 +12,7 @@ import {
 
 import styles from '@/styles/dashboard/ModalComponent.module.css';
 
-export default function App(props) {
+export default function ModalComponent(props) {
   const {
     size,
     show,
