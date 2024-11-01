@@ -75,12 +75,9 @@ export default function DetailNotification(props) {
         </CardHeader>
         <Divider />
         <CardBody>
-          <p className={`${styles.message}`}>{record.message}</p>
+          <p className={`${styles.message}`}>{record.description}</p>
         </CardBody>
         <Divider />
-        <CardFooter>
-          <Link href={link}>Ver acá</Link>
-        </CardFooter>
       </Card>
     </>
   );
