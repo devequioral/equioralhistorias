@@ -111,6 +111,7 @@ export default async function handler(req, res) {
         difference
       );
       if (difference >= 0) {
+        console.log('ENTRO');
         sendNotification(_record);
         updateRecord(_record);
       }
