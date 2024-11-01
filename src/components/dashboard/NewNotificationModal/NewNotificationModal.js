@@ -10,7 +10,7 @@ import {
 import {
   now,
   getLocalTimeZone,
-  parseZonedDateTime,
+  parseAbsoluteToLocal,
 } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
@@ -33,7 +33,7 @@ export default function NewNotificationModal({ show }) {
   const defaultData = {
     title: '',
     description: '',
-    date: now(getLocalTimeZone()).add({ minutes: 65 }).toString(),
+    date: now(getLocalTimeZone()).add({ minutes: 65 }).toAbsoluteString(),
     notification: '30min',
   };
   const [data, setData] = useState(defaultData);
@@ -94,8 +94,8 @@ export default function NewNotificationModal({ show }) {
           hideTimeZone
           showMonthAndYearPickers
           minValue={now(getLocalTimeZone()).add({ minutes: 60 })}
-          defaultValue={parseZonedDateTime(defaultData.date)}
-          onChange={(value) => onChange('date', value.toString())}
+          defaultValue={parseAbsoluteToLocal(defaultData.date)}
+          onChange={(value) => onChange('date', value.toAbsoluteString())}
         />
       </I18nProvider>
       <Select

@@ -25,6 +25,8 @@ async function createRecord(record) {
       description: record.description,
       date: record.date,
       notification: record.notification,
+      role: 'admin',
+      status: 'pending',
     });
 
     const response = await axios({
