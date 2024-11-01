@@ -4,7 +4,7 @@ import TableComponent from '@/components/dashboard/TableComponent';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
-import { Chip } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
 import Image from 'next/image';
@@ -123,9 +123,12 @@ function ListUsers() {
     switch (columnKey) {
       case 'expand':
         return (
-          <div
-            className="expand-cell"
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               showRecordDetail(record);
             }}
           >
@@ -135,7 +138,7 @@ function ListUsers() {
               height={12}
               alt=""
             />
-          </div>
+          </Button>
         );
       case 'role':
         const statusColorMap = {
@@ -164,18 +167,16 @@ function ListUsers() {
 
       case 'id':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            color="primary"
+            variant="link"
+            onPress={() => {
               showRecordDetail(record);
             }}
           >
             {shortUUID(cellValue)}
-          </div>
+          </Button>
         );
 
       default:
