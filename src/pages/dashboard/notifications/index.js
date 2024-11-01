@@ -4,7 +4,7 @@ import TableComponent from '@/components/dashboard/TableComponent';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
-import { Chip } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
 import Image from 'next/image';
 import ModalComponent from '@/components/dashboard/ModalComponent';
@@ -132,9 +132,12 @@ function Notifications() {
     switch (columnKey) {
       case 'expand':
         return (
-          <div
-            className="expand-cell"
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               showRecordDetail(record);
             }}
           >
@@ -144,7 +147,7 @@ function Notifications() {
               height={12}
               alt=""
             />
-          </div>
+          </Button>
         );
       case 'status':
         const statusColorMap = {
@@ -178,18 +181,16 @@ function Notifications() {
 
       case 'id':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            color="default"
+            variant="link"
+            onPress={() => {
               showRecordDetail(record);
             }}
           >
             {shortUUID(cellValue)}
-          </div>
+          </Button>
         );
 
       default:

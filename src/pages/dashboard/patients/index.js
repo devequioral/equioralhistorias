@@ -5,7 +5,7 @@ import React, { useContext, useEffect } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import patientModel from '@/models/patientModel';
 import MainScreenObject from '@/components/dashboard/MainScreenObject';
-import { Chip } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import Image from 'next/image';
 import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
 import { useRouter } from 'next/router';
@@ -25,12 +25,14 @@ function ListPatients() {
     switch (columnKey) {
       case 'expand':
         return (
-          <div
-            className="expand-cell"
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               showRecordDetail(record);
             }}
-            style={{ cursor: 'pointer', width: '12px' }}
           >
             <Image
               src="/assets/images/icon-expand.svg"
@@ -38,7 +40,7 @@ function ListPatients() {
               height={12}
               alt=""
             />
-          </div>
+          </Button>
         );
       case 'status':
         const statusColorMap = {
@@ -67,30 +69,25 @@ function ListPatients() {
 
       case 'history':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            color="primary"
+            onPress={() => {
               viewHistory(record);
             }}
           >
             Ver Historia
-          </div>
+          </Button>
         );
 
       case 'delete':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-              width: '24px',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               showModalDelete(record);
             }}
           >
@@ -100,23 +97,22 @@ function ListPatients() {
               height={24}
               alt="Borrar"
             />
-          </div>
+          </Button>
         );
 
       case 'id':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               showRecordDetail(record);
             }}
           >
             {shortUUID(cellValue)}
-          </div>
+          </Button>
         );
 
       default:

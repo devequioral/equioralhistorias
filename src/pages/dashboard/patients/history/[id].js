@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import BreadCrumbs from '@/components/dashboard/BreadCrumbs';
 import historyModel from '@/models/historyModel';
 import MainScreenObject from '@/components/dashboard/MainScreenObject';
-import { Chip } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import Image from 'next/image';
 import { formatDate, capitalizeFirstLetter, shortUUID } from '@/utils/utils';
 import { useRouter } from 'next/router';
@@ -63,12 +63,14 @@ function ListHistory() {
     switch (columnKey) {
       case 'expand':
         return (
-          <div
-            className="expand-cell"
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               viewHistoryDetail(record);
             }}
-            style={{ cursor: 'pointer', width: '12px' }}
           >
             <Image
               src="/assets/images/icon-expand.svg"
@@ -76,7 +78,7 @@ function ListHistory() {
               height={12}
               alt=""
             />
-          </div>
+          </Button>
         );
       case 'status':
         const statusColorMap = {
@@ -152,46 +154,40 @@ function ListHistory() {
 
       case 'history':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            color="default"
+            variant="link"
+            onPress={() => {
               viewHistoryDetail(record);
             }}
           >
             Ver Historia
-          </div>
+          </Button>
         );
 
       case 'id':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            color="primary"
+            variant="link"
+            onPress={() => {
               viewHistoryDetail(record);
             }}
           >
             {shortUUID(cellValue)}
-          </div>
+          </Button>
         );
 
       case 'delete':
         return (
-          <div
-            style={{
-              textDecoration: 'none',
-              color: '#0070f0',
-              cursor: 'pointer',
-              width: '24px',
-            }}
-            onClick={() => {
+          <Button
+            size="sm"
+            isIconOnly
+            color="default"
+            variant="link"
+            onPress={() => {
               showModalDelete(record);
             }}
           >
@@ -201,7 +197,7 @@ function ListHistory() {
               height={24}
               alt="Borrar"
             />
-          </div>
+          </Button>
         );
 
       default:
