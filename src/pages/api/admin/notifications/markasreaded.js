@@ -5,7 +5,8 @@ import { filterBy, filterValue } from '@/utils/filters';
 import { sanitizeOBJ } from '@/utils/utils';
 
 async function updateRecord(record) {
-  const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/notifications`;
+  //const url = `${process.env.VIDASHY_URL}6d498a2a94a3/quoter/notifications`;
+  const url = `${process.env.VIDASHY_URL}${process.env.VIDASHY_ORGANIZATION}/${process.env.VIDASHY_DATABASE}/notifications`;
 
   try {
     //UPDATE RECORD

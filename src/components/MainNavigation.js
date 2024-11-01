@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -29,12 +29,18 @@ const ChevronDownIcon = () => (
   </svg>
 );
 
-export default function MainNavigation() {
+export default function MainNavigation({ onShowNewNotification }) {
   const { data: session } = useSession();
   const user = session?.user;
 
   const router = useRouter();
   const [selectedOption, setSelectedOption] = React.useState('');
+  const [showModalNewNotification, setShowModalNewNotification] =
+    React.useState(0);
+  useEffect(() => {
+    if (showModalNewNotification > 0)
+      onShowNewNotification(showModalNewNotification);
+  }, [showModalNewNotification]);
   const onClickMenu = (path) => {
     router.push(path);
   };
@@ -98,6 +104,26 @@ export default function MainNavigation() {
           }
         >
           Usuarios
+        </Button>
+      )}
+      {user && user?.role === 'admin' && (
+        <Button
+          color="default"
+          variant="light"
+          className="btn-menu"
+          onClick={() => {
+            setShowModalNewNotification((c) => c + 1);
+          }}
+          startContent={
+            <Image
+              src={`/assets/images/theme-light/icon-new-notification.svg`}
+              width={24}
+              height={24}
+              alt="New Notification"
+            />
+          }
+        >
+          New Notification
         </Button>
       )}
       <Button

@@ -51,6 +51,38 @@ async function getHistory(history_id) {
   return await res.json();
 }
 
+function PDFModal({ show, patient, history }) {
+  const [photosPerRow, setPhotosPerRow] = useState(3);
+  const openPDF = () => {
+    const params = JSON.stringify({ patient, history, photosPerRow });
+    const url = `${process.env.NEXT_PUBLIC_PDFGEN}?params=${params}`;
+    window.open(url);
+  };
+
+  const onChangePhotosPerRow = (e) => {
+    if (!Number.isNaN(Number(e.target.value))) {
+      setPhotosPerRow(Number(e.target.value));
+    }
+  };
+  return (
+    <ModalComponent
+      show={show}
+      onSave={openPDF}
+      title="PDF Configuration"
+      onCloseModal={() => {}}
+      allowSave={true}
+      savingRecord={false}
+      labelButtonSave={'Open'}
+    >
+      <Input
+        label="Fotos por fila"
+        defaultValue="3"
+        onChange={onChangePhotosPerRow}
+      />
+    </ModalComponent>
+  );
+}
+
 function HistoryDetail() {
   const router = useRouter();
   const { ids } = router.query;
@@ -89,6 +121,8 @@ function HistoryDetail() {
   const targetPdfRef = React.useRef();
 
   const [photoB64, setPhotoB64] = React.useState(null);
+
+  const [showModalPdf, setShowModalPdf] = React.useState(0);
 
   useEffect(() => {
     async function fetchData(patient_id) {
@@ -401,9 +435,7 @@ function HistoryDetail() {
                     variant="shadow"
                     className={`${styles.MainButton}`}
                     onClick={() => {
-                      const params = JSON.stringify({ patient, history });
-                      const url = `${process.env.NEXT_PUBLIC_PDFGEN}?params=${params}`;
-                      window.open(url);
+                      setShowModalPdf((c) => c + 1);
                     }}
                     startContent={
                       <Image
@@ -760,6 +792,7 @@ function HistoryDetail() {
             </div>
           </div>
         </ModalComponent>
+        <PDFModal show={showModalPdf} patient={patient} history={history} />
         <div className={`${styles.ModalImageCnt}`} ref={modalImagePreview}>
           <div className={`${styles.ModalImageBar}`}>
             <Button
