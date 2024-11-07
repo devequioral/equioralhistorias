@@ -5,7 +5,7 @@ import { sanitizeOBJ } from '@/utils/utils';
 
 function sendNotification(record) {
   let nodemailer = require('nodemailer');
-  const transporter = nodemailer.createTransport({
+  const config = {
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     secure: process.env.SMTP_SECURE,
@@ -13,7 +13,8 @@ function sendNotification(record) {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
-  });
+  };
+  const transporter = nodemailer.createTransport(config);
 
   const textMessage = ` Este es un recordatotio desde: historias.equioral.com \n
   Title: ${record.title} \n
@@ -34,7 +35,11 @@ function sendNotification(record) {
   console.log('Before Transporter');
   transporter.sendMail(mailData, function (err, info) {
     if (err)
-      console.log('Sorry, message not sent, please try again later!!', err);
+      console.log(
+        'Sorry, message not sent, please try again later!!',
+        config,
+        mailData
+      );
     else console.log('Message sent successfully');
   });
 }
