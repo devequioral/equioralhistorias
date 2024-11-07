@@ -31,6 +31,7 @@ function sendNotification(record) {
     html: textHtml,
   };
 
+  console.log('Before Transporter');
   transporter.sendMail(mailData, function (err, info) {
     if (err) console.log('Sorry, message not sent, please try again later!!');
     else console.log('Message sent successfully');
