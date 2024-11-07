@@ -32,14 +32,9 @@ function sendNotification(record) {
     html: textHtml,
   };
 
-  console.log('Before Transporter');
+  console.log('Before Transporter', config, mailData);
   transporter.sendMail(mailData, function (err, info) {
-    if (err)
-      console.log(
-        'Sorry, message not sent, please try again later!!',
-        config,
-        mailData
-      );
+    if (err) console.log('Sorry, message not sent, please try again later!!');
     else console.log('Message sent successfully');
   });
 }
