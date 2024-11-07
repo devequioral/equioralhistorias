@@ -33,7 +33,8 @@ function sendNotification(record) {
 
   console.log('Before Transporter');
   transporter.sendMail(mailData, function (err, info) {
-    if (err) console.log('Sorry, message not sent, please try again later!!');
+    if (err)
+      console.log('Sorry, message not sent, please try again later!!', err);
     else console.log('Message sent successfully');
   });
 }
