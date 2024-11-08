@@ -45,7 +45,6 @@ async function sendNotification(record) {
     html: textHtml,
   };
 
-  console.log('Before Transporter');
   await new Promise((resolve, reject) => {
     // send mail
     transporter.sendMail(mailData, (err, info) => {
@@ -58,10 +57,6 @@ async function sendNotification(record) {
       }
     });
   });
-  // transporter.sendMail(mailData, function (err, info) {
-  //   if (err) console.log('Sorry, message not sent, please try again later!!');
-  //   else console.log('Message sent successfully');
-  // });
 }
 
 async function updateRecord(record) {
