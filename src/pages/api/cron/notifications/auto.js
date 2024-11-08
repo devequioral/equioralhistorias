@@ -3,7 +3,7 @@ import { getRecords } from '@/vidashy-sdk/dist/backend';
 import { filterBy, filterValue } from '@/utils/filters';
 import { sanitizeOBJ } from '@/utils/utils';
 
-function sendNotification(record) {
+async function sendNotification(record) {
   let nodemailer = require('nodemailer');
   const config = {
     host: process.env.SMTP_HOST,
@@ -15,6 +15,19 @@ function sendNotification(record) {
     },
   };
   const transporter = nodemailer.createTransport(config);
+
+  await new Promise((resolve, reject) => {
+    // verify connection configuration
+    transporter.verify(function (error, success) {
+      if (error) {
+        console.log(error);
+        reject(error);
+      } else {
+        console.log('Server is ready to take our messages');
+        resolve(success);
+      }
+    });
+  });
 
   const textMessage = ` Este es un recordatotio desde: historias.equioral.com \n
   Title: ${record.title} \n
@@ -32,11 +45,23 @@ function sendNotification(record) {
     html: textHtml,
   };
 
-  console.log('Before Transporter', config, mailData);
-  transporter.sendMail(mailData, function (err, info) {
-    if (err) console.log('Sorry, message not sent, please try again later!!');
-    else console.log('Message sent successfully');
+  console.log('Before Transporter');
+  await new Promise((resolve, reject) => {
+    // send mail
+    transporter.sendMail(mailData, (err, info) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        console.log(info);
+        resolve(info);
+      }
+    });
   });
+  // transporter.sendMail(mailData, function (err, info) {
+  //   if (err) console.log('Sorry, message not sent, please try again later!!');
+  //   else console.log('Message sent successfully');
+  // });
 }
 
 async function updateRecord(record) {
@@ -98,7 +123,8 @@ export default async function handler(req, res) {
         .status(404)
         .send({ data: records, message: 'Records Not found' });
 
-    records.records.map((_record) => {
+    for (var i = 0; i < records.records.length; i++) {
+      const _record = records.records[i];
       const current_date = new Date();
       const record_date = new Date(_record.date);
       const notification = Number.parseInt(
@@ -114,10 +140,10 @@ export default async function handler(req, res) {
       );
       if (difference >= 0) {
         console.log('ENTRO');
-        sendNotification(_record);
+        await sendNotification(_record);
         updateRecord(_record);
       }
-    });
+    }
 
     res.status(200).json({ success: true, records });
   } catch (error) {
