@@ -1,0 +1,151 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  /* background: #000;
+  color:#fff; */
+  font-family: var(--primary-font), serif;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+@media only screen and (min-width: 599px) {
+  .container {
+    padding: 0 40px;
+  }
+}
+
+.image-fit-content {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.expand-cell {
+  width: 12px;
+  height: 12px;
+}
+
+.expand-cell img {
+  display: none;
+  cursor: pointer;
+}
+
+tr:hover .expand-cell img {
+  display: block;
+}
+
+.avatar-topnav {
+  background-color: var(--theme-light-color-primary) !important;
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px,
+    var(--theme-light-color-primary) 0px 0px 0px 4px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px !important;
+}
+
+.btn-menu.text-primary {
+  color: var(--theme-light-color-primary);
+}
+.btn-menu.border-primary {
+  border-color: var(--theme-light-color-primary);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*Calendar*/
+
+.rbc-calendar {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.rbc-toolbar {
+  padding: 10px;
+  background-color: #f1f3f4;
+  border-bottom: 1px solid #dadce0;
+}
+
+.rbc-toolbar button {
+  color: #3c4043;
+  background-color: transparent;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 6px 12px;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #e8eaed;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+
+.rbc-month-view {
+  border: 1px solid #dadce0;
+}
+
+.rbc-day-bg {
+  background-color: #ffffff;
+}
+
+.rbc-off-range-bg {
+  background-color: #f8f9fa;
+}
+
+.rbc-today {
+  background-color: #e8f0fe;
+}
+
+.rbc-event {
+  background-color: #4285f4;
+  border: none;
+  border-radius: 4px;
+}
+
+.rbc-event-content {
+  font-size: 12px;
+}
+
+.rbc-header {
+  padding: 10px;
+  font-weight: 500;
+  color: #3c4043;
+  border-bottom: 1px solid #dadce0;
+}
+
+.CalendarContainer {
+  height: 70vh;
+  position: relative;
+}
+
+.CalendarContainer.loading::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0%;
+  height: 5px;
+  background-color: rgb(21, 42, 229);
+  z-index: 10;
+  transform: translate(-50%, 0px);
+  animation: animationLoadingCalendar 5s infinite forwards;
+}
+
+/*Animate Width*/
+@keyframes animationLoadingCalendar {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
