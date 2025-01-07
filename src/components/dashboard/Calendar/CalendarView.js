@@ -14,6 +14,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import CreateTaskDialog from './CreateTaskDialog';
 import { saveTask } from './FetchTask';
 
+//CLASS CALENDAR
 export default function CalendarView({ show }) {
   const [showModal, setShowModal] = useState(0);
   const [view, setView] = useState('month');
