@@ -270,9 +270,6 @@ function HistoryDetail() {
           });
           formData.append('file', imageResized);
 
-          // Justo después de los append y antes del fetch
-          console.log('FormData:', Object.fromEntries(formData.entries()));
-
           const uploadResponse = await fetch(url, {
             method: 'POST',
             body: formData,
