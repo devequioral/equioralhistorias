@@ -36,7 +36,15 @@ export const config = {
 
 async function preparePost(filename, contentType) {
   try {
-    const client = new S3Client({ region: process.env.AWS_REGION });
+    //const client = new S3Client({ region: process.env.AWS_REGION });
+    const client = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID.trim(),
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY.trim(),
+        sessionToken: null
+      }
+    });
     const Key = uuidv4();
     const { url, fields } = await createPresignedPost(client, {
       Bucket: process.env.AWS_BUCKET_NAME,
